@@ -12,7 +12,7 @@
 \usepackage{caption}
 \usepackage{fixltx2e}
 \usepackage{booktabs}
-\usepackage{float}  % Aggiunto pacchetto float
+\usepackage{float}  
 
 \titleformat{\section}
 {\LARGE\bfseries}{\thesection}{1em}{}
@@ -22,89 +22,155 @@
 
 \begin{document}
 
+\setcounter{subsection}{0}
+
 \pagestyle{empty}
 
-\section*{ESQL}
-\large
-Nella qui presente documentazione si riportano l'insieme delle specifiche necessarie per comprendere al meglio la direzione seguita dallo sviluppo del progetto \textbf{ESQL}. Si susseguono sezioni relative alla modellazione, espandendosi da tematiche inerenti alla progettazione di entità-relazioni fino all'adozione dei modelli concettuali, logici e fisici.
+\newgeometry{left=2cm, right=2cm}
+\begin{titlepage}
+\begin{center}
+    {{\Large{\textsc{Alma Mater Studiorum - Università di Bologna}}}}
+    \rule[0.1cm]{\textwidth}{0.1px}
+    \rule[0.5cm]{\textwidth}{0.6px}\\
+    {\fontsize{12}{13}{SCUOLA DI SCIENZE \\ Corso di Laurea in Informatica per il Management}}
+\end{center}
 
-\subsection*{Modello E-R}
+\vspace{50px}
+
+\begin{center}
+    {\LARGE{{\bf Piattaforma ESQL}}}\\
+\end{center}
+
+\vspace{115px}
+\par
+\noindent
+\begin{minipage}[t]{0.04\textwidth}
+~
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.4\textwidth}\raggedleft
+{\fontsize{12}{13}{SVOLTA DA:}\\
+\fontsize{12}{13}{\it Canghiari Matteo \\ De Rosa Davide \\ Nadifi Ossama}}
+\end{minipage}
+\begin{minipage}[t]{0.04\textwidth}
+~
+\end{minipage}
+
+\vspace*{210px}
+
+\begin{center}
+    \large{Anno Accademico 2023/2024}
+\end{center}
+\end{titlepage}
+
+\subsection{Analisi dei requisiti}
+\large
+All'interno di questa prima sezione, si adotta un approccio orientato ad un'analisi degli aspetti principali inerenti al progetto, mediante una serie di azioni mirate per rendere il più comprensibile possibile il documento di specifica, attraverso la scelta del corretto livello di astrazione, la standardizzazione della struttura delle frasi oppure tramite la decomposizione del testo in espressioni omogenee. \vspace*{7px}\\
+Di seguito sono descritti i concetti essenziali riferiti a ciascuna entità, affinchè sia definito un supporto concreto per successive fasi di sviluppo:
+\begin{itemize}[label={-}]
+    \itemsep0em
+    \item 
+\end{itemize}
+
+
+\subsection{Progettazione concettuale}
+\large
+\subsubsection*{Modello E-R}
 \begin{figure}[H]
-    \includegraphics[width=1.1\textwidth]{foto1.png}
+    \includegraphics[width=1\textwidth]{foto1.png}
     \caption{Modello E-R precedente alla raffinazione.}
 \end{figure}
 
-\subsection*{Dizionario delle entità}
+\subsubsection*{Dizionario delle entità}
 \begin{table}[H]
     \centering
-    \begin{tabularx}{\textwidth}{|X|p{5cm}|X|X|}
+    \begin{tabularx}{\textwidth}{|X|p{5cm}|p{5cm}|X|}
         \hline
         Entità & Descrizione & Attributi & Identificatore \\
         \hline
-        Utente & Utente rappresenta coloro che adoperino il software realizzato & Email, Nome, Cognome, Telefono & Email \\        
+        Utente & Utilizzatore dell'applicativo & Email, Nome, Cognome, Telefono & Email \\        
         \hline
-        Docenti & Sottotipo dell'entità padre Utente, da cui si delineano specifiche attività che possano essere conseguite & Nome\_Dipartimento, Nome\_Corso & Email \\
+        Docenti & Docente creatore e ideatore di quesiti e tabelle di esercizio & Nome\_Dipartimento, Nome\_Corso & Email \\
         \hline
-        Studente & Sottotipo dell'entità padre Utente, il quale si contraddistingue per certe azioni che possano esercitare & Anno\_Immatricolazione, Codice & Email \\
+        Studente & Alunno che interagisce con l'applicativo per la risoluzione dei quesiti posti & Anno\_Ipxatricolazione, Codice & Email \\
         \hline
-        Tabelle\_Esercizio & Definisce i meta-data necessari per la creazione vera e propria di relazioni & ID, Nome, Data\_Creazione, Num\_Righe & ID \\
+        Tabelle\_Esercizio & Tabelle che costituiscono parte dei meta-dati per la realizzazione di test & ID, Nome, Data\_Creazione, Num\_Righe & ID \\
         \hline
-        Attributi & Definisce i meta-dati necessari per la concretizzazione di tabelle inerenti alla creazione di esercizi da sottoporre successivamente agli Studenti & ID, Tipo Nome, Chiave\_Primaria & ID \\
+        Attributi & Attributi i quali costituiscono la seconda entità essenziale per i meta-dati, legati alla realizzazione di test da sopxinistrare & ID, Tipo Nome, Chiave\_Primaria & ID \\
         \hline
-        Test & Entità necessaria per sottoporre gli Studenti alla risoluzione di possibili quesiti & Titolo, Foto, Data\_Creazione, Visualizza\_Risposte & Titolo \\
+        Test & Test indica l'insieme di quesiti svolti dagli studenti e creati dal docente & Titolo, Foto, Data\_Creazione, Visualizza\_Risposte & Titolo \\
         \hline
-        Quesito & Entità fondamentale per la creazione delle domande da sottoporre agli Studenti, raggruppati in specifici test & Numero, Difficoltà, Descrizione, Num\_Risposte & Numero \\
+        Quesito & Domanda relativa a tematiche svolte nel corso & Numero, Difficoltà, Descrizione, Num\_Risposte & Numero \\
         \hline
-        Risposta & Entità idealizzata per salvaguardare e verificare le risposte formulate dagli Studenti in merito a quesiti specifici & ID, Esito & ID \\
+        Domanda\_Chiusa & Tipologia di Quesito, rappresentante una domanda a scelta multipla & . & Numero \\
         \hline
-        Domanda\_Chiusa & Tipologia di Quesito, la quale rappresenta una domanda a scelta multipla & . & Numero \\
+        Sketch\_Codice & Tipologia di Quesito, richiedente la formulazione di query SQL & . & Numero \\
         \hline
-        Sketch\_Codice & Tipologia di Quesito, necessita la formulazione di codice SQL che restituisca righe e colonne attese & . & Numero \\
-        \hline
-        Messaggi & Relazione ideata per mantenere al suo interno comunicazioni inviate e ricevute da Studenti e Docenti mediante l'impiego di applicativi & ID, Titolo, Data\_Inserimento & ID \\
+        Messaggi & Comunicazioni ricevute e inviate tra docenti e studenti & ID, Titolo, Data\_Inserimento & ID \\
         \hline
     \end{tabularx}
-    \caption{Descrizioni delle entità della prima stesura del modello E-R}
+    \caption{Descrizione delle entità del modello E-R precedente alla raffinazione.}
 \end{table}
 
-\subsection*{Dizionario delle relazioni}
+\subsubsection*{Dizionario delle relazioni}
 \begin{table}[H]
     \centering
-    \begin{tabularx}{\textwidth}{|X|p{5cm}|X|X|}
+    \begin{tabularx}{\textwidth}{|X|p{5cm}|p{3cm}|X|}
         \hline
         Relazione & Descrizione & Componenti & Attributi \\
         \hline
-        Creazione & Adottata per la concretizzazione da parte dei Docenti delle tabelle e test di esercizio & Docenti, Tabelle\_Esercizio, Test & . \\
+        Creazione & Creazione da parte di docenti di tabelle di esercizio e quesiti & Docenti, Tabelle\_Esercizio, Test & . \\
         \hline
-        Realizzazione & Gli Studenti formulano possibili risposte rispetto ai quesiti posti dal test & Studente, Risposta & . \\
+        Completamento & Completamento di un test sopxinistrato da parte degli studenti & Studente, Test & Stato, Data\_UltimaRisposta, Data\_PrimaRisposta \\
         \hline
-        Completamento & Relazione ideata per tenere traccia degli Studenti che partecipino allo svolgimento dei test sottoposti dai Docenti & Studente, Test & Stato, Data\_UltimaRisposta, Data\_PrimaRisposta \\
-        \hline
-        Invio & Associazione necessaria per il consecutivo smistamento di messaggi tra Studenti e Docenti & Studente, Docenti, Messaggi & . \\
+        Invio & Invio di messaggi da parte di docenti e studenti & Studente, Docenti, Messaggi & . \\
         \hline 
-        Pubblicazione & Tramite per associare possibili messaggi rispetto ai quesiti posti all'interno di uno specifico test & Messaggi, Test & . \\
+        Pubblicazione & Pubblicazione di comunicazioni afferenti ad uno specifico test & Messaggi, Test & . \\
         \hline
-        Ricezione & Relazione attuata per stabilire quale sia il docente ricevitore di comunicazioni da parte dei propri Studenti & Messaggi, Docenti & . \\
+        Ricezione & Ricezione di messaggi emessi da studenti oppure da docenti & Messaggi, Docenti & . \\
         \hline
-        Svolgimento & Stabilita per formalizzare quali risposte siano collegate alle domande poste in certi insiemi di quesiti & Risposta, Quesito & . \\ 
+        Risposta & Risposta formulata dagli studenti in relazione ad uno specifico quesito & Studente, Quesito & Esito \\
         \hline
-        Composizione & Un insieme di quesiti specifica una determinata Test, imponendo in questo modo un collegamento diretto & Quesito, Test & . \\
+        Composizione & Composizione di un insieme di quesiti rispetto ad un determinato test & Quesito, Test & . \\
         \hline
-        Riferimento & Relazione per individuare a quali tabelle siano relativi i quesiti trattati & Quesito, Tabelle\_Esercizio & . \\
+        Afferenza & Afferenza dei quesiti ideati relativamente a tabelle di esercizio & Quesito, Tabelle\_Esercizio & . \\
         \hline
-        Disposizione & Definita per specificare i meta-dati essenziali per la creazione delle tabelle & Tabelle\_Esercizio, Attributi & . \\
+        Combinazione & Combinazione di attributi per la costruzione di tabelle di esercizio & Tabelle\_Esercizio, Attributi & . \\
         \hline
-        Soluzione & Definisce il totale delle soluzioni approcciabili rispetto ad un quesito di implementazione di codice SQL & Codice, Skecth\_Codice & . \\
+        Soluzione & Soluzione alla query SQL richiesta & Codice, Skecth\_Codice & . \\
         \hline
-        Disposizione & Totale delle opzioni che defiscono le possibili errate o corrette risposte relative ad una domanda chiusa & Domanda\_Chiusa, Opzioni\_Risposta & . \\    
+        Disposizione & Disposizione del numero complessivo di opzioni di risposta relative alla domanda sottoposta & Domanda\_Chiusa, Opzioni\_Risposta & . \\    
         \hline
     \end{tabularx}
-    \caption{Descrizione delle relazioni della prima stesura del modello E-R.}
+    \caption{Descrizione delle relazioni del modello E-R precedente alla raffinazione.}
 \end{table}
 
-\subsection*{Modello E-R raffinato}
+\subsubsection*{Modello E-R raffinato}
 \begin{figure}[H]
     \includegraphics*[width=1.1\textwidth]{foto2.png}
     \caption{Modello E-R successivo alla raffinazione.}
 \end{figure}
+
+\subsection{Progettazione logica}
+\large
+\dots 
+
+\subsection{Normalizzazione}
+\large
+\dots 
+
+\subsection{Descrizione delle funzionalità}
+\large
+\dots 
+
+\subsection{Codice SQL}
+\large
+\dots 
+
+
+\subsubsection*{Costo operazionale}
+
+
 \end{document}
