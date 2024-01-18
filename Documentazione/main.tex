@@ -20,6 +20,9 @@
 \titleformat{\subsection}
 {\Large\bfseries}{\thesection}{1em}{}
 
+\titleformat{\subsubsection}
+{\normalfont\large\bfseries}{\thesection}{2em}{}
+
 \begin{document}
 
 \setcounter{subsection}{0}
@@ -67,13 +70,38 @@
 
 \subsection{Analisi dei requisiti}
 \large
-All'interno di questa prima sezione, si adotta un approccio orientato ad un'analisi degli aspetti principali inerenti al progetto, mediante una serie di azioni mirate per rendere il più comprensibile possibile il documento di specifica, attraverso la scelta del corretto livello di astrazione, la standardizzazione della struttura delle frasi oppure tramite la decomposizione del testo in espressioni omogenee. \vspace*{7px}\\
-Di seguito sono descritti i concetti essenziali riferiti a ciascuna entità, affinchè sia definito un supporto concreto per successive fasi di sviluppo:
+All'interno di questa prima sezione, si adotta un approccio orientato ad un'analisi degli aspetti principali inerenti al progetto, mediante una serie di azioni mirate per rendere il più comprensibile possibile il documento di specifica, attraverso la scelta del corretto livello di astrazione, la standardizzazione della struttura delle frasi oppure tramite la decomposizione del testo in espressioni omogenee.
+
+\subsubsection{Documento di specifica}
+
+\subsubsection{Decomposizione in gruppi di frasi}
+Di seguito sono descritti i concetti essenziali raggruppati sulla base di medesime caratterizzazioni, affinchè sia definito un supporto concreto per successive fasi di sviluppo, costituito da:
 \begin{itemize}[label={-}]
-    \itemsep0em
-    \item 
+    \itemsep1px
+    \item \textbf{UTENTE} \vspace*{3px}\\ Tutti gli utenti dispongono di: email, nome, cognome e di un possibile recapito telefonico. Gli utenti sono suddivisi in due tipologie: docenti e studenti. 
+    \item \textbf{STUDENTE} \vspace*{3px}\\ Gli studenti dispongono di un campo anno di immatricolazione e di un codice alfanumerico. Gli studenti possono svolgere un test, inserendo una o più risposte per ciascun quesito.
+    \item \textbf{DOCENTI} \vspace*{3px}\\ I docenti dispongono del nome del dipartimento di afferenza e nome del corso di cui sono titolari. I docenti possono creare delle tabelle di esercizio. Devono essere inseriti dai docenti anche i vincoli di integrità referenziale tra attributi di differenti tabelle di esercizio. In aggiunta ogni docente può creare dei test.
+    \item \textbf{TABELLE\_ESERCIZIO} \vspace*{3px}\\ Ogni tabella di esercizio dispone di nome, data di creazione, un campo num\_righe. Inoltre, ogni tabella di esercizio dispone di un insieme di attributi.
+    \item \textbf{ATTRIBUTO} \vspace*{3px}\\ Ogni attributo dispone di un nome, un tipo e può essere parte della chiave primaria della tabella di esercizio. 
+    \item \textbf{TEST} \vspace*{3px}\\ Ogni test dispone di un titolo univoco, una data di creazione e di una possibile foto. Ogni test include una serie di quesiti. Ogni test dispone di un campo VisualizzaRisposte, se settato a True, le risposte dei quesiti diventano visibili agli studenti, altrimenti rimaranno nascoste.
+    \item \textbf{QUESITO} \vspace*{3px}\\ Ogni quesito dispone di un numero progressivo, ma solo all'interno della relazione che lo contraddistingue con l'entità test, un livello di difficoltà, un campo descrizione, un campo num\_risposte e si riferisce ad una o più tabelle di esercizio. I quesiti sono esclusivamente di due categorie: domande a risposta chiusa oppure quesiti di codice.
+    \item \textbf{DOMANDA\_CHIUSA} \vspace*{3px}\\ La domanda chiusa dispone di una serie di opzioni di risposta. Nel caso di quesiti a domanda chiusa, la risposta consiste in una dell'opzioni disponibili. 
+    \item \textbf{OPZIONI\_RISPOSTA} \vspace*{3px}\\ Ogni opzione dispone di una numerazione, univoca rispetto ad uno specifico quesito, ed un campo di testo. 
+    \item \textbf{CODICE} \vspace*{3px}\\ Il quesito di codice dispone di una o più soluzioni. Nel caso di quesiti di codice, la risposta consiste in un campo di testo.
+    \item \textbf{SKETCH\_CODICE} \vspace*{3px}\\ Gli sketch di codice in SQL implementano query che restituiscano quanto richiesto dal quesito.
+    \item \textbf{COMPLETAMENTO} \vspace*{3px}\\ Si vuole tenere traccia del completamento del test, ossia: data di inserimento della prima risposta, data di inserimento dell'ultima risposta, stato.
+    \item \textbf{RISPOSTA} \vspace*{3px}\\ Ogni risposta dispone di un campo di esito, che può valere True o False a seconda che la risposta fornita dallo studente coincida con l'opzione del quesito a domanda chiusa oppure che la risposta produca l'output desiderato nel caso di quesiti di codice.
+    \item \textbf{MESSAGGI} \vspace*{3px}\\ Ogni messaggio dispone di un titolo, un campo testo, una data di inserimento, e fa riferimento ad uno specifico test. Il messaggio può essere inviato da un docente oppure da uno studente, nel primo caso i destinatari saranno tutti gli studenti mentre nel secondo caso il destinatario sarà un determinato docente.
 \end{itemize}
 
+\subsubsection{Lista delle operazioni}
+\dots
+
+\subsubsection{Tavola media dei volumi}
+\dots
+
+\subsubsection{Glossario dei dati}
+\dots
 
 \subsection{Progettazione concettuale}
 \large
