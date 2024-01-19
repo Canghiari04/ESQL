@@ -92,11 +92,11 @@ Di seguito sono descritti i concetti essenziali raggruppati sulla base di medesi
     \item \textbf{QUESITO} \vspace*{3px}\\ Ogni quesito dispone di un numero progressivo, ma solo all'interno della relazione che lo contraddistingue con l'entità test, un livello di difficoltà, un campo descrizione e un numero di risposte. I quesiti fanno riferimento ad una o più tabelle di esercizio create dal docente. I quesiti sono esclusivamente di due categorie: domande a risposta chiusa oppure quesiti di codice.
     \item \textbf{DOMANDA\_CHIUSA} \vspace*{3px}\\ La domanda chiusa dispone di una serie di opzioni di risposta. Nel caso di quesiti a domanda chiusa, la risposta consiste in una dell'opzioni disponibili. 
     \item \textbf{OPZIONI\_RISPOSTA} \vspace*{3px}\\ Ogni opzione dispone di una numerazione, univoca rispetto ad uno specifico quesito, ed un campo di testo. 
-    \item \textbf{CODICE} \vspace*{3px}\\ Il quesito di codice dispone di una o più soluzioni. Nel caso di quesiti di codice, la risposta consiste in un campo di testo.
+    \item \textbf{DOMANDA\_CODICE} \vspace*{3px}\\ Il quesito di codice dispone di una o più soluzioni. Nel caso di quesiti di codice, la risposta consiste in un campo di testo.
     \item \textbf{SKETCH\_CODICE} \vspace*{3px}\\ Gli sketch di codice in SQL implementano query che restituiscano quanto richiesto dal quesito.
     \item \textbf{COMPLETAMENTO} \vspace*{3px}\\ Si vuole tenere traccia del completamento del test, ossia: data di inserimento della prima risposta, data di inserimento dell'ultima risposta, stato.
     \item \textbf{RISPOSTA} \vspace*{3px}\\ Ogni risposta dispone di un campo di esito, che può valere True o False a seconda che la risposta fornita dallo studente coincida con l'opzione del quesito a domanda chiusa oppure che la risposta produca l'output desiderato nel caso di quesiti di codice.
-    \item \textbf{MESSAGGI} \vspace*{3px}\\ Ogni messaggio dispone di un titolo, un campo testo, una data di inserimento, e fa riferimento ad uno specifico test. Il messaggio può essere inviato da un docente oppure da uno studente. Nel primo caso i destinatari saranno tutti gli studenti; nel secondo caso il destinatario sarà il determinato docente.
+    \item \textbf{MESSAGGI} \vspace*{3px}\\ Ogni messaggio dispone di un titolo, un campo testo, una data di inserimento, e fa riferimento ad uno specifico test. Il messaggio può essere inviato da un docente oppure da uno studente. Nel primo caso, i destinatari saranno tutti gli studenti; nel secondo caso, il destinatario sarà il determinato docente.
 \end{itemize}
 
 \subsection{Lista delle operazioni}
@@ -114,7 +114,7 @@ Come da denominazione, sono riportate l'insieme delle possibili operazioni sui d
     \item {\small\bf{OPERAZIONE 8.}} \hspace*{1px} Visualizzare tutti i quesiti associati a differenti test 
     \item {\small\bf{OPERAZIONE 9.}} \hspace*{1px} Inserire una o più risposte rispetto ad un certo quesito 
     \item {\small\bf{OPERAZIONE 10.}} Visualizzare l'esito della risposta inserita da uno studente
-    \item {\small\bf{OPERAZIONE 11.}} MOdificare la modalità di visualizzazione delle risposte
+    \item {\small\bf{OPERAZIONE 11.}} Modificare la modalità di visualizzazione delle risposte
     \item {\small\bf{OPERAZIONE 12.}} Inserire un nuovo messaggio 
     \item {\small\bf{OPERAZIONE 13.}} Visualizzare le conversazioni effettuate
 \end{itemize}
@@ -159,7 +159,7 @@ Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristi
         \hline
         Opzioni\_Risposta & Opzioni di risposta riferite ad uno specifico quesito & . & Domanda\_Chiusa \\
         \hline
-        Codice & Quesito di codice SQL, per la costruzione di query che restituiscano il risultato voluto & Quesito di codice & Quesito \\
+        Domanda\_Codice & Quesito di codice SQL, per la costruzione di query che restituiscano il risultato voluto & Quesito di codice & Quesito \\
         \hline
         Skecth\_Codice & Skecth risolutivi rispetto al quesito di codice posto, quindi più di una singola soluzione soddisfa la richiesta & Opzione risposta del codice & Codice \\
         \hline
@@ -167,7 +167,7 @@ Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristi
         \hline
         Risposta & Risposta formulata da uno studente per la risoluzione dei quesiti somministrati & . & Studente, Quesito \\
         \hline 
-        Messaggi & Messaggi comunicati e ricevuti tra docenti e studenti, una comunicazione è riferita ad un solo docente oppure a tutti gli studenti del corso & . & Studente, Docente, Test \\
+        Messaggi & Messaggi comunicati e ricevuti tra docenti e studenti, una comunicazione è riferita ad un solo docente e a tutti gli studenti dello specifico corso & . & Studente, Docente, Test \\
         \hline
     \end{tabularx}
     \caption{Glossario dei termini individuati all'interno del documento di specifica.}
@@ -196,7 +196,7 @@ Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristi
         \hline
         Tabelle\_Esercizio & Tabelle contenenti i meta-dati per la realizzazione di eventuali quesiti & ID, Nome, Data\_Creazione, Num\_Righe & ID \\
         \hline
-        Attributi & Attributi i quali costituiscono la nozione di meta-dato, legati alla realizzazione di quesiti da somministrare & ID, Tipo, Nome, Chiave\_Primaria & ID \\
+        Attributi & Attributi parte costituente delle tabelle di esercizio, finalizzati per la realizzazione di quesiti & ID, Tipo, Nome, Chiave\_Primaria & ID \\
         \hline
         Test & Test indica l'insieme di quesiti svolti dagli studenti e creati dal docente & Titolo, Foto, Data\_Creazione, Visualizza\_Risposte & Titolo \\
         \hline
@@ -204,7 +204,11 @@ Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristi
         \hline
         Domanda\_Chiusa & Tipologia di quesito, rappresentante una domanda a scelta multipla & . & Numero \\
         \hline
-        Sketch\_Codice & Tipologia di quesito, richiedente la formulazione di query SQL & . & Numero \\
+        Opzioni\_Risposta & Opzioni di risposta relative ad una domanda chiusa & Numero, Testo & Numero, NumDomanda\_Chiusa \\
+        \hline
+        Domanda\_Codice & Tipologia di quesito, richiedente la formulazione di query SQL & . & Numero \\
+        \hline
+        Skecth\_Codice & Skecth di codice SQL risulutivi rispetto al quesito somministrato & Numero, Testo & Numero, NumDomanda\_Codice \\
         \hline
         Messaggi & Comunicazioni ricevute e inviate tra docenti e studenti & ID, Titolo, Data\_Inserimento & ID \\
         \hline
