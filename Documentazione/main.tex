@@ -173,8 +173,11 @@ Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristi
     \caption{Glossario dei termini individuati all'interno del documento di specifica.}
 \end{table}
 
+\newpage
 \section{Progettazione concettuale}
 \large
+Definito il primo step, inerente all'analisi dei concetti e termini di maggior spessore, il passo successivo comprende la modellazione dello schema E-R. Tale diagramma è adottato per la rappresentazione concettuale dei dati ad alto livello di astrazione, crocevia essenziale per la realizzazione di un qualsiasi database di riferimento. Si compone non solo della rappresentazione grafica, ma anche di strumenti descrittivi, dedicati a tutte quelle caratteristiche non riproducibili attraverso lo schema. 
+
 \subsection{Modello E-R}
 \begin{figure}[H]
     \includegraphics[width=1\textwidth]{foto1.png}
@@ -250,19 +253,39 @@ Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristi
     \caption{Descrizione delle relazioni del modello E-R precedente al raffinamento.}
 \end{table}
 
-\subsection{Tavola delle business rules}
+\subsection{Tabella delle business rules}
 \large
 \begin{table}[h]
     \centering
-    \begin{tabular}[center]{|p{7cm}|}
+    \begin{tabular}[center]{|p{13cm}|}
     \hline
     \bf Regole di vincolo \\
     \hline
-    \dots \\
+    Il campo Codice alfanumerico degli studenti deve avere una lunghezza pari a 16 caratteri \\
+    \hline
+    Il docente può inserire i vincoli di integrità referenziale tra gli attributi che compongano tabelle di esercizio \\
+    \hline
+    Il numero progressivo associato ad un quesito è univoco, ma solo all'interno di uno specifico test \\
+    \hline
+    Il numero delle opzioni di risposta, sia per Domande\_Chiuse che per Domande\_Codice, è univoco, ma solo all'interno dello specifico quesito \\
+    \hline
+    Uno studente può sottomettere più risposte per lo stesso quesito, ma solo se il test non è in stato Concluso \\ 
+    \hline 
+    Un messaggio inviato da un docente è recapitato da tutti gli studenti del corso, invece un messaggio comunicato da uno studente è ricevuto dallo specifico docente \\
     \hline
     \bf Regole di derivazione \\ 
     \hline
-    \dots \\
+    Il livello di difficoltà di ogni test consiste in un campo enum, che può assumere esclusivamente tre valori: Basso, Medio oppure Difficile \\
+    \hline
+    Il campo Num\_Risposte nell'entità Quesito è una ridondanza concettuale \\
+    \hline 
+    L'attributo Visualizza\_Risposte è un campo booleano, permette di visualizzare o meno le risposte dei quesiti \\
+    \hline
+    I campi Data\_PrimaRisposta e Data\_UltimaRisposta, della relazione Completamento, devono essere espressi su scala temporale \\
+    \hline
+    L'attributo della relazione Completamento è un campo enum, il quale può assumere esclusivamente tre valori: Aperto, InCompletamento e Concluso \\
+    \hline 
+    Il campo Esito della relazione Risposta è un attributo booleano, definisce la correttezza della risposta sottomessa \\
     \hline    
 \end{tabular}
     \caption{Descrizione delle regole di vincolo e di derivazione non attuabili tramite il modello concettuale}
