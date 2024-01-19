@@ -305,8 +305,50 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
 
 \subsection{Analisi delle ridondanze}
 \large
+In questa sezione sono riportate tutte le considerazioni del caso, necessarie per la comprensione dell'osservazioni individuate durante l'analisi delle ridondanze; con conseguente definizione del costo dell'operazioni sui dati di riferimento. Una fase simile è cruciale per stabilire se determinate informazioni comportano svantaggi significativi, come ad esempio maggiore occupazione di memoria oppure maggiore complessità degli aggiornamenti.\vspace{7pt}\\
+Si definiscono le due seguenti nozioni, le quali saranno spesso utilizzate, ossia:
+\begin{itemize}[label={-}]
+    \itemsep0em
+    \item \textit{S$_r$}, lo schema E-R \textbf{con ridondanza}
+    \item \textit{S}, \hspace{1px} lo schema E-R \textbf{senza ridondanza}
+\end{itemize}
+\vspace*{7pt}
+Sono specificate un totale di quattro operazioni, relative al campo \textit{Num\_Risposte} dell'entità \textit{Quesito}, le quali si contraddistinguono in: \vspace*{7pt}\\
+\hspace*{5pt}\textbf{OP1} \\
+\hspace*{5pt}Aggiungere una nuova risposta ad un quesito esistente (10 volte/mese, interattiva) \vspace*{7pt}\\
+\hspace*{5pt}\textbf{OP2} \\
+\hspace*{5pt}Rimuovere un quesito e tutte le risposte ottenute (2 volte/mese, batch) \vspace*{7pt}\\
+\hspace*{5pt}\textbf{OP3} \\
+\hspace*{5pt}Visualizzare tutti gli utenti presenti nella piattaforma (1 volte/mese, batch) \vspace*{7pt}\\
+\hspace*{5pt}\textbf{OP4} \\
+\hspace*{5pt}Contare il numero di risposte per ciascun quesito presente nella piattaforma (2 volte/mese, \hspace*{5pt}interattiva) \vspace*{7pt}\\
+Consecutivamente si calcolano i costi operazionali dello schema E-R con ridondanza, esplicitando tutti gli elementi necessari, suddivisi in:
+\begin{itemize}[label={-}]
+    \itemsep0em 
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 1 per RISPOSTA, 1 per QUESITO, 1 per DOMANDA\_CHIUSA, 1 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP1) = 10 * 1 * (2 * 4 + 0) = 80 \vspace*{2pt} 
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 10 per RISPOSTA, 1 per QUESITO, 1 per DOMANDA\_CHIUSA, 1 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP2) = 2 * 0.5 * (2 * 13 + 0) = 26 \vspace*{2pt}
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 50 per UTENTE, 50 per STUDENTE, 50 per DOCENTI} \vspace*{2pt}\\ C(OP3) = 1 * 0.5 * (0 + 150) = 75
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 20 per QUESITO, 20 per DOMANDA\_CHIUSA, 20 DOMANDA\_CODICE } \vspace*{1pt}\\ C(OP4) = 2 * 1 * (0 + 60) = 120
+\end{itemize}
+\hspace*{15pt}C(S$_r$) = 80 + 26 + 75 + 120 = 301 \vspace*{7pt}\\
+Si calcolano i costi operazionali dello schema E-R senza ridondanza, suddivisi in:
+\begin{itemize}[label={-}]
+    \itemsep0em 
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 1 per RISPOSTA} \vspace*{2pt}\\ C(OP1) = 10 * 1 * (2 * 1 + 0) = 20 \vspace*{2pt} 
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 10 per RISPOSTA, 1 per QUESITO, 1 per DOMANDA\_CHIUSA, 1 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP2) = 2 * 0.5 * (2 * 13 + 0) = 26 \vspace*{2pt}
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 50 per UTENTE, 50 per STUDENTE, 50 per DOCENTI} \vspace*{2pt}\\ C(OP3) = 1 * 0.5 * (0 + 150) = 75
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 200 per RISPOSTA, 20 per QUESITO, 20 per DOMANDA\_CHIUSA, 20 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP4) = 2 * 1 * (0 + 260) = 520
+\end{itemize}
+\hspace*{15pt}C(S) = 20 + 26 + 75 + 520 = 641 \vspace*{7pt} \vspace*{7pt}\\
+Si osserva ora l'occupazione di memoria di entrambi i diagrammi, in cui si manifesta:
+\begin{itemize}[label={-}]
+    \itemsep0em
+    \item M(S) = \hspace*{1pt}X byte
+    \item M(S$_r$) = X + 20 * 4 = X + 80 byte
+\end{itemize}
+Terminate tutte le operazioni riferite all'analisi delle ridondanze, si osserva come il mantenimento comporti a vantaggi significativi, piuttosto che l'eliminazione. Infatti il rapporto della metrica $C(S) \div C(S_r)$ restituisce un valore di circa 2, in questo caso è conveniente mantenere l'attributo Num\_Risposte, dettata anche dall'irrisorio overhead introdotto, pari a 80 byte.
 
-
+\newpage
 \subsection{Lista delle tabelle con i vincoli di chiave}
 \large
 \dots

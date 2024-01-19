@@ -1,0 +1,5 @@
+Domande 
+- chiedere se il campo Testo in Risposta
+- tavola media dei volumi
+- chiedere se le query sono DML o anche DDL 
+- cosa intende con sezione di codice SQL a pedice 
