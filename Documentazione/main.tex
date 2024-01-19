@@ -29,7 +29,7 @@
     {{\Large{\textsc{Alma Mater Studiorum - Università di Bologna}}}}
     \rule[0.1cm]{\textwidth}{0.1px}
     \rule[0.5cm]{\textwidth}{0.6px}\\
-    {\fontsize{12}{13}{SCUOLA DI SCIENZE \\ Corso di Laurea in Informatica per il Management}}
+    {\large{SCUOLA DI SCIENZE \\ Corso di Laurea in Informatica per il Management}}
 \end{center}
 
 \vspace{50px}
@@ -48,7 +48,7 @@
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.4\textwidth}\raggedleft
-    {\fontsize{12}{13}{SVOLTA DA:}\\
+    {\fontsize{12}{13}{DOCUMENTAZIONE SVOLTA DA:}\\
 \fontsize{12}{13}{\it Canghiari Matteo \\ De Rosa Davide \\ Nadifi Ossama}}
 \end{minipage}
 \begin{minipage}[t]{0.04\textwidth}
@@ -137,7 +137,7 @@ Come da denominazione, sono riportate l'insieme delle possibili operazioni sui d
 Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristiche comuni, è possibile concretizzare un glossario dei termini, capace di favorire un quadro diretto ed informativo delle nozioni principali da considerare per passaggi consecutivi. Il glossario, rispetto a quanto svolto, si compone di:
 \begin{table}[H]
     \centering
-       \begin{tabularx}{\textwidth}{|X|p{6.5cm}|X|X|}
+       \begin{tabularx}{\textwidth}{|X|p{6cm}|X|X|}
         \hline
         \bf Termine & \bf Descrizione & \bf Sinonimi & \bf Collegamenti \\
         \hline
@@ -153,7 +153,7 @@ Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristi
         \hline
         Test & Test ideati dai docenti e somministrati agli studenti, include un insieme di quesiti & . & Docenti, Studente, Quesito \\
         \hline 
-        Quesito & Quesito sottoposto agli studenti del corso, può assumere una singola tipologia tra domanda chiusa o quesito di codice & . & Studente, Test, Domanda\_Chiusa, Codice \\
+        Quesito & Quesito sottoposto agli studenti del corso, può assumere una singola tipologia tra domanda chiusa o quesito di codice & . & Studente, Test, Domanda\_Chiusa, Domanda\_Codice \\
         \hline
         Domanda\_Chiusa & Domanda a risposta chiusa, inerente ad un quesito posto agli studenti, possiede più di un'opzione di risposta & Risposta chiusa & Quesito, Opzioni\_Risposta \\
         \hline
@@ -161,7 +161,7 @@ Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristi
         \hline
         Domanda\_Codice & Quesito di codice SQL, per la costruzione di query che restituiscano il risultato voluto & Quesito di codice & Quesito \\
         \hline
-        Skecth\_Codice & Skecth risolutivi rispetto al quesito di codice posto, quindi più di una singola soluzione soddisfa la richiesta & Opzione risposta del codice & Codice \\
+        Skecth\_Codice & Skecth risolutivi rispetto al quesito di codice posto, quindi più di una singola soluzione soddisfa la richiesta & Opzione risposta del codice & Domanda\_Codice \\
         \hline
         Completamento & Stato di completamento dei test da parte degli studenti & . & Studente, Test \\
         \hline
@@ -242,7 +242,7 @@ Grazie al capitolo riferito alla decomposizione delle frasi secondo caratteristi
         \hline
         Combinazione & Combinazione di attributi per la costruzione di tabelle di esercizio & Tabelle\_Esercizio, Attributi & . \\
         \hline
-        Soluzione & Soluzione alla query SQL richiesta & Codice, Sketch\_Codice & . \\
+        Soluzione & Soluzione alla query SQL richiesta & Domanda\_Codice, Sketch\_Codice & . \\
         \hline
         Disposizione & Disposizione del numero complessivo di opzioni di risposta relative alla domanda sottoposta & Domanda\_Chiusa, Opzioni\_Risposta & . \\    
         \hline
