@@ -5,3 +5,9 @@
 echo "Hello world";
 $x = 0;
 ?>
+
+<html>
+<body>
+    <input type="text" id="name" required>
+</body>
+</hmtl>
