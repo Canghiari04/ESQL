@@ -4,3 +4,5 @@ Domande
 - chiedere se le query sono DML o anche DDL 
 - cosa intende con sezione di codice SQL a pedice 
 - fare entità-relazione con vincoli di integrità
+- modello E-R da cambiare per messaggio in cui messaggio_studente(da uno studente ad uno docente)
+- suddividere sql in trigger e in stored-procedure
