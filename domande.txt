@@ -3,3 +3,4 @@ Domande
 - tavola media dei volumi
 - chiedere se le query sono DML o anche DDL 
 - cosa intende con sezione di codice SQL a pedice 
+- fare entità-relazione con vincoli di integrità
