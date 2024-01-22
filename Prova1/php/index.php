@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: 'Public Sans';
-            background-image: url(img/background.jpeg);
+            background-image: url("img/background.png");
             background-repeat: no-repeat;
             background-size: cover;
             max-height: 1024px;
@@ -14,21 +14,32 @@
 
         .h-p {
             color: #ff3131;
-            font-size: 32px;
+            font-size: 58px;
             font-weight: bold;
+            display: inline;
         }
 
         .center {
             position: relative; /* Relative è l'unica posizione che puù essere spostata */
             top: 200px; 
-            padding-top: 5px;
+            padding-top: 10px;
             padding-bottom: 15px;
             padding-left: 15px;
             padding-right: 15px;
             margin: auto;
-            width: 35%; /* Larghezza del tag div */
+            width: 45%; /* Larghezza del tag div */
             text-align: center;
             border-radius: 20px;
+        }
+
+        .center-center {
+            width: 60%;
+            position: relative; /* Relative è l'unica posizione che puù essere spostata */
+            padding-top: 5px;
+            padding-bottom: 15px;
+            padding-left: 15px;
+            padding-right: 15px;
+            margin: auto;   
         }
 
         ul {
@@ -58,7 +69,7 @@
             border-radius: 15px;
             text-align: center;
             padding: 14px 32px;
-            margin-top: 15px;
+            margin-top: 18px;
             margin-right: 15px;
             text-decoration: none;
         }
@@ -78,7 +89,7 @@
             border: 2px solid transparent;
             text-align: center;
             padding: 14px 32px;
-            margin-top: 15px;
+            margin-top: 18px;
             margin-right: 25px;
             text-decoration: none;
         }
@@ -108,6 +119,7 @@
         }
 
         .url-utility {
+            padding-bottom: 10px;
             margin-top: 5px;
             color: black;
             background-color: transparent;
@@ -119,6 +131,11 @@
         .url-utility:hover {
             transition: color .4s;
             color: #ff3131;
+        }
+
+        h3 {
+            color: darkgrey;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -136,11 +153,11 @@
         </li>
     </ul>
 
-    <div class="background">
+    <div>
         <div class="center first-div">
             <p class="h-p">Piattaforma ESQL</p>
-            <h3>Mettere didascalia della documentazione</h3>
-            <a class="url-utility" href="https://github.com/Canghiari04">Link utili</a>
+            <div class="center-center"><h3>Progetto del corso di Basi di Dati (70155) anno accademico 2023/2024, realizzato dagli studenti Canghiari Matteo, De Rosa Davide e Nadifi Ossama.</h3></div>
+                <a class="url-utility" href="https://github.com/Canghiari04">Link Github</a>
         </div>
     </div>
 </body>
