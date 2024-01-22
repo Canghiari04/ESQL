@@ -6,10 +6,6 @@
     <style>
         body {
             font-family: 'Public Sans';
-            background-image: url("img/background.png");
-            background-repeat: no-repeat;
-            background-size: cover;
-            max-height: 1024px;
         }
 
         .h-p {
@@ -30,6 +26,12 @@
             width: 45%; /* Larghezza del tag div */
             text-align: center;
             border-radius: 20px;
+            background-color: rgba(255,255,255,0.70);
+            transition: transform .4s;
+        }
+
+        .center:hover {
+            transform: scale(1.03);
         }
 
         .center-center {
@@ -66,7 +68,7 @@
             color: black;
             background-color: white;
             border: 2px solid black;
-            border-radius: 15px;
+            border-radius: 10px;
             text-align: center;
             padding: 14px 32px;
             margin-top: 18px;
@@ -76,9 +78,8 @@
 
         .button-Login:hover {
             transition: color .4s;
-            color: white;
-            background-color: black;
-            border-color: white;
+            color: #ff3131;
+            border-color: #ff3131;
         }
 
         .button-Signup {
@@ -96,7 +97,7 @@
 
         .button-Signup:hover {
             transition: color .4s;
-            color: grey;
+            color: #ff3131;
             background-color: white;
         }
 
@@ -110,12 +111,11 @@
 
         .img-div {
             background: url(img/background-dotpaper.png);
-            background-position: no-repeat;
-            background-size: cover;
+            background-size: 2048px;
         }
 
         .first-div {
-            background: rgba(255,255,255,0.85); 
+            background: rgba(255,255,255,0.70); 
         }
 
         .url-utility {
@@ -133,6 +133,13 @@
             color: #ff3131;
         }
 
+        .background {
+            padding: auto;
+            background-image: url("img/background.png");
+            background-repeat: no-repeat;
+            background-size: cover; /*  */
+        }
+
         h3 {
             color: darkgrey;
             font-weight: bold;
@@ -140,17 +147,19 @@
     </style>
 </head>
 
-<body>
+<body class="background">
     <ul> <!-- ul riferito alla colonna, quindi creazione di una singola colonna -->
+    <form action="login.php">
         <li> <!-- per applicare effetti all'interno di una navbar, occorre applicarli sulle singole righe che lo compongono ossia il tag <li> -->
             <a><img class="zoom-on-img" src="img/ESQL.png" alt="ESQL Icon" width="112" height="48"></a></li> <!-- Riga, creazione di tre righe totali -->
         </li>
         <li>
-            <button class="button-Login zoom-on-btn-Login" name="btn_Login" value="Login">Login</button>
+            <button type="submit" class="button-Login zoom-on-btn-Login" name="btn_Login" value="Login" >Login</button>
         </li>
         <li>
-            <button class="button-Signup zoom-on-btn-Signup" name="btn_SignUp" value="Sign Up">Sign Up</button>
+            <button type="submit" class="button-Signup zoom-on-btn-Signup" name="btn_SignUp" value="Sign Up">Sign Up</button>
         </li>
+    </form>    
     </ul>
 
     <div>
