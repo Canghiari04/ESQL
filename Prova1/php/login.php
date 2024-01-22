@@ -17,6 +17,7 @@
 
         .center {
             position: relative; /* Relative è l'unica posizione che puù essere spostata */
+            display: block;
             top: 200px; 
             padding-top: 10px;
             padding-bottom: 15px;
@@ -64,9 +65,7 @@
             border-radius: 10px;
         }
 
-        .button-Submit {
-            float: right;
-            display: block;
+        button {
             color: black;
             background-color: white;
             border: 2px solid black;
@@ -78,7 +77,7 @@
             text-decoration: none;
         }
 
-        .button-Submit:hover {
+        button:hover {
             transition: color .4s;
             color: #ff3131;
             border-color: #ff3131;
@@ -133,7 +132,7 @@
         }
 
         .input {
-            font-size: 9px;
+            font-size: 12px;
             width: 100%;
             padding: 3px 3px;
             margin: 1px 0;
@@ -144,6 +143,11 @@
 
         .input:hover {
             border-bottom: 2px solid #ff3131;
+        }
+
+        .label- {
+            margin: auto;
+            margin-left: 100px;
         }
     </style>
 </head>
@@ -159,17 +163,21 @@
         </li>
     </form>    
     </ul>
-
+    
     <div class="center">
-        <form method="POST">
+        <form action="access.php" method="POST">
             <p class="h-p" style="margin-top: 10px;">Inserisci le credenziali</p>
             <div style="margin-top: 30px;">
                 <label class="label-inline">Email</label>
-                <input class="input" type="text" id="lblEmail" name="lblEmail">
+                <input class="input" type="text" id="txtEmail" name="txtEmail">
             </div>
             <div style="margin-top: 8px; margin-bottom: 20px;">
                 <label>Password</label>
-                <input class="input" type="password" id="lblPassword" name="lblPassword">
+                <input class="input" type="password" id="txtPassword" name="txtPassword">
+            </div>
+            <div>
+                <button type="submit" style="margin-right:25px;" name="btnAccedi" value="Accedi">Accedi</button>
+                <button type="submit" style="margin-left:25px;" name="btnIscriviti" value="Iscriviti">Iscriviti</button>
             </div>
         </form>
     </div>

@@ -17,6 +17,7 @@
 
         .center {
             position: relative; /* Relative è l'unica posizione che puù essere spostata */
+            background-color: rgba(255,255,255,0.70);
             top: 200px; 
             padding-top: 10px;
             padding-bottom: 15px;
@@ -26,7 +27,6 @@
             width: 45%; /* Larghezza del tag div */
             text-align: center;
             border-radius: 20px;
-            background-color: rgba(255,255,255,0.70);
             transition: transform .4s;
         }
 
@@ -36,6 +36,7 @@
 
         .center-center {
             width: 60%;
+            display: block; /* Solo tramite attributo block è possibile che funzioni hover */
             position: relative; /* Relative è l'unica posizione che puù essere spostata */
             padding-top: 5px;
             padding-bottom: 15px;
@@ -154,7 +155,7 @@
             <a><img class="zoom-on-img" src="img/ESQL.png" alt="ESQL Icon" width="112" height="48"></a></li> <!-- Riga, creazione di tre righe totali -->
         </li>
         <li>
-            <button type="submit" class="button-Login zoom-on-btn-Login" name="btn_Login" value="Login" >Login</button>
+            <button type="submit" class="button-Login zoom-on-btn-Login" name="btn_Login" value="Login">Login</button>
         </li>
         <li>
             <button type="submit" class="button-Signup zoom-on-btn-Signup" name="btn_SignUp" value="Sign Up">Sign Up</button>
