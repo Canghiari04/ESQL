@@ -10,39 +10,29 @@
 
         .h-p {
             color: #ff3131;
-            font-size: 58px;
+            font-size: 20px;
             font-weight: bold;
             display: inline;
         }
 
         .center {
             position: relative; /* Relative è l'unica posizione che puù essere spostata */
-            background-color: rgba(255,255,255,0.70);
-            top: 200px; 
+            display: block;
+            top: 150px; 
             padding-top: 10px;
             padding-bottom: 15px;
             padding-left: 15px;
             padding-right: 15px;
             margin: auto;
-            width: 45%; /* Larghezza del tag div */
+            width: 30%; /* Larghezza del tag div */
             text-align: center;
             border-radius: 20px;
+            background-color: rgba(255,255,255,0.70);
             transition: transform .4s;
         }
 
         .center:hover {
             transform: scale(1.03);
-        }
-
-        .center-center {
-            width: 60%;
-            display: block; /* Solo tramite attributo block è possibile che funzioni hover */
-            position: relative; /* Relative è l'unica posizione che puù essere spostata */
-            padding-top: 5px;
-            padding-bottom: 15px;
-            padding-left: 15px;
-            padding-right: 15px;
-            margin: auto;   
         }
 
         ul {
@@ -54,7 +44,7 @@
             background-color: white;
         }
 
-        li a {
+        li .a {
             float: left;
             display: block;
             color: white;
@@ -63,27 +53,35 @@
             text-decoration: none;
         }
 
-        .button-Login {
-            float: right;
-            display: block;
+        .undo {
+            float: left;
+            margin-left: 25px;
+            margin-top: 30px;
+        }
+
+        input {
+            background-color: transparent;
+            border-color: transparent;
+            border-radius: 10px;
+        }
+
+        .button-Signup {
             color: black;
             background-color: white;
             border: 2px solid black;
             border-radius: 10px;
             text-align: center;
             padding: 14px 32px;
-            margin-top: 18px;
-            margin-right: 15px;
             text-decoration: none;
         }
 
-        .button-Login:hover {
+        .button-Signup:hover {
             transition: color .4s;
             color: #ff3131;
             border-color: #ff3131;
         }
 
-        .button-Signup {
+        .button-Login {
             float: right;
             display: block;
             color: black;
@@ -93,10 +91,11 @@
             padding: 14px 32px;
             margin-top: 18px;
             margin-right: 25px;
+            margin-bottom: 20px;
             text-decoration: none;
         }
 
-        .button-Signup:hover {
+        .button-Login:hover {
             transition: color .4s;
             color: #ff3131;
             background-color: white;
@@ -108,11 +107,6 @@
 
         .zoom-on-img:hover {
             transform: scale(1.099);
-        }
-
-        .img-div {
-            background: url(img/background-dotpaper.png);
-            background-size: 2048px;
         }
 
         .first-div {
@@ -145,32 +139,76 @@
             color: darkgrey;
             font-weight: bold;
         }
+
+        label {
+            display: relative;
+            float: left;
+        }
+
+        label:hover {
+            color: #ff3131;
+        }
+
+        .input {
+            font-size: 12px;
+            width: 100%;
+            padding: 3px 3px;
+            margin: 1px 0;
+            border-bottom: 1px solid darkgrey;
+            border-radius: 0px;
+            outline: none;
+        }
+
+        .input:hover {
+            border-bottom: 2px solid #ff3131;
+        }
+
+        .label- {
+            margin: auto;
+            margin-left: 100px;
+        }
     </style>
 </head>
 
 <body class="background">
     <ul> <!-- ul riferito alla colonna, quindi creazione di una singola colonna -->
-        <li> <!-- per applicare effetti all'interno di una navbar, occorre applicarli sulle singole righe che lo compongono ossia il tag <li> -->
-            <a><img class="zoom-on-img" src="img/ESQL.png" alt="ESQL Icon" width="112" height="48"></a></li> <!-- Riga, creazione di tre righe totali -->
+    <form action="login.php">
+        <li>
+            <a href="index.php"><img class="zoom-on-img undo" src="img/undo.png" width="24" height="24"></a>
         </li>
-        <form action="login.php">
-            <li>
-                <button type="submit" class="button-Login zoom-on-btn-Login" name="btn_Login" value="Login">Login</button>
-            </li>
-        </form>  
-        <form action="signUp.php">
-            <li>
-                <button type="submit" class="button-Signup zoom-on-btn-Signup" name="btn_SignUp" value="Sign Up">Sign Up</button>
-            </li>
-        </form>  
+        <li>
+            <button type="submit" class="button-Login zoom-on-btn-Login" name="btn_Login" value="Login">Login</button>
+        </li>
+    </form>    
     </ul>
-
-    <div>
-        <div class="center first-div">
-            <p class="h-p">Piattaforma ESQL</p>
-            <div class="center-center"><h3>Progetto del corso di Basi di Dati (70155) anno accademico 2023/2024, realizzato dagli studenti Canghiari Matteo, De Rosa Davide e Nadifi Ossama.</h3></div>
-                <a class="url-utility" href="https://github.com/Canghiari04">Link Github</a>
-        </div>
+    
+    <div class="center">
+        <form action="authentication.php" method="POST">
+            <p class="h-p" style="margin-top: 10px;">Inserisci le credenziali</p>
+            <div style="margin-top: 30px;">
+                <label class="label-inline">Email</label>
+                <input class="input" type="text" id="txtEmailSignup" name="txtEmailSignup">
+            </div>
+            <div style="margin-top: 8px;">
+                <label>Password</label>
+                <input class="input" type="password" id="txtPasswordSignup" name="txtPasswordSignup">
+            </div>
+            <div style="margin-top: 8px;">
+                <label class="label-inline">Nome</label>
+                <input class="input" type="text" id="txtNomeSignup" name="txtNomeSignup">
+            </div>
+            <div style="margin-top: 8px;">
+                <label>Cognome</label>
+                <input class="input" type="text" id="txtCognomeSignup" name="txtCognomeSignup">
+            </div>
+            <div style="margin-top: 8px; margin-bottom: 20px;">
+                <label>Recapito telefonico</label>
+                <input class="input" type="numeric" id="txtTelefonoSignup" name="txtTelefonoSignup">
+            </div>
+            <div>
+                <button type="submit" class="button-Signup" style="margin-right:25px;" name="btnSignup" value="Sign Up">Sign Up</button>
+            </div>
+        </form>
     </div>
 </body>
 </html>

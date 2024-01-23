@@ -54,8 +54,8 @@
         }
 
         .undo {
-            float: right;
-            margin-right: 15px;
+            float: left;
+            margin-left: 25px;
             margin-top: 30px;
         }
 
@@ -65,22 +65,40 @@
             border-radius: 10px;
         }
 
-        button {
+        .button-Accedi {
             color: black;
             background-color: white;
             border: 2px solid black;
             border-radius: 10px;
             text-align: center;
             padding: 14px 32px;
-            margin-top: 18px;
-            margin-right: 15px;
             text-decoration: none;
         }
 
-        button:hover {
+        .button-Accedi:hover {
             transition: color .4s;
             color: #ff3131;
             border-color: #ff3131;
+        }
+
+        .button-Signup {
+            float: right;
+            display: block;
+            color: black;
+            background-color: transparent;
+            border: 2px solid transparent;
+            text-align: center;
+            padding: 14px 32px;
+            margin-top: 18px;
+            margin-right: 25px;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+        .button-Signup:hover {
+            transition: color .4s;
+            color: #ff3131;
+            background-color: white;
         }
 
         .zoom-on-img {
@@ -154,30 +172,29 @@
 
 <body class="background">
     <ul> <!-- ul riferito alla colonna, quindi creazione di una singola colonna -->
-    <form action="index.php">
-        <li> <!-- per applicare effetti all'interno di una navbar, occorre applicarli sulle singole righe che lo compongono ossia il tag <li> -->
-            <a class="a"><img class="zoom-on-img" src="img/ESQL.png" alt="ESQL Icon" width="112" height="48"></a></li> <!-- Riga, creazione di tre righe totali -->
-        </li>
+    <form action="signUp.php">
         <li>
             <a href="index.php"><img class="zoom-on-img undo" src="img/undo.png" width="24" height="24"></a>
+        </li>
+        <li>
+            <button type="submit" class="button-Signup zoom-on-btn-Signup" name="btn_SignUp" value="Sign Up">Sign Up</button>
         </li>
     </form>    
     </ul>
     
     <div class="center">
-        <form action="access.php" method="POST">
+        <form action="authentication.php" method="POST">
             <p class="h-p" style="margin-top: 10px;">Inserisci le credenziali</p>
             <div style="margin-top: 30px;">
                 <label class="label-inline">Email</label>
-                <input class="input" type="text" id="txtEmail" name="txtEmail">
+                <input class="input" type="text" id="txtEmailLogin" name="txtEmailLogin">
             </div>
             <div style="margin-top: 8px; margin-bottom: 20px;">
                 <label>Password</label>
-                <input class="input" type="password" id="txtPassword" name="txtPassword">
+                <input class="input" type="password" id="txtPasswordLogin" name="txtPasswordLogin">
             </div>
             <div>
-                <button type="submit" style="margin-right:25px;" name="btnAccedi" value="Accedi">Accedi</button>
-                <button type="submit" style="margin-left:25px;" name="btnIscriviti" value="Iscriviti">Iscriviti</button>
+                <button type="submit" class="button-Accedi" style="margin-right:25px;" name="btnAccedi" value="Accedi">Accedi</button>
             </div>
         </form>
     </div>
