@@ -6,3 +6,4 @@ Domande
 - fare entità-relazione con vincoli di integrità
 - modello E-R da cambiare per messaggio in cui messaggio_studente(da uno studente ad uno docente)
 - suddividere sql in trigger e in stored-procedure
+- non è possibile tramite procedure restituire alcun valore, magari si preparano le query per le ricerche (Login e Registrazione) e in base al risultato ottenuto si chiameranno le stored procedure per l'inserimento di nuovi utenti sostanzialmente
