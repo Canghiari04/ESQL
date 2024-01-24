@@ -9,6 +9,7 @@
 
             $sql = "SELECT COUNT(*) FROM Utente WHERE (EMAIL = '$email') AND (PSWD = '$password')";
             
+            /* JOIN con docente e studente per restituire il tipo, necessario per reindirizzarlo alla corretta pagina */
         try {
             $result = mysqli_query($conn, $sql);
             $row = mysqli_num_rows($result);
