@@ -18,13 +18,27 @@
             }
         } catch(Exception $e) {
             echo 'Eccezione individuata: '. $e -> getMessage();
-        }    
-        } elseif (isset($_POST["txtEmailSignup"])) {
+        }   
+        } elseif (isset($_POST["txtEmailSignupDocente"])) {
             $email = $_POST["txtEmailSignup"];
             $password = $_POST["txtPasswordSignup"];
             $nome = $_POST["txtNomeSignup"];
             $cognome = $_POST["txtCognomeSignup"];
             $telefono = $_POST["txtTelefonoSignup"];
+            $corso = $_POST["txtCorso"];
+            $dipartimento = $_POST["txtDipartimento"];
+            
+            /* controllo mancante per la presenza o meno dell'account */
+        } elseif (isset($_POST["txtEmailSignupStudente"])) {
+            $email = $_POST["txtEmailSignup"];
+            $password = $_POST["txtPasswordSignup"];
+            $nome = $_POST["txtNomeSignup"];
+            $cognome = $_POST["txtCognomeSignup"];
+            $telefono = $_POST["txtTelefonoSignup"];
+            $annoImmatricolazione = $_POST["txtAnnoImmatricolazione"];
+            $codice = $_POST["txtCodice"];
+
+            /* controllo mancante per la presenza o meno dell'account */
         }
     }
 ?>
