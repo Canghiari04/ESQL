@@ -35,7 +35,13 @@
             $password = $_POST["txtPasswordSignup"];
             $nome = $_POST["txtNomeSignup"];
             $cognome = $_POST["txtCognomeSignup"];
-            $telefono = $_POST["txtTelefonoSignup"];
+
+            if(isset($_POST["txtEmailSignupStudente"])){
+                $telefono = $_POST["txtTelefonoSignup"];
+            }else{
+                $telefono = '';
+            }
+            
             $annoImmatricolazione = $_POST["txtAnnoImmatricolazione"];
             $codice = $_POST["txtCodice"];
 

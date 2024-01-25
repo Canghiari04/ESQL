@@ -199,7 +199,7 @@
                 </div>
                 <div style="margin-top: 8px;">
                     <label>Recapito telefonico</label>
-                    <input class="input" type="numeric" id="txtTelefonoSignupStudente" name="txtTelefonoSignupStudente">
+                    <input class="input" type="numeric" id="txtTelefonoSignupStudente" name="txtTelefonoSignupStudente" pattern="[1-9]{1}[0-9]{9}">
                 </div>
                 <div style="margin-top: 8px;">
                     <label>Anno immatricolazione</label>

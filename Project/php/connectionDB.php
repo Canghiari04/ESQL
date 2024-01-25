@@ -2,7 +2,7 @@
     function OpenConnection() {
         $dbhost = "localhost";
         $dbuser = "root";
-        $dbpassword = "password";
+        $dbpassword = "root";
         $db = "ESQLDB";
         try {
             $conn = mysqli_connect($dbhost, $dbuser, $dbpassword, $db);

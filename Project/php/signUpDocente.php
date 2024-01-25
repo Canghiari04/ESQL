@@ -199,15 +199,15 @@
                 </div>
                 <div style="margin-top: 8px;">
                     <label>Recapito telefonico</label>
-                    <input class="input" type="numeric" id="txtTelefonoSignupDocente" name="txtTelefonoSignupDocente">
+                    <input class="input" type="numeric" id="txtTelefonoSignupDocente" name="txtTelefonoSignupDocente" pattern="[1-9]{1}[0-9]{9}">
                 </div>
                 <div style="margin-top: 8px;">
                     <label>Corso</label>
-                    <input class="input" type="numeric" id="txtCorso" name="txtCorso">
+                    <input class="input" type="text" id="txtCorso" name="txtCorso">
                 </div>
                 <div style="margin-top: 8px; margin-bottom: 20px;">
                     <label>Dipartimento</label>
-                    <input class="input" type="numeric" id="txtDipartimento" name="txtDipartimento">
+                    <input class="input" type="text" id="txtDipartimento" name="txtDipartimento">
                 </div>
                 <div>
                     <button type="submit" class="button-Signup" style="margin-right:25px;" name="btnSignup" value="Sign Up">Sign Up</button>
