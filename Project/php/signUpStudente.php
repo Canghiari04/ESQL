@@ -8,11 +8,48 @@
             font-family: 'Public Sans';
         }
 
-        .h-p {
+        label {
+            display: relative;
+            float: left;
+        }
+
+        label:hover {
             color: #ff3131;
-            font-size: 20px;
-            font-weight: bold;
-            display: inline;
+        }
+        
+        button {
+            color: black;
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+            text-align: center;
+            padding: 14px 32px;
+            text-decoration: none;
+        }
+
+        button:hover {
+            transition: color .4s;
+            color: #ff3131;
+            border-color: #ff3131;
+        } 
+
+        span {
+            color: #ff3131;
+        }
+
+        .navbar {
+            overflow: hidden;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Center items vertically */
+        }
+
+        .undo {
+            float: left;
+            margin-left: 25px;
+            margin-top: 15px;
+            margin-bottom: 15px;
         }
 
         .center {
@@ -35,84 +72,12 @@
             transform: scale(1.03);
         }
 
-        ul {
-            position: relative;
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Necessario per spostare gli elementi nella navbar */ 
-            background-color: white;
-        }
-
-        li .a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        .undo {
-            float: left;
-            margin-left: 25px;
-            margin-top: 30px;
-        }
-
-        input {
-            background-color: transparent;
-            border-color: transparent;
-            border-radius: 10px;
-        }
-
-        button {
-            color: black;
-            background-color: white;
-            border: 2px solid black;
-            border-radius: 10px;
-            text-align: center;
-            padding: 14px 32px;
-            text-decoration: none;
-        }
-
-        button:hover {
-            transition: color .4s;
-            color: #ff3131;
-            border-color: #ff3131;
-        }
-                
-        .undo {
-            float: left;
-            margin-left: 25px;
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
-
         .zoom-on-img {
             transition: transform .4s;
         }
 
         .zoom-on-img:hover {
             transform: scale(1.099);
-        }
-
-        .first-div {
-            background: rgba(255,255,255,0.70); 
-        }
-
-        .url-utility {
-            padding-bottom: 10px;
-            margin-top: 5px;
-            color: black;
-            background-color: transparent;
-            border: 2px solid transparent;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .url-utility:hover {
-            transition: color .4s;
-            color: #ff3131;
         }
 
         .background {
@@ -122,50 +87,36 @@
             background-size: cover; /*  */
         }
 
-        h3 {
-            color: darkgrey;
-            font-weight: bold;
-        }
-
-        label {
-            display: relative;
-            float: left;
-        }
-
-        label:hover {
-            color: #ff3131;
-        }
-
-        .input {
+        .input-Required {
             font-size: 12px;
             width: 100%;
             padding: 3px 3px;
             margin: 1px 0;
+            background-color: transparent;
+            border-color: transparent;
+            border-radius: 0px;
+            border-bottom: 1px solid darkgrey;
+            outline: none;
+        }
+
+        .no-Required {
+            font-size: 12px;
+            width: 100%;
+            padding: 3px 3px;
+            margin: 1px 0;
+            background-color: transparent;
+            border-color: transparent;
             border-bottom: 1px solid darkgrey;
             border-radius: 0px;
             outline: none;
         }
 
-        .input:hover {
+        .input-Required:hover {
+            border:2px solid #ff3131;
+        }
+
+        .no-Required:hover {
             border-bottom: 2px solid #ff3131;
-        }
-
-        .label- {
-            margin: auto;
-            margin-left: 100px;
-        }
-
-        .navbar {
-            overflow: hidden;
-            background-color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center; /* Center items vertically */
-        }
-
-        .button-Login {
-            margin-top: 10px;
-            margin-right: 15px;
         }
     </style>
 </head>
@@ -182,32 +133,32 @@
         <div class="center">
             <form action="authentication.php" method="POST">
                 <div style="margin-top: 30px;">
-                    <label class="label-inline">Email</label>
-                    <input class="input" type="text" id="txtEmailSignupStudente" name="txtEmailSignupStudente">
+                    <label>Email<span>*</span></label>
+                    <input class="input-Required" type="text" id="txtEmailSignupStudente" name="txtEmailSignupStudente" required>
                 </div>
                 <div style="margin-top: 8px;">
-                    <label>Password</label>
-                    <input class="input" type="password" id="txtPasswordSignupStudente" name="txtPasswordSignupStudente">
+                    <label>Password<span>*</span></label>
+                    <input class="input-Required" type="password" id="txtPasswordSignupStudente" name="txtPasswordSignupStudente" required>
                 </div>
                 <div style="margin-top: 8px;">
-                    <label class="label-inline">Nome</label>
-                    <input class="input" type="text" id="txtNomeSignupStudente" name="txtNomeSignupStudente">
+                    <label>Nome<span>*</span></label>
+                    <input class="input-Required" type="text" id="txtNomeSignupStudente" name="txtNomeSignupStudente" required>
                 </div>
                 <div style="margin-top: 8px;">
-                    <label>Cognome</label>
-                    <input class="input" type="text" id="txtCognomeSignupStudente" name="txtCognomeSignupStudente">
+                    <label>Cognome<span>*</span></label>
+                    <input class="input-Required" type="text" id="txtCognomeSignupStudente" name="txtCognomeSignupStudente" required>
                 </div>
                 <div style="margin-top: 8px;">
                     <label>Recapito telefonico</label>
-                    <input class="input" type="numeric" id="txtTelefonoSignupStudente" name="txtTelefonoSignupStudente" pattern="[1-9]{1}[0-9]{9}">
+                    <input class="no-Required" type="numeric" id="txtTelefonoSignupStudente" name="txtTelefonoSignupStudente">
                 </div>
                 <div style="margin-top: 8px;">
-                    <label>Anno immatricolazione</label>
-                    <input class="input" type="numeric" id="txtAnnoImmatricolazione" name="txtAnnoImmatricolazione">
+                    <label>Anno immatricolazione<span>*</span></label>
+                    <input class="input-Required" type="numeric" id="txtAnnoImmatricolazione" name="txtAnnoImmatricolazione" required>
                 </div>
                 <div style="margin-top: 8px; margin-bottom: 20px;">
-                    <label>Codice</label>
-                    <input class="input" type="numeric" id="txtCodice" name="txtCodice">
+                    <label>Codice<span>*</span></label>
+                    <input class="input-Required" type="numeric" id="txtCodice" name="txtCodice" required>
                 </div>
                 <div>
                     <button type="submit" class="button-Signup" style="margin-right:25px;" name="btnSignup" value="Sign Up">Sign Up</button>

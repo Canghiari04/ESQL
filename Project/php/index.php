@@ -16,58 +16,6 @@
             display: inline;
         }
 
-        .center {
-            position: relative;
-            background-color: rgba(255, 255, 255, 0.70);
-            top: 200px;
-            padding-top: 10px;
-            padding-bottom: 15px;
-            padding-left: 15px;
-            padding-right: 15px;
-            margin: auto;
-            width: 45%;
-            text-align: center;
-            border-radius: 20px;
-            transition: transform .4s;
-        }
-
-        .center:hover {
-            transform: scale(1.03);
-        }
-
-        .center-center {
-            width: 60%;
-            display: block;
-            position: relative;
-            padding-top: 5px;
-            padding-bottom: 15px;
-            padding-left: 15px;
-            padding-right: 15px;
-            margin: auto;
-        }
-
-        .url-utility {
-            padding-bottom: 10px;
-            margin-top: 5px;
-            color: black;
-            background-color: transparent;
-            border: 2px solid transparent;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .url-utility:hover {
-            transition: color .4s;
-            color: #ff3131;
-        }
-
-        .background {
-            padding: auto;
-            background-image: url("img/background.png");
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-
         h3 {
             color: darkgrey;
             font-weight: bold;
@@ -89,26 +37,6 @@
 
         .zoom-on-img:hover {
             transform: scale(1.099);
-        }
-
-        .button-Login {
-            float: right;
-            display: block;
-            color: black;
-            background-color: white;
-            border: 2px solid black;
-            border-radius: 10px;
-            text-align: center;
-            padding: 14px 32px;
-            margin-top: 10px;
-            margin-right: 15px;
-            text-decoration: none;
-        }
-
-        .button-Login:hover {
-            transition: color .4s;
-            color: #ff3131;
-            border-color: #ff3131;
         }
 
         .dropdown {
@@ -160,13 +88,81 @@
             display: block;
         }
 
-        .first-div {
-            background: rgba(255, 255, 255, 0.70);
+        .button-Login {
+            float: right;
+            display: block;
+            color: black;
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+            text-align: center;
+            padding: 14px 32px;
+            margin-top: 10px;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+
+        .button-Login:hover {
+            transition: color .4s;
+            color: #ff3131;
+            border-color: #ff3131;
+        }
+
+        .center {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.70);
+            top: 200px;
+            padding-top: 10px;
+            padding-bottom: 15px;
+            padding-left: 15px;
+            padding-right: 15px;
+            margin: auto;
+            width: 45%;
+            text-align: center;
+            border-radius: 20px;
+            transition: transform .4s;
+        }
+
+        .center:hover {
+            transform: scale(1.03);
+        }
+
+        .center-center {
+            width: 60%;
+            display: block;
+            position: relative;
+            padding-top: 5px;
+            padding-bottom: 15px;
+            padding-left: 15px;
+            padding-right: 15px;
+            margin: auto;
+        }
+
+        .url-utility {
+            padding-bottom: 10px;
+            margin-top: 5px;
+            color: black;
+            background-color: transparent;
+            border: 2px solid transparent;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .url-utility:hover {
+            transition: color .4s;
+            color: #ff3131;
+        }
+
+        .background {
+            padding: auto;
+            background-image: url("img/background.png");
+            background-repeat: no-repeat;
+            background-size: cover;
         }
     </style>
 </head>
 
-<body style="background-color:white;">
+<body>
     <div class="navbar">
         <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
         <div class="dropdown">
