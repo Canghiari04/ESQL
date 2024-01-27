@@ -1,18 +1,18 @@
 <?php
-    function OpenConnection() {
-        $dbhost = "localhost";
-        $dbuser = "root";
-        $dbpassword = "password";
-        $db = "ESQLDB";
+    function openConnection() {
         try {
-            $conn = mysqli_connect($dbhost, $dbuser, $dbpassword, $db);
-            return $conn;
-        } catch(mysqli_sql_exception $e) {
-            echo 'Eccezione individuata: '. $e -> getMessage();
+            $pdo = new PDO('mysql:host=localhost;dbname=ESQLDB','root', 'root');
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            return $pdo;
+        }
+        catch(PDOException $e) {
+            echo("[ERRORE] Connessione al DB non riuscita. Errore: ".$e->getMessage());
+            return null;
         }
     }
 
-    function CloseConnection($conn) {
-        mysqli_close($conn);
+    function closeConnection($pdo) {
+        $pdo = null;
     }
 ?> 
