@@ -51,7 +51,7 @@
             $sql = "SELECT EMAIL FROM Utente JOIN Studente ON (Utente.EMAIL=Studente.EMAIL_STUDENTE) WHERE (EMAIL=:labelEmail) AND (PSWD=:labelPassword)";
             
             try {
-                $result -> $conn -> prepare($sql);
+                $result = $conn -> prepare($sql);
                 $result -> bindValue(":labelEmail", $email);
                 $result -> bindValue(":labelPassword", $password);
                 $result -> execute();
@@ -66,7 +66,7 @@
                 echo 'Eccezione individuata: '. $e -> getMessage();
             }  
 
-            closeConnection($conn);
+            //closeConnection($conn);
         } elseif (isset($_POST["txtEmailSignupDocente"])) {
             $email = $_POST["txtEmailSignupDocente"];
             $password = $_POST["txtPasswordSignupDocente"];
@@ -98,7 +98,7 @@
                 echo 'Eccezione individuata: '. $e -> getMessage();
             }  
 
-            closeConnection($conn);
+            //closeConnection($conn);
         } 
     }
 
@@ -136,7 +136,7 @@
     }
 
     function insertDocente($conn, $email, $password, $nome, $cognome, $telefono, $dipartimento, $corso) {
-        $storedProcedure = "CALL Registrazione_Studente(:labelEmail, :labelPassword, :labelNome, :labelCognome, :labelTelefono, :labelDipartimento, :labelCorso)";
+        $storedProcedure = "CALL Registrazione_Docente(:labelEmail, :labelPassword, :labelNome, :labelCognome, :labelTelefono, :labelDipartimento, :labelCorso)";
         $stmt = $conn -> prepare($storedProcedure);
 
         $stmt -> bindValue(":labelEmail", $email);
