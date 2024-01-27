@@ -4,7 +4,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
     <style>
-        body {
+        html, body {
+            height: 100%;
             font-family: 'Public Sans';
         }
 
@@ -42,7 +43,7 @@
             background-color: white;
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Center items vertically */
+            align-items: center;
         }
 
         .undo {
@@ -55,8 +56,8 @@
         .center {
             position: relative; /* Relative è l'unica posizione che puù essere spostata */
             display: block;
-            top: 150px; 
-            padding-top: 10px;
+            top: 115px; 
+            padding-top: 15px;
             padding-bottom: 15px;
             padding-left: 15px;
             padding-right: 15px;
@@ -81,8 +82,83 @@
         }
 
         .background {
-            padding: auto;
+            height: 100%;
+            background-image: url(img/background.png);
+            height: 100%;
+            font-family: 'Public Sans';
+        }
+            
+        label {
+            display: relative;
+            float: left;
+        }
+            
+        label:hover {
+            color: #ff3131;
+        }
+
+        button {
+            color: black;
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+            text-align: center;
+            padding: 14px 32px;
+            text-decoration: none;
+        }
+
+        button:hover {
+            transition: color .4s;
+            color: #ff3131;
+            border-color: #ff3131;
+        }
+
+        span {
+            color: #ff3131;
+        }
+        
+        .navbar {
+            overflow: hidden;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Center items vertically */
+        }
+        
+        .zoom-on-img {
+            transition: transform .4s;
+        }
+        
+        .zoom-on-img:hover {
+            transform: scale(1.099);
+        }
+        
+        .undo {
+            float: left;
+            margin-left: 25px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .button-Login {
+            margin-top: 10px;
+            margin-right: 15px;
+        }
+
+        .background {
+            height: 100%;
             background-image: url("img/background.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .center {
+            position: relative; /* Relative è l'unica posizione che puù essere spostata */
+            display: block;
+            top: 115px; 
+            padding-top: 15px;
+            padding-bottom: 15px;
+            padding-left: 15px;
             background-repeat: no-repeat;
             background-size: cover; /*  */
         }
@@ -150,7 +226,7 @@
                 </div>
                 <div style="margin-top: 8px;">
                     <label>Recapito telefonico</label>
-                    <input class="no-Required" type="numeric" id="txtTelefonoSignupStudente" name="txtTelefonoSignupStudente">
+                    <input class="no-Required" type="numeric" id="txtTelefonoSignupStudente" name="txtTelefonoSignupStudente" value="NULL">
                 </div>
                 <div style="margin-top: 8px;">
                     <label>Anno immatricolazione<span>*</span></label>

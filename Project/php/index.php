@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
     <style>
-        body {
+        html, body {
             font-family: 'Public Sans';
+            height: 100%;
         }
 
         p {
@@ -26,7 +27,7 @@
             background-color: white;
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Center items vertically */
+            align-items: center;
         }
 
         .zoom-on-img {
@@ -108,6 +109,13 @@
             border-color: #ff3131;
         }
 
+        .background {
+            height: 100%;
+            background-image: url("img/background.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
         .center {
             position: relative;
             background-color: rgba(255, 255, 255, 0.70);
@@ -140,9 +148,8 @@
 
         .url-utility {
             padding-bottom: 10px;
+            color: darkgray;
             margin-top: 5px;
-            color: black;
-            background-color: transparent;
             border: 2px solid transparent;
             text-align: center;
             text-decoration: none;
@@ -151,13 +158,6 @@
         .url-utility:hover {
             transition: color .4s;
             color: #ff3131;
-        }
-
-        .background {
-            padding: auto;
-            background-image: url("img/background.png");
-            background-repeat: no-repeat;
-            background-size: cover;
         }
     </style>
 </head>

@@ -4,8 +4,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
     <style>
-        body {
+        html, body {
             font-family: 'Public Sans';
+            height: 100%;
         }
 
         label {
@@ -41,7 +42,7 @@
             background-color: white;
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Center items vertically */
+            align-items: center;
         }
 
         .zoom-on-img {
@@ -109,12 +110,11 @@
         }
         
         .background {
-            padding: auto;
-            background-image: url("img/background.png");
+            height: 100%; 
+            background-image: url(img/background.png);
             background-repeat: no-repeat;
             background-size: cover; /*  */
         }
-        
         
         .center {
             position: relative; /* Relative è l'unica posizione che puù essere spostata */

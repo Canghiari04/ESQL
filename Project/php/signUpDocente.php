@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <style>
-        body {
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+    <style>
+        html, body {
+            height: 100%;
             font-family: 'Public Sans';
         }
             
@@ -42,7 +43,7 @@
             background-color: white;
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Center items vertically */
+            align-items: center;
         }
         
         .zoom-on-img {
@@ -66,17 +67,17 @@
         }
 
         .background {
-            padding: auto;
+            height: 100%;
             background-image: url("img/background.png");
             background-repeat: no-repeat;
-            background-size: cover; /*  */
+            background-size: cover;
         }
 
         .center {
             position: relative; /* Relative è l'unica posizione che puù essere spostata */
             display: block;
-            top: 150px; 
-            padding-top: 10px;
+            top: 115px; 
+            padding-top: 15px;
             padding-bottom: 15px;
             padding-left: 15px;
             padding-right: 15px;
@@ -92,7 +93,6 @@
             transform: scale(1.03);
         }
 
-        
         .input-Required {
             font-size: 12px;
             width: 100%;
@@ -156,7 +156,7 @@
                 </div>
                 <div style="margin-top: 8px;">
                     <label>Recapito telefonico</label>
-                    <input class="non-Required" type="numeric" id="txtTelefonoSignupDocente" name="txtTelefonoSignupDocente">
+                    <input class="non-Required" type="numeric" id="txtTelefonoSignupDocente" name="txtTelefonoSignupDocente" value="NULL">
                 </div>
                 <div style="margin-top: 8px;">
                     <label>Corso<span>*</span></label>
