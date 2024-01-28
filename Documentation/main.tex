@@ -102,7 +102,7 @@ Di seguito sono descritti i concetti essenziali raggruppati sulla base di medesi
 \subsection{Lista delle operazioni}
 \large
 Come da denominazione, sono riportate l'insieme delle possibili operazioni sui dati individuate durante l'analisi del documento di specifica, costituito da: 
-\begin{itemize}[label={-}]
+\begin{itemize}[label={ }]
     \itemsep1px
     \item {\small\bf{OPERAZIONE 1.}} \hspace*{1px} Inserire un nuovo utente
     \item {\small\bf{OPERAZIONE 2.}} \hspace*{1px} Visualizzare i dati degli studenti 
@@ -187,35 +187,37 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
 \subsection{Dizionario delle entità}
 \begin{table}[H]
     \centering
-    \begin{tabularx}{\textwidth}{|p{2.7cm}|p{5cm}|p{4.3cm}|X|}
+    \begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|p{3.5cm}|}
         \hline
         \bf Entità & \bf Descrizione & \bf Attributi & \bf Identificatore \\
         \hline
-        Utente & Utilizzatore generale dell'applicativo & Email, Nome, Cognome, Telefono & Email \\        
+        Utente & Utilizzatore generale dell'applicativo & Email, Password, Nome, Cognome, Telefono & Email \\        
         \hline
-        Docenti & Docente creatore e ideatore di quesiti e tabelle di esercizio & Nome\_Dipartimento, Nome\_Corso & Email \\
+        Docente & Docente creatore e ideatore di quesiti e tabelle di esercizio & Nome\_Dipartimento, Nome\_Corso & Email\_Docente \\
         \hline
-        Studente & Studente  fruitore della piattaforma per la risoluzione dei quesiti posti & Anno\_Immatricolazione, Codice & Email \\
+        Studente & Studente  fruitore della piattaforma per la risoluzione dei quesiti posti & Anno\_Immatricolazione, Codice & Email\_Studente \\
         \hline
-        Tabelle\_Esercizio & Tabelle contenenti i meta-dati per la realizzazione di eventuali quesiti & ID, Nome, Data\_Creazione, Num\_Righe & ID \\
+        Tabella\_Esercizio & Tabelle contenenti i meta-dati per la realizzazione di eventuali quesiti & ID, Nome, Data\_Creazione, Num\_Righe & ID \\
         \hline
-        Attributi & Attributi parte costituente delle tabelle di esercizio, finalizzati per la realizzazione di quesiti & ID, Tipo, Nome, Chiave\_Primaria & ID \\
+        Attributo & Attributi parte costituente delle tabelle di esercizio, finalizzati per la realizzazione di quesiti & ID, Tipo, Nome, Chiave\_Primaria & ID \\
         \hline
         Test & Test indica l'insieme di quesiti svolti dagli studenti e creati dal docente & Titolo, Foto, Data\_Creazione, Visualizza\_Risposte & Titolo \\
         \hline
-        Quesito & Quesito relativo a tematiche svolte durante il corso & Numero, Difficoltà, Descrizione, Num\_Risposte & Numero \\
+        Quesito & Quesito relativo a tematiche svolte durante il corso & ID, Difficoltà, Descrizione, Num\_Risposte & ID, Titolo\_Test \\
         \hline
-        Domanda\_Chiusa & Tipologia di quesito, rappresentante una domanda a scelta multipla & . & Numero \\
+        Domanda\_Chiusa & Tipologia di quesito, rappresentante una domanda a scelta multipla & . & ID\_Quesito \\
         \hline
-        Opzioni\_Risposta & Opzioni di risposta relative ad una domanda chiusa & Numero, Testo & Numero, NumDomanda\_Chiusa \\
+        Opzione\_Risposta & Opzioni di risposta relative ad una domanda chiusa & ID, Testo & ID, ID\_Domanda\_Chiusa \\
         \hline
-        Domanda\_Codice & Tipologia di quesito, richiedente la formulazione di query SQL & . & Numero \\
+        Domanda\_Codice & Tipologia di quesito, richiedente la formulazione di query SQL & . & ID\_Quesito \\
         \hline
-        Skecth\_Codice & Skecth di codice SQL risulutivi rispetto al quesito somministrato & Numero, Testo & Numero, NumDomanda\_Codice \\
+        Skecth\_Codice & Skecth di codice SQL risulutivi rispetto al quesito somministrato & ID, Testo & ID, ID\_Domanda\_Codice \\
         \hline
-        Messaggi & Comunicazioni ricevute e inviate tra docenti e studenti & ID, Titolo, Data\_Inserimento & ID \\
+        Messaggio & Comunicazioni ricevute e inviate tra docenti e studenti & ID, Testo, Titolo, Data\_Inserimento & ID \\
         \hline
-    \end{tabularx}
+        Messaggio\_Studente & Messaggio inviato dallo studente al docente del corso & . & ID\_Messaggio\\
+        \hline
+    \end{tabular}
     \caption{Descrizione delle entità del modello E-R precedente al raffinamento.}
 \end{table}
 
@@ -227,27 +229,31 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
         \hline
         \bf Relazione & \bf Descrizione & \bf Componenti & \bf Attributi \\
         \hline
-        Creazione & Creazione da parte di docenti di tabelle di esercizio e quesiti & Docenti, Tabelle\_Esercizio, Test & . \\
+        Creazione & Creazione da parte di docenti di tabelle di esercizio e quesiti & Docente, Tabella\_Esercizio, Test & . \\
         \hline
         Completamento & Completamento di un test somministrato da parte degli studenti & Studente, Test & Stato, Data\_UltimaRisposta, Data\_PrimaRisposta \\
         \hline
-        Invio & Invio di messaggi da parte di docenti e studenti & Studente, Docenti, Messaggi & . \\
-        \hline 
-        Pubblicazione & Pubblicazione di comunicazioni afferenti ad uno specifico test & Messaggi, Test & . \\
+        Invio & Invio di messaggi da parte di studenti & Studente, Messaggio\_Studente & . \\
         \hline
-        Ricezione & Ricezione di messaggi emessi da studenti oppure da docenti & Messaggi, Docenti & . \\
+        Smistamento & Invio e ricezione di comunicazioni dal docente del corso & Docente, Messaggio & . \\
+        \hline 
+        Pubblicazione & Pubblicazione di comunicazioni afferenti ad uno specifico test & Messaggio, Test & . \\
+        \hline
+        Ricezione & Ricezione di messaggi emessi da studenti oppure da docenti & Messaggio, Docente & . \\
         \hline
         Risposta & Risposta formulata dagli studenti in relazione ad uno specifico quesito & Studente, Quesito & Esito \\
         \hline
         Composizione & Composizione di un insieme di quesiti rispetto ad un determinato test & Quesito, Test & . \\
         \hline
-        Afferenza & Afferenza dei quesiti ideati relativamente a tabelle di esercizio & Quesito, Tabelle\_Esercizio & . \\
+        Afferenza & Afferenza dei quesiti ideati relativamente a tabelle di esercizio & Quesito, Tabella\_Esercizio & . \\
         \hline
-        Combinazione & Combinazione di attributi per la costruzione di tabelle di esercizio & Tabelle\_Esercizio, Attributi & . \\
+        Combinazione & Combinazione di attributi per la costruzione di tabelle di esercizio & Tabella\_Esercizio, Attributo & . \\
+        \hline
+        Vincolo Integrità & Vincolo Integrità mantiene tutti i vincoli referenziali tra attributi di tabelle di esercizio & Attributo & . \\
         \hline
         Soluzione & Soluzione alla query SQL richiesta & Domanda\_Codice, Sketch\_Codice & . \\
         \hline
-        Disposizione & Disposizione del numero complessivo di opzioni di risposta relative alla domanda sottoposta & Domanda\_Chiusa, Opzioni\_Risposta & . \\    
+        Disposizione & Disposizione del numero complessivo di opzioni di risposta relative alla domanda sottoposta & Domanda\_Chiusa, Opzione\_Risposta & . \\    
         \hline
     \end{tabularx}
     \caption{Descrizione delle relazioni del modello E-R precedente al raffinamento.}
@@ -258,35 +264,35 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
 \begin{table}[h]
     \centering
     \begin{tabular}[center]{|p{13cm}|}
-    \hline
-    \bf Regole di vincolo \\
-    \hline
-    Il campo Codice alfanumerico degli studenti deve avere una lunghezza pari a 16 caratteri \\
-    \hline
-    Il docente può inserire i vincoli di integrità referenziale tra gli attributi che compongano tabelle di esercizio \\
-    \hline
-    Il numero progressivo associato ad un quesito è univoco, ma solo all'interno di uno specifico test \\
-    \hline
-    Il numero delle opzioni di risposta, sia per Domande\_Chiuse che per Domande\_Codice, è univoco, ma solo all'interno dello specifico quesito \\
-    \hline
-    Uno studente può sottomettere più risposte per lo stesso quesito, ma solo se il test non è in stato Concluso \\ 
-    \hline 
-    Un messaggio inviato da un docente è recapitato da tutti gli studenti del corso, invece un messaggio comunicato da uno studente è ricevuto dallo specifico docente \\
-    \hline
-    \bf Regole di derivazione \\ 
-    \hline
-    Il livello di difficoltà di ogni test consiste in un campo enum, che può assumere esclusivamente tre valori: Basso, Medio oppure Difficile \\
-    \hline
-    Il campo Num\_Risposte nell'entità Quesito è una ridondanza concettuale \\
-    \hline 
-    L'attributo Visualizza\_Risposte è un campo booleano, permette di visualizzare o meno le risposte dei quesiti \\
-    \hline
-    I campi Data\_PrimaRisposta e Data\_UltimaRisposta, della relazione Completamento, devono essere espressi su scala temporale \\
-    \hline
-    L'attributo della relazione Completamento è un campo enum, il quale può assumere esclusivamente tre valori: Aperto, InCompletamento e Concluso \\
-    \hline 
-    Il campo Esito della relazione Risposta è un attributo booleano, definisce la correttezza della risposta sottomessa \\
-    \hline    
+        \hline
+        \bf Regole di vincolo \\
+        \hline
+        Il campo Codice alfanumerico degli studenti deve avere una lunghezza pari a 16 caratteri \\
+        \hline
+        Il docente può inserire i vincoli di integrità referenziale tra gli attributi che compongano tabelle di esercizio \\
+        \hline
+        Il numero progressivo associato ad un quesito è univoco, ma solo all'interno di uno specifico test \\
+        \hline
+        Il numero delle opzioni di risposta, sia per Domande\_Chiuse che per Domande\_Codice, è univoco, ma solo all'interno dello specifico quesito \\
+        \hline
+        Uno studente può sottomettere più risposte per lo stesso quesito, ma solo se il test non è in stato Concluso \\ 
+        \hline 
+        Un messaggio inviato da un docente è recapitato da tutti gli studenti del corso, invece un messaggio comunicato da uno studente è ricevuto dallo specifico docente \\
+        \hline
+        \bf Regole di derivazione \\ 
+        \hline
+        Il livello di difficoltà di ogni test consiste in un campo enum, che può assumere esclusivamente tre valori: Basso, Medio oppure Difficile \\
+        \hline
+        Il campo Num\_Risposte nell'entità Quesito è una ridondanza concettuale \\
+        \hline 
+        L'attributo Visualizza\_Risposte è un campo booleano, permette di visualizzare o meno le risposte dei quesiti \\
+        \hline
+        I campi Data\_PrimaRisposta e Data\_UltimaRisposta, della relazione Completamento, devono essere espressi su scala temporale \\
+        \hline
+        L'attributo della relazione Completamento è un campo enum, il quale può assumere esclusivamente tre valori: Aperto, InCompletamento e Concluso \\
+        \hline 
+        Il campo Esito della relazione Risposta è un attributo booleano, definisce la correttezza della risposta sottomessa \\
+        \hline    
 \end{tabular}
     \caption{Descrizione delle regole di vincolo e di derivazione non attuabili tramite il modello concettuale}
 \end{table}
@@ -299,7 +305,7 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
 \subsection{Modello E-R raffinato}
 \large
 \begin{figure}[H]
-    \includegraphics*[width=1.1\textwidth]{foto2.png}
+    \includegraphics*[width=0.7\textwidth]{foto1.png}
     \caption{Modello E-R successivo al raffinamento.}
 \end{figure}
 
@@ -307,7 +313,7 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
 \large
 In questa sezione sono riportate tutte le considerazioni necessarie per comprendere al meglio l'impatto delle ridondanze sullo schema E-R ideato; con conseguente definizione del costo operazionale sui dati di riferimento. Una fase simile è cruciale per stabilire se determinate informazioni comportano svantaggi significativi, come ad esempio maggiore occupazione di memoria oppure maggiore complessità degli aggiornamenti.\vspace{7pt}\\
 Si definiscono le due seguenti nozioni, le quali saranno spesso utilizzate, ossia:
-\begin{itemize}[label={ }]
+\begin{itemize}[label={-}]
     \itemsep0em
     \item \textit{S$_r$}, lo schema E-R \textbf{con ridondanza}
     \item \textit{S}, \hspace{1px} lo schema E-R \textbf{senza ridondanza}
@@ -341,22 +347,68 @@ Si calcolano i costi operazionali dello schema E-R senza ridondanza, suddivisi i
 \end{itemize}
 \hspace*{15pt}C(S) = 20 + 26 + 75 + 520 = 641 \vspace*{7pt} \vspace*{7pt}\\
 Si osserva ora l'occupazione di memoria di entrambi i diagrammi, in cui si manifesta:
-\begin{itemize}[label={ }]
+\begin{itemize}[label={-}]
     \itemsep0em
     \item M(S$_r$) = X + 20 * 4 = X + 80 byte
     \item M(S) = \hspace*{1pt}X byte
 \end{itemize}
 Terminate tutte le operazioni riferite all'analisi delle ridondanze, si osserva come il mantenimento comporti a vantaggi significativi, piuttosto che l'eliminazione. Infatti il rapporto della metrica $C(S) \div C(S_r)$ restituisce un valore che si aggira attorno a 2, in questo caso è conveniente mantenere l'attributo Num\_Risposte, dettata anche dall'irrisorio overhead introdotto, pari a 80 byte.
 
-\newpage
 \subsection{Lista delle tabelle con i vincoli di chiave}
 \large
-\dots
+\dots 
+\begin{itemize}[label={ }, leftmargin=*, wide=1pt]
+    \itemsep0em
+    \item Utente(\underline{Email}, Pswd, Nome, Cognome, Telefono)
+    \item Studente(\underline{Email\_Studente}, Codice, Anno\_Immatricolazione)
+    \item Docente(\underline{Email\_Docente}, Nome\_Diparitmento, Nome\_Corso)
+    \item Tabella\_Esercizio(\underline{ID}, Nome, Data\_Creazione, Num\_Righe)
+    \item Attributo(\underline{ID}, ID\_Tabella, Tipo, Nome, Chiave\_Primaria)
+    \item Vincolo\_integrita(\underline{Referente}, \underline{Referenza})
+    \item Test(\underline{Titolo}, Email\_Docente, Foto, Data\_Creazione, Visualizza\_Risposta)
+    \item Quesito(\underline{ID}, \underline{Titolo\_Test}, Difficolta, Descrizione, Num\_Risposte)
+    \item Afferenza(\underline{ID\_Quesito}, \underline{ID\_Tabella}, \underline{Titolo\_Test})
+    \item Domanda\_Chiusa(\underline{ID\_Domanda\_Chiusa})
+    \item Opzione\_Risposta(\underline{ID}, \underline{ID\_Domanda\_Chiusa}, Testo)
+    \item Domanda\_Codice(\underline{ID\_Domanda\_Codice})
+    \item Skecth\_Codice(\underline{ID}, \underline{ID\_Domanda\_Codice}, Testo)
+    \item Completamento(\underline{Titolo\_Test}, \underline{Email\_Studente}, Stato, Data\_UltimaRisposta, Data\_PrimaRisposta)
+    \item Risposta(\underline{Email\_Studente}, \underline{ID\_Quesito}, Testo, Esito)
+    \item Messaggio(\underline{ID}, Email\_Docente, Titolo, Testo, Data\_Inserimento, Titolo\_Test)
+    \item Messaggio\_Studente(\underline{ID\_Messaggio\_Studente}, Email\_Studente)
+\end{itemize}
 
 \subsection{Lista dei vincoli inter-relazionali}
 \large
 \dots
+\begin{itemize}[label={ }, leftmargin=*, wide=1pt]
+    \itemsep0em
+    \item Studente.Email\_Studente \textbf{-->} Utente.Email
+    \item Docente.Email\_Docente \textbf{-->} Utente.Email
+    \item Attributo.ID\_Tabella \textbf{-->} Tabella\_Esercizio.ID
+    \item Vincolo\_Integrità.Referente \textbf{-->} Attributo.ID
+    \item Vincolo\_Integrità.Referenziato \textbf{-->} Attributo.ID
+    \item Test.Email\_Docente \textbf{-->} Docente.Email\_Docente
+    \item Quesito.Titolo\_Test \textbf{-->} Test.Titolo
+    \item Afferenza.ID\_Quesito \textbf{-->} Quesito.ID
+    \item Afferenza.ID\_Tabella \textbf{-->} Tabella.ID
+    \item Afferenza.Titolo\_Test \textbf{-->} Test.Titolo
+    \item Domanda\_Chiusa.ID\_Domanda\_Chiusa \textbf{-->} Quesito.ID
+    \item Opzione\_Risposta.ID\_Domanda\_Chiusa \textbf{-->} Domanda\_Chiusa.ID\_Domanda\_Chiusa 
+    \item Domanda\_Codice.ID\_Domanda\_Codice \textbf{-->} Quesito.ID
+    \item Skecth\_Codice.ID\_Domanda\_Codice \textbf{-->} Domanda\_Codice.ID\_Domanda\_Codice
+    \item Completamento.Titolo\_Test \textbf{-->} Test.Titolo
+    \item Completamento.Email\_Studente \textbf{-->} Studente.Email\_Studente
+    \item Risposta.Email\_Studente \textbf{-->} Studente.Email\_Studente
+    \item Risposta.ID\_Quesito \textbf{-->} Quesito.ID
+    \item Messaggio.Email\_Docente \textbf{-->} Docente.Email\_Docente
+    \item Messaggio.Titolo\_Test \textbf{-->} Test.Titolo
+    \item Messaggio\_Studente.ID\_Messaggio\_Studente \textbf{-->} Messaggio.ID
+    \item Messaggio\_Studente.Titolo\_Test \textbf{-->} Studente.Email\_Studente
+\end{itemize}
 
+
+\newpage
 \section{Normalizzazione}
 \large
 \dots
