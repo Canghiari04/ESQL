@@ -300,12 +300,12 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
 \newpage
 \section{Progettazione logica}
 \large
-\dots
+L'obiettivo di tale sezione promuove la realizzazione del modello logico a partire dalle informazioni del modello E-R. Tuttavia è bene attuare un insieme di possibili passaggi che possano favorire la traduzione, adeguando tematiche di efficienza e correttezza. Pertanto, come da capitolo seguente, è definita la ristrutturazione del entity-relationship diagram, affinchè sia agevolata la traduzione secondo il modello logico, ottimizzando il processo nella sua interezza.
 
 \subsection{Modello E-R raffinato}
 \large
 \begin{figure}[H]
-    \includegraphics*[width=0.7\textwidth]{foto1.png}
+    \includegraphics*[width=0.75\textwidth]{foto2.png}
     \caption{Modello E-R successivo al raffinamento.}
 \end{figure}
 
@@ -356,7 +356,7 @@ Terminate tutte le operazioni riferite all'analisi delle ridondanze, si osserva 
 
 \subsection{Lista delle tabelle con i vincoli di chiave}
 \large
-\dots 
+Dopo aver svolto le fasi principali che agevolano il processo di traduzione, nella sezione consecutiva si osserva la descrizione del modello logico di riferimento, il quale fornisce l'insieme di tabelle che caratterizzano il database e i differenti attributi relativi ad ogni specifica relazione. Si evidenzia la presenza delle chiavi primarie, segnalate attraverso una sottolineatura delle colonne che compongano il vincolo.\vspace*{7pt}
 \begin{itemize}[label={ }, leftmargin=*, wide=1pt]
     \itemsep0em
     \item Utente(\underline{Email}, Pswd, Nome, Cognome, Telefono)
@@ -380,7 +380,7 @@ Terminate tutte le operazioni riferite all'analisi delle ridondanze, si osserva 
 
 \subsection{Lista dei vincoli inter-relazionali}
 \large
-\dots
+Quest'ultima parte del capitolo, riporta in maniera esplicita tutti i vincoli inter-relazionali che intercorrono tra le differenti tabelle, disposti nello stesso ordine in cui sono visualizzate le relazioni nel paragrafo precedente.
 \begin{itemize}[label={ }, leftmargin=*, wide=1pt]
     \itemsep0em
     \item Studente.Email\_Studente \textbf{-->} Utente.Email
