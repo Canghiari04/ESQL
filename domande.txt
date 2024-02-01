@@ -1,8 +1,10 @@
 Domande 
 - chiedere se il campo Testo in Risposta
 - tavola media dei volumi
-- chiedere se le query sono DML o anche DDL 
+- chiedere se le query sono DML o anche DDL (penso DML per la costruzione del risultato della soluzione alla domanda di codice)
 - cosa intende con sezione di codice SQL a pedice 
 - suddividere sql in trigger e in stored-procedure
 - non è possibile tramite procedure restituire alcun valore, magari si preparano le query per le ricerche (Login e Registrazione) e in base al risultato ottenuto si chiameranno le stored procedure per l'inserimento di nuovi utenti sostanzialmente
 - bisogna collegare messaggio studente a test (nonostante sia già collegata all'entità padre)
+- come collegare i vari attributi che compongono le tabelle ? (magari mediante l'uso della tabella afferenza, questo va fatto a livello di backend)
+- come controllare che non si inserisca nella stessa tabella un attributo che sia già referenziato
