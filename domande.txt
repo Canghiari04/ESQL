@@ -8,3 +8,4 @@ Domande
 - bisogna collegare messaggio studente a test (nonostante sia già collegata all'entità padre)
 - come collegare i vari attributi che compongono le tabelle ? (magari mediante l'uso della tabella afferenza, questo va fatto a livello di backend)
 - come controllare che non si inserisca nella stessa tabella un attributo che sia già referenziato
+- ricordarsi che l'inserimento dei dati deve avvennire tramite mongodb, comunque sia si mantiene la possibilità di aggiungere dati
