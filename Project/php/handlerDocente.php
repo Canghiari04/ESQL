@@ -104,6 +104,7 @@
     </div>
 
     <div class="background">
+        /* piccola descrizione di quello che il docente è in grado di fare */
     </div>
 </body>
 </html>
