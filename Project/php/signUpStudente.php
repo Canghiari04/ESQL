@@ -17,26 +17,6 @@
         label:hover {
             color: #ff3131;
         }
-        
-        button {
-            color: black;
-            background-color: white;
-            border: 2px solid black;
-            border-radius: 10px;
-            text-align: center;
-            padding: 14px 32px;
-            text-decoration: none;
-        }
-
-        button:hover {
-            transition: color .4s;
-            color: #ff3131;
-            border-color: #ff3131;
-        } 
-
-        span {
-            color: #ff3131;
-        }
 
         .navbar {
             overflow: hidden;
@@ -201,7 +181,7 @@
     <div class="navbar">
         <a href="index.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
         <form action="login.php">
-            <button class="button-Login" type="submit">Login</button>
+            <button type="submit">Login</button>
         </form>
     </div>
 

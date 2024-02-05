@@ -53,13 +53,6 @@
             margin-left: 50px;
         }
 
-        .background {
-            height: 100%;
-            background-image: url("img/background.png");
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-
         .center {
             position: relative;
             background-color: rgba(255, 255, 255, 0.70);
@@ -99,9 +92,6 @@
         <a class="a-href" href="#">Risposte</a>
         <a class="a-href" href="#">Test</a>
         <a href="login.php?"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
-    </div>
-
-    <div class="background">
     </div>
 </body>
 </html>

@@ -109,13 +109,6 @@
             display: block;
         }
         
-        .background {
-            height: 100%; 
-            background-image: url(img/background.png);
-            background-repeat: no-repeat;
-            background-size: cover; /*  */
-        }
-        
         .center {
             position: relative; /* Relative è l'unica posizione che puù essere spostata */
             display: block;
@@ -176,7 +169,7 @@
         </div>
     </div>
     
-    <div class="background">
+    <div>
         <div class="center">
             <form action="authentication.php" method="POST">
                 <div style="margin-top: 30px;">

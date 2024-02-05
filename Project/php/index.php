@@ -108,13 +108,6 @@
             border-color: #ff3131;
         }
 
-        .background {
-            height: 100%;
-            background-image: url("img/background.png");
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-
         .center {
             position: relative;
             background-color: rgba(255, 255, 255, 0.70);
@@ -176,7 +169,7 @@
         </form>
     </div>
 
-    <div class="background">
+    <div>
         <div class="center">
             <p>Piattaforma ESQL</p>
             <div class="center-center">

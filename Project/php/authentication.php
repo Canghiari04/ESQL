@@ -99,7 +99,7 @@
         } 
     }
 
-    function loginUtente($conn, $email){
+    function loginUtente($conn, $email) {
         $sql = "SELECT EMAIL FROM Utente JOIN Studente ON (EMAIL=EMAIL_STUDENTE) WHERE (EMAIL=:labelEmail)";
         
         $result = $conn -> prepare($sql);
