@@ -24,7 +24,7 @@
                         /* metodo per reindirizzare tramite uso di HTTP */
                         header("Location: handlerStudente.php");                      
                     } else {
-                        header("Location: handlerStudente.php");
+                        header("Location: handlerDocente.php");
                     }
                 } else {
                     /* messageBox a video, data la presenza già dell'utente */
