@@ -59,12 +59,11 @@
             $annoImmatricolazione = $_POST["txtAnnoImmatricolazione"];
             $codice = $_POST["txtCodice"];
             
-            $sql = "SELECT EMAIL FROM Utente JOIN Studente ON (Utente.EMAIL=Studente.EMAIL_STUDENTE) WHERE (EMAIL=:labelEmail) AND (PSWD=:labelPassword)";
+            $sql = "SELECT EMAIL FROM Utente WHERE (EMAIL=:labelEmail)";
             
             try {
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":labelEmail", $email);
-                $result -> bindValue(":labelPassword", $password);
                 $result -> execute();
                 $numRows = $result -> rowCount();
                 
@@ -90,12 +89,11 @@
             $corso = $_POST["txtCorso"];
             $dipartimento = $_POST["txtDipartimento"];
             
-            $sql = "SELECT EMAIL FROM Utente JOIN Docente ON (Utente.EMAIL=Docente.EMAIL_DOCENTE) WHERE (EMAIL=:labelEmail) AND (PSWD=:labelPassword)";
+            $sql = "SELECT EMAIL FROM Utente WHERE (EMAIL=:labelEmail)";
             
             try {
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":labelEmail", $email);
-                $result -> bindValue(":labelPassword", $password);
                 $result -> execute();
                 $numRows = $result -> rowCount();
                 
