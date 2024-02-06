@@ -1,17 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <style>
+            <?php
+                include 'css/authentication.css';
+            ?>
+        </style>
+    </head>
+</html>
+
 <?php
     include 'connectionDB.php';
     $conn = openConnection();
-
+    
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST["txtEmailLogin"])) {
             $email = $_POST["txtEmailLogin"];
             $password = $_POST["txtPasswordLogin"];
-
-            /* mai mettere COUNT(*) nelle query di login, restituisce sempre un valore maggiore di 0 */
+            
+            /* mai mettere COUNT(*) nelle query, restituisce sempre un valore maggiore di 0, quindi non è attendibile */
             $sql = "SELECT EMAIL FROM Utente WHERE (EMAIL=:labelEmail) AND (PSWD=:labelPassword)";
             
             try {
                 $result = $conn -> prepare($sql);
+
+                /* bindValue è un metodo cruciale per evitare SQL injection causando quindi possibili ritorsioni a livello di implementazione; evitando in questo modo la possibilità di oltrepassare i controlli necesssari*/
                 $result -> bindValue(":labelEmail", $email);
                 $result -> bindValue(":labelPassword", $password);
                 $result -> execute();
@@ -19,8 +34,7 @@
                 
                 if($numRows > 0){
                     $tipo =  loginUtente($conn, $email);
-
-                    /* mettere controllo se login di un utente esiste */
+                    
                     if($tipo == "Studente") {
                         /* metodo per reindirizzare tramite uso di HTTP */
                         header("Location: handlerStudente.php");                      
@@ -28,12 +42,12 @@
                         header("Location: handlerDocente.php");
                     }
                 } else {
-                    /* messageBox a video, data la presenza già dell'utente */
+                    loginError();
                 }
-            } catch(Exception $e) {
-                echo 'Eccezione individuata: '. $e -> getMessage();
+            } catch(PDOException $e) {
+                echo 'Eccezione: '. $e -> getMessage();
             }   
-
+            
             /* chiusura necessaria, poichè se si indirizza in una nuova pagina php-html potrebbe riportare errori a livello di definition-manipulation del db */
             closeConnection($conn);
         } elseif (isset($_POST["txtEmailSignupStudente"])) {
@@ -55,17 +69,17 @@
                 $numRows = $result -> rowCount();
                 
                 if($numRows > 0){
-                    /* messageBox che evidenzia la presenza dell'utente, magari con un suggerimento dopo errore ripetuto */
+                    signUpErrorStudente();
                 } else{
                     /* controllo per verifica assenza di recapito telefonico */
                     $telefono = checkTelefono($telefono);
                     insertStudente($conn, $email, $password, $nome, $cognome, $telefono, $annoImmatricolazione, $codice);
                     header("Location: login.php");
                 }
-            } catch(Exception $e) {
-                echo 'Eccezione individuata: '. $e -> getMessage();
+            } catch(PDOException $e) {
+                echo 'Eccezione: '. $e -> getMessage();
             }  
-
+            
             closeConnection($conn);
         } elseif (isset($_POST["txtEmailSignupDocente"])) {
             $email = $_POST["txtEmailSignupDocente"];
@@ -75,8 +89,8 @@
             $telefono = $_POST["txtTelefonoSignupDocente"];
             $corso = $_POST["txtCorso"];
             $dipartimento = $_POST["txtDipartimento"];
-
-            $sql = "SELECT EMAIL FROM Utente JOIN Docente ON (Utente.EMAIL=Docente.EMAIL_DOCENTE) WHERE (EMAIL = :labelEmail) AND (PSWD = :labelPassword)";
+            
+            $sql = "SELECT EMAIL FROM Utente JOIN Docente ON (Utente.EMAIL=Docente.EMAIL_DOCENTE) WHERE (EMAIL=:labelEmail) AND (PSWD=:labelPassword)";
             
             try {
                 $result = $conn -> prepare($sql);
@@ -84,20 +98,32 @@
                 $result -> bindValue(":labelPassword", $password);
                 $result -> execute();
                 $numRows = $result -> rowCount();
-        
+                
                 if($numRows > 0) {
-                    /* messageBox che evidenzia la presenza dell'utente, magari con un suggerimento dopo errore ripetuto */
+                    signUpErrorDocente();
                 } else {
                     $telefono = checkTelefono($telefono);
                     insertDocente($conn, $email, $password, $nome, $cognome, $telefono, $dipartimento, $corso);
                     header("Location: login.php");
                 }
-            } catch(Exception $e) {
-                echo 'Eccezione individuata: '. $e -> getMessage();
+            } catch(PDOException $e) {
+                echo 'Eccezione: '. $e -> getMessage();
             }  
-
+            
             closeConnection($conn);
         } 
+    }
+    
+    /* message error qualora non soddisfatti requisiti di registrazione oppure di login, con successivo reindirizzamento alla pagina precedente */
+    function loginError() {
+        echo '
+            <form action="login.php">
+                <div>
+                    <h4>Utente non esistente o credenziali errate</h4>
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+        ';
     }
 
     function loginUtente($conn, $email) {
@@ -116,14 +142,23 @@
         }
     }
 
+    function signUpErrorStudente() {
+        echo '
+            <form action="signUpStudente.php">
+                <div>
+                    <h4>Credenziali esistenti, riprova la registrazione</h4>
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+        ';
+    }
+    
     function insertStudente($conn, $email, $password, $nome, $cognome, $telefono, $annoImmatricolazione, $codice) {
         /* string per richiamare la stored procedure, senza che sia posti i campi */
         $storedProcedure = "CALL Registrazione_Studente(:labelEmail, :labelPassword, :labelNome, :labelCognome, :labelTelefono, :labelAnno, :labelCodice)";
         
-        /* si crea lo statement necessario per richiamare la stored procedure  */
+        /* si crea lo statement necessario per richiamare la stored procedure */
         $stmt = $conn -> prepare($storedProcedure);
-
-        /* si associano i valori della stored procedure rispetto ai campi estrapolati */
         $stmt -> bindValue(":labelEmail", $email);
         $stmt -> bindValue(":labelPassword", $password);
         $stmt -> bindValue(":labelNome", $nome);
@@ -131,15 +166,25 @@
         $stmt -> bindValue(":labelTelefono", $telefono);
         $stmt -> bindValue(":labelAnno", $annoImmatricolazione);
         $stmt -> bindValue(":labelCodice", $codice);
-
+        
         /* si esegue la stored procedure */
         $stmt -> execute();
     }
 
+    function signUpErrorDocente() {
+        echo '
+            <form action="signUpDocente.php">
+                <div>
+                    <h4>Credenziali esistenti, riprova la registrazione</h4>
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+        ';
+    }
+    
     function insertDocente($conn, $email, $password, $nome, $cognome, $telefono, $dipartimento, $corso) {
         $storedProcedure = "CALL Registrazione_Docente(:labelEmail, :labelPassword, :labelNome, :labelCognome, :labelTelefono, :labelDipartimento, :labelCorso)";
         $stmt = $conn -> prepare($storedProcedure);
-
         $stmt -> bindValue(":labelEmail", $email);
         $stmt -> bindValue(":labelPassword", $password);
         $stmt -> bindValue(":labelNome", $nome);
@@ -150,7 +195,7 @@
 
         $stmt -> execute();
     }
-
+        
     function checkTelefono($telefono) {
         /* funzione necessaria, dato che i tag possono restituire solo valori di default di tipo stringa */
         if($telefono == "NULL") {

@@ -4,66 +4,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
         <style>
-            html, body {
-                font-family: 'Public Sans';
-                height: 100%;
-            }
-
-            button {
-                background-color: transparent;
-                border: none;
-            }
-
-            .navbar {
-                background-color: white;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .zoom-on-img {
-                transition: transform .4s;
-            }
-
-            .zoom-on-img:hover {
-                transform: scale(1.099);
-            }
-
-            .ESQL {
-                margin-top: 10px;
-                margin-left: 15px;
-                margin-bottom: 10px;
-            }
-
-            .undo {
-                float: right;
-                margin-right: 25px;
-                margin-top: 15px;
-                margin-bottom: 15px;
-            }
-            
-            table {
-                table-layout: fixed;
-                width: 100%;
-            }
-
-            .div-th-table {
-                display: flex;
-                justify-content: space-between; /* Adjust as needed */
-                padding: 30px;
-                margin: 30px 150px;
-            }
-
-            .div-table {
-                display: flex;
-                justify-content: space-between; /* Adjust as needed */
-                padding: 30px;
-                margin: 50px 150px;
-                background-color: rgb(240, 240, 240);
-                border: 2px solid rgb(224, 224, 224);
-                border-radius: 10px;
-                align-items: center;
-            }
+            <?php
+                include 'css/specifics.css';
+            ?>
         </style>
     </head>
     <body>
@@ -76,53 +19,53 @@
                 <?php 
                     include 'connectionDB.php';
                     $conn = openConnection();
-                    try {
-                        if ($_SERVER["REQUEST_METHOD"] == "GET") {   
-                            $spec = $_GET["btnSpecific"];                         
-                            $sql = "SELECT Attributo.ID, Attributo.TIPO, Attributo.NOME, Attributo.CHIAVE_PRIMARIA FROM Tabella_Esercizio, Attributo WHERE (Tabella_Esercizio.ID = Attributo.ID_TABELLA) AND (Tabella_Esercizio.ID = $spec)";
+
+                    if ($_SERVER["REQUEST_METHOD"] == "GET") {   
+                        $idTable = $_GET["btnSpecificTable"];                         
+                        $sql = "SELECT Attributo.TIPO, Attributo.NOME, Attributo.CHIAVE_PRIMARIA FROM Tabella_Esercizio JOIN Attributo ON (Tabella_Esercizio.ID=Attributo.ID_TABELLA) WHERE (Tabella_Esercizio.ID=:idTable)";
+                      
+                        try {
                             $result = $conn -> prepare($sql);
+                            $result -> bindValue(':idTable', $idTable);
                             $result -> execute();
+                            $numRows = $result -> rowCount();
 
                             echo'
-                            <div class="div-th-table"> 
-                                <table>   
-                                    <tr>  
-                                        <th> Nome attributo </th>
-                                        <th> Tipo attributo </th>
-                                        <th> Chiave primaria </th>
-                                    </tr>
-                                </table>
-                            </div>';
+                                <div class="div-th"> 
+                                    <table class="table-head">   
+                                        <tr>  
+                                            <th>Nome</th>
+                                            <th>Tipo</th>
+                                            <th>Chiave primaria</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            ';
 
                             if($result) {
-                                while($row = $result->fetch(PDO::FETCH_OBJ)){
-                                    $key = convertPrimaryKey($row -> CHIAVE_PRIMARIA);
+                                while($row = $result->fetch(PDO::FETCH_OBJ)) {
+                                    /* metodo che restituisce se l'attributo visualizzato costituisca o meno la chiave primaria dellla tabella */
+                                    $primaryKey = convertPrimaryKey($row -> CHIAVE_PRIMARIA);
 
-                                    /* tolto dal form il metodo POST per l'eliminazione del meta-dato */
                                     echo '
-                                    <div class="div-table">
-                                            <form>   
-                                                <table>   
-                                                    <tr>  
-                                                        <th> '.$row -> NOME.' </th>
-                                                        <th> '.$row -> TIPO.' </th>
-                                                        <th> '.$key.' </th>
-                                                    </tr>
-                                                </table>
-                                            </form>
+                                        <div class="div-td">
+                                            <table class="table-list">   
+                                                <tr>  
+                                                    <th>'.$row -> NOME.'</th>
+                                                    <th>'.$row -> TIPO.'</th>
+                                                    <th>'.$primaryKey.'</th>
+                                                </tr>
+                                            </table>
                                         </div>
                                     ';
                                 }
                             }
-                            else {
-                                echo '<script> alert("No Record / Data Found")</script>';
-                            }
+                        } catch (PDOException $e) {
+                            echo 'Eccezione: '. $e -> getMessage(); 
                         }
-                        closeConnection($conn);
-                    } catch(Exception $e) {
-                        echo 'Eccezione individuata: '. $e -> getMessage();
-                    } 
-                    
+                    }
+
+                    closeConnection($conn);
                 ?>
             </div>
         </form>
@@ -130,7 +73,6 @@
 </html>
 
 <?php
-    
     function convertPrimaryKey($value) {
         if($value == 0) {
             return "No";
@@ -138,5 +80,4 @@
             return "Si";
         }
     }
-
 ?>
