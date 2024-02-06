@@ -10,6 +10,7 @@ Domande
 - come controllare che non si inserisca nella stessa tabella un attributo che sia già referenziato
 - ricordarsi che l'inserimento dei dati deve avvennire tramite mongodb, comunque sia si mantiene la possibilità di aggiungere dati
 - chiedere come modellare per la lista degli attributi 
+- chiedere se tutti i docenti possono vedere tutte le tabelle create da tutti i docenti
 
 DOCENTE
 1. SIGNUP
@@ -23,3 +24,7 @@ DOCENTE
 
 **PER CREARE TABELLA ESERCIZIO SOVRASCRIVI STRINGA CON ATTRIBUTI TRAMITE REFERENZA TRA TABELLA E ATTRIBUTO, FOREIGN KEYS TRAMITE JOIN TRA ATTRIBUTO E VINCOLO INTEGRITà PER OTTENERE ID ATTRIBUTO REFERENZIATO,
   E INFINE JOIN TRA ATTRIBUTO D'ARRIVO CON ID TABELLA E TAB PER OTTENERE NOME TABELLA**
+
+
+
+  CREARE PAG PER INSERIMENTO CON LABEL, TEXTBOX NUTTON CHE ESEGUE QUERY CON CONTROLLO SULLA KEYWORD, CREA TABELLA SU DB 

@@ -1,5 +1,4 @@
 USE ESQLDB;
-DROP PROCEDURE IF EXISTS Login_Utente;
 DROP PROCEDURE IF EXISTS Registrazione_Studente;
 DROP PROCEDURE IF EXISTS Registrazione_Docente;
 

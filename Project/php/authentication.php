@@ -19,7 +19,8 @@
                 
                 if($numRows > 0){
                     $tipo =  loginUtente($conn, $email);
-                    
+
+                    /* mettere controllo se login di un utente esiste */
                     if($tipo == "Studente") {
                         /* metodo per reindirizzare tramite uso di HTTP */
                         header("Location: handlerStudente.php");                      

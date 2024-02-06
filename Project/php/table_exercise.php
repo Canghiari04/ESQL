@@ -63,10 +63,14 @@
                 table-layout: fixed;
                 width: 100%;
             }
+
+            .div-th-table {
+                margin: 
+            }
             
             .div-table {
                 display: flex;
-                justify-content: space-between; /* Adjust as needed */
+                justify-content: space-between;
                 padding: 30px;
                 margin: 50px 150px;
                 background-color: rgb(240, 240, 240);
@@ -80,6 +84,7 @@
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img ESQL" width="112" height="48" src="img/ESQL.png"></a>
+            <a><button type="submit">New Table</button></a>
             <a href="handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
         </div>
 
@@ -91,19 +96,37 @@
                 $query_run = $conn -> query($query);
 
                 if($query_run) {
+                    echo'
+                        <div class="div-th-table"> 
+                            <table>   
+                                <tr>  
+                                    <th> Nome tabella </th>
+                                    <th> Data creazione </th>
+                                    <th> Numero righe </th>
+                                </tr>
+                            </table>
+                        </div>
+                    ';
+
                     while($row = $query_run -> fetch(PDO::FETCH_OBJ))
                         echo '
                             <div class="div-table">
                                 <form action="specifics.php" method="GET">
                                     <table>
                                         <tr>
-                                            <th> '.$row -> NOME.'</th>
-                                            <th> '.$row -> DATA_CREAZIONE.'</th>
-                                            <th> '.$row -> NUM_RIGHE.'</th>
-                                            <th> <button type="submit" name="btnSpecific" value='.$row -> ID.'>LINK</button> </th>
+                                            <th> '.$row -> NOME.' </th>
+                                            <th> '.$row -> DATA_CREAZIONE.' </th>
+                                            <th> '.$row -> NUM_RIGHE.' </th>
+                                            <th> <button type="submit" name="btnSpecificTable" value='.$row -> ID.'>Attributi</button> </th>
+                                </form>
+                                            <form action="deleted.php" method="GET">
+                                                    <th> <button type="submit" name="btnDropTable" value='.$row -> ID.'>Drop Table</button> </th>
+                                            </form>
+                                            <form action="insert.php" method="GET">
+                                                    <th> <button type="submit" name="btnInsertTable" value='.$row -> ID.'>Aggiungi riga</button> </th>
+                                            </form>
                                         </tr>
                                     </table>
-                                </form>
                             </div>
                         ';
                 } else {

@@ -42,13 +42,16 @@
                 margin-bottom: 15px;
             }
             
-            .div-hide {
-                color: white;
-            }
-
             table {
                 table-layout: fixed;
                 width: 100%;
+            }
+
+            .div-th-table {
+                display: flex;
+                justify-content: space-between; /* Adjust as needed */
+                padding: 30px;
+                margin: 30px 150px;
             }
 
             .div-table {
@@ -76,22 +79,36 @@
                     try {
                         if ($_SERVER["REQUEST_METHOD"] == "GET") {   
                             $spec = $_GET["btnSpecific"];                         
-                            $sql = "SELECT Attributo.ID, Attributo.TIPO, Attributo.NOME FROM Combinazione, Tabella_Esercizio, Attributo WHERE (Combinazione.ID_TABELLA = Tabella_Esercizio.ID) AND (Combinazione.ID_ATTRIBUTO = Attributo.ID) AND (Tabella_Esercizio.ID = $spec)";
+                            $sql = "SELECT Attributo.ID, Attributo.TIPO, Attributo.NOME, Attributo.CHIAVE_PRIMARIA FROM Tabella_Esercizio, Attributo WHERE (Tabella_Esercizio.ID = Attributo.ID_TABELLA) AND (Tabella_Esercizio.ID = $spec)";
                             $result = $conn -> prepare($sql);
                             $result -> execute();
 
+                            echo'
+                            <div class="div-th-table"> 
+                                <table>   
+                                    <tr>  
+                                        <th> Nome attributo </th>
+                                        <th> Tipo attributo </th>
+                                        <th> Chiave primaria </th>
+                                    </tr>
+                                </table>
+                            </div>';
 
                             if($result) {
                                 while($row = $result->fetch(PDO::FETCH_OBJ)){
-                                    $val=$row->ID;
+                                    $key = convertPrimaryKey($row -> CHIAVE_PRIMARIA);
 
                                     /* tolto dal form il metodo POST per l'eliminazione del meta-dato */
-
                                     echo '
                                     <div class="div-table">
-                                            <form>        
-                                                <a> '.$row -> NOME.'</a>
-                                                <a> '.$row -> TIPO.'</a>
+                                            <form>   
+                                                <table>   
+                                                    <tr>  
+                                                        <th> '.$row -> NOME.' </th>
+                                                        <th> '.$row -> TIPO.' </th>
+                                                        <th> '.$key.' </th>
+                                                    </tr>
+                                                </table>
                                             </form>
                                         </div>
                                     ';
@@ -100,7 +117,6 @@
                             else {
                                 echo '<script> alert("No Record / Data Found")</script>';
                             }
-                            
                         }
                         closeConnection($conn);
                     } catch(Exception $e) {
@@ -113,3 +129,14 @@
     </body>
 </html>
 
+<?php
+    
+    function convertPrimaryKey($value) {
+        if($value == 0) {
+            return "No";
+        } else {
+            return "Si";
+        }
+    }
+
+?>
