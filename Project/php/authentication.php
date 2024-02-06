@@ -57,7 +57,7 @@
                     /* messageBox che evidenzia la presenza dell'utente, magari con un suggerimento dopo errore ripetuto */
                 } else{
                     /* controllo per verifica assenza di recapito telefonico */
-                    $telefono = controlTelefono($telefono);
+                    $telefono = checkTelefono($telefono);
                     insertStudente($conn, $email, $password, $nome, $cognome, $telefono, $annoImmatricolazione, $codice);
                     header("Location: login.php");
                 }
@@ -87,7 +87,7 @@
                 if($numRows > 0) {
                     /* messageBox che evidenzia la presenza dell'utente, magari con un suggerimento dopo errore ripetuto */
                 } else {
-                    $telefono = controlTelefono($telefono);
+                    $telefono = checkTelefono($telefono);
                     insertDocente($conn, $email, $password, $nome, $cognome, $telefono, $dipartimento, $corso);
                     header("Location: login.php");
                 }
@@ -150,7 +150,7 @@
         $stmt -> execute();
     }
 
-    function controlTelefono($telefono) {
+    function checkTelefono($telefono) {
         /* funzione necessaria, dato che i tag possono restituire solo valori di default di tipo stringa */
         if($telefono == "NULL") {
             return NULL;

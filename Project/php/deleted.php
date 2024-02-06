@@ -41,10 +41,6 @@
                 margin-top: 15px;
                 margin-bottom: 15px;
             }
-            
-            .div-hide {
-                color: white;
-            }
 
             table {
                 table-layout: fixed;
@@ -63,50 +59,55 @@
             }
         </style>
     </head>
+
     <body>
         <form>
             <div class="navbar">
                 <a><img class="zoom-on-img ESQL" width="112" height="48" src="img/ESQL.png"></a>
                 <a href="table_exercise.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
             </div>
+
             <div>
                 <?php 
                     include 'connectionDB.php';
                     $conn = openConnection();
-                    try {
-                        if ($_SERVER["REQUEST_METHOD"] == "GET") {   
-                            $spec = $_GET["btnSpecific"];                         
-                            $sql = "SELECT Attributo.ID, Attributo.TIPO, Attributo.NOME FROM Combinazione, Tabella_Esercizio, Attributo WHERE (Combinazione.ID_TABELLA = Tabella_Esercizio.ID) AND (Combinazione.ID_ATTRIBUTO = Attributo.ID) AND (Tabella_Esercizio.ID = $spec)";
-                            $result = $conn -> prepare($sql);
-                            $result -> execute();
-
-
-                            if($result) {
-                                while($row = $result->fetch(PDO::FETCH_OBJ)){
-                                    $val=$row->ID;
-
-                                    /* tolto dal form il metodo POST per l'eliminazione del meta-dato */
-
-                                    echo '
-                                    <div class="div-table">
-                                            <form>        
-                                                <a> '.$row -> NOME.'</a>
-                                                <a> '.$row -> TIPO.'</a>
-                                            </form>
-                                        </div>
-                                    ';
-                                }
-                            }
-                            else {
-                                echo '<script> alert("No Record / Data Found")</script>';
-                            }
+                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                        if (isset($_POST["deleteSpecific"])) {
+                            echo ' bella ciao';
+                            deleteAttribute($conn, $idAttributo = $_POST["deleteSpecific"]);
                             
+                        } elseif (isset($_POST["updateSpecific"])) {
+                            updateAttribute($conn);
+                        } elseif (isset($_POST["addSpecific"])) {
+                            addAttribute($conn);
                         }
-                        closeConnection($conn);
-                    } catch(Exception $e) {
-                        echo 'Eccezione individuata: '. $e -> getMessage();
-                    } 
+                    }
+                    else {
+                            echo '<script> alert("No Record / Data Found")</script>';
+                    }
                     
+                    
+                    function deleteAttribute($conn, $idAttributo){
+                        $sql = "DELETE FROM COMBINAZIONE WHERE ID_ATTRIBUTO = $idAttributo";
+                        $stmt = $conn -> prepare($sql);        
+                        $stmt -> execute();
+                       
+                        
+                        closeConnection($conn);
+                        header("Location: table_exercise.php");
+                    }
+                
+                    function updateAttribute($conn) {
+                        /* reindirizzare al file .php per aggiornare il contenuto degli attributi */
+                
+                        closeConnection($conn);
+                    }
+                
+                    function addAttribute($conn) {
+                        /* reindirizzare al file .php per aggiungere attributi alle tabelle (uso di un form con checkbox per l'inserimento) */
+                
+                        closeConnection($conn);
+                    }
                 ?>
             </div>
         </form>
