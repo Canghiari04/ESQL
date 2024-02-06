@@ -43,7 +43,8 @@ html, body {
 }
 
 .undo {
-    margin-top: 250px;
+    position: absolute;
+    margin-top: 450px;
     margin-left: 50px;
 }
 

@@ -5,7 +5,7 @@
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
         <style>
             <?php
-                include 'css/handler.css';
+                include 'css/handlerStudente.css';
             ?>
         </style>
     </head>
