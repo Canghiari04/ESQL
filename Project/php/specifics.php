@@ -49,7 +49,7 @@
                                             <div class="div-td">
                                                 <table class="table-list">   
                                                     <tr>  
-                                                    <th>'.$row -> NOME.'</th>
+                                                        <th>'.$row -> NOME.'</th>
                                                         <th>'.$row -> TIPO.'</th>
                                                         <th>'.$primaryKey.'</th>
                                                     </tr>
@@ -78,7 +78,10 @@
                                             <div class="div-Question">
                                                 <table>   
                                                     <tr>  
-                                                        <th>'.$row -> TESTO.'</th>
+                                                        <th>Risposta</th>
+                                                    </tr>
+                                                    <tr>  
+                                                        <td>'.$row -> TESTO.'</tc>
                                                     </tr>
                                                 </table>
                                             </div>

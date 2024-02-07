@@ -55,7 +55,7 @@
                                                 <th><button class="table-button" type="submit" name="btnDropQuestion" value='.$row -> ID.'>Drop Question</button></th>
                                             </form>
                                             <form action="insert.php" method="GET">
-                                                <th><button class="table-button" type="submit" name="btnOption" value='.$row -> ID.'>Add Option</button></th>
+                                                <th><button class="table-button" type="submit" name="btnAddOption" value='.$row -> ID.'>Add Option</button></th>
                                             </form>
                                         </tr>
                                     </table>
@@ -72,14 +72,3 @@
         </div>
     </body>
 </html>
-
-<?php 
-    /* diversificare se si tratti di un quesito di sketch di codice oppure ad opzione chiusa:
-        - per i primi sarebbe bene stile specifics delle tabelle, da cui si visualizzano le opzioni di risposta possibili
-        - per gli sketch di codice si entra nella sezione specifics, magari visualizzano la query corretta e le tabelle di riferimento (quella totale e la stessa ma con la selezione dei domini voluti) 
-    */
-
-    /* - provare a replicare stile delle tabelle, quindi che riesca a stampare informazioni necessarie
-       - provare a diversificare con le domande a risposta chiusa e aperta
-    */
-?>

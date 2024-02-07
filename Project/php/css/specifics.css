@@ -65,10 +65,17 @@ html, body {
 }
 
 .div-Question {
-    position: relative;
-    padding: 38px;
-    margin: 30px 150px;
+    float: left;
+    padding: 10px 12.5px;
+    width: 295px;
+    height: 200px;
+    margin: 75px;
     background-color: rgb(240, 240, 240);
     border: 2px solid rgb(224, 224, 224);
     border-radius: 10px;
+}
+
+.div-Question:hover {
+    transition: color .4s;
+    border-color: #ff3131;
 }
