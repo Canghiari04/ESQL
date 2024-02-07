@@ -3,6 +3,12 @@ html, body {
     height: 100%;
 }
 
+button:hover {
+    transition: color .4s;
+    color: #ff3131;
+    border-color: #ff3131;
+}
+
 .navbar {
     overflow: hidden;
     background-color: white;
@@ -39,18 +45,13 @@ html, body {
     margin-bottom: 15px;
 }
 
+.div-th {
+    margin: 90px 180px 35px;
+}
+
 .table-head {
     table-layout: fixed;
     width: 50%;
-}
-
-.div-th {
-    margin: 90px 185px 35px;
-}
-
-.table-list {
-    table-layout: fixed;
-    width: 100%;
 }
 
 .div-td {
@@ -64,6 +65,11 @@ html, body {
     align-items: center;
 }
 
+.table-list {
+    table-layout: fixed;
+    width: 100%;
+}
+
 .table-button {
     float: right;
     display: block;
@@ -74,10 +80,4 @@ html, body {
     text-align: center;
     padding: 8px 24px;
     text-decoration: none;
-}
-
-button:hover {
-    transition: color .4s;
-    color: #ff3131;
-    border-color: #ff3131;
 }
