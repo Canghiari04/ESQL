@@ -13,7 +13,7 @@
         <form action="insert.php" method="POST">
             <div class="navbar">
                 <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
-                <a><button class="navbar-button" type="submit" name="btnAddQuestion">Add Question</button></a>
+                <a><button class="navbar-button" type="submit" name="btnInsertQuestion">Add Question</button></a>
                 <a href="handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
             </div>
         </form>
