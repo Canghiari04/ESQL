@@ -2,6 +2,7 @@ USE ESQLDB;
 DROP PROCEDURE IF EXISTS Registrazione_Studente;
 DROP PROCEDURE IF EXISTS Registrazione_Docente;
 DROP PROCEDURE IF EXISTS Eliminazione_Tabella_Esercizio;
+DROP PROCEDURE IF EXISTS Eliminazione_Quesito;
 
 DELIMITER |
 CREATE PROCEDURE Registrazione_Studente(IN EMAIL VARCHAR(255), IN PSWD VARCHAR(255), IN NOME VARCHAR(255), IN COGNOME VARCHAR(255), IN TELEFONO INT(10), IN ANNO_IMMATRICOLAZIONE INT(4), IN CODICE VARCHAR(16))
@@ -36,6 +37,18 @@ BEGIN
 	SET countTabella=(SELECT COUNT(*) FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA));
 	IF (countTabella>0) THEN
 		DELETE FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA);
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Quesito(IN ID_QUESITO INT)
+BEGIN
+	DECLARE countQuesito INT DEFAULT 0;
+	SET countQuesito=(SELECT COUNT(*) FROM Quesito WHERE (Quesito.ID=ID_QUESITO));
+	IF (countQuesito>0) THEN
+		DELETE FROM Quesito WHERE (Quesito.ID=ID_QUESITO);
 	END IF;
 END ;
 | 
