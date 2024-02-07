@@ -10,11 +10,13 @@
         </style>
     </head>
     <body>
-        <div class="navbar">
-            <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
-            <a><button class="navbar-button" type="submit">Add Question</button></a>
-            <a href="handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
-        </div>
+        <form action="insert.php" method="POST">
+            <div class="navbar">
+                <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
+                <a><button class="navbar-button" type="submit" name="btnAddQuestion">Add Question</button></a>
+                <a href="handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
+            </div>
+        </form>
         <div>
             <?php 
                 include 'connectionDB.php';
@@ -54,8 +56,8 @@
                                             <form action="deleted.php" method="GET">
                                                 <th><button class="table-button" type="submit" name="btnDropQuestion" value='.$row -> ID.'>Drop Question</button></th>
                                             </form>
-                                            <form action="insert.php" method="GET">
-                                                <th><button class="table-button" type="submit" name="btnAddOption" value='.$row -> ID.'>Add Option</button></th>
+                                            <form action="" method="GET">
+                                                <th><button class="table-button" type="submit" name="btnAddOption">Add Option</button></th>
                                             </form>
                                         </tr>
                                     </table>
