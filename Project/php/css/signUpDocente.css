@@ -32,6 +32,22 @@ span {
     color: #ff3131;
 }
 
+input {
+    font-size: 12px;
+    width: 100%;
+    padding: 3px 3px;
+    margin: 1px 0;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 0px;
+    border-bottom: 1px solid darkgrey;
+    outline: none;
+}
+
+input:hover {
+    border-bottom: 2px solid #ff3131;
+}
+
 .navbar {
     overflow: hidden;
     background-color: white;
@@ -78,36 +94,4 @@ span {
 
 .center:hover {
     transform: scale(1.03);
-}
-
-.input-Required {
-    font-size: 12px;
-    width: 100%;
-    padding: 3px 3px;
-    margin: 1px 0;
-    background-color: transparent;
-    border-color: transparent;
-    border-radius: 0px;
-    border-bottom: 1px solid darkgrey;
-    outline: none;
-}
-
-.non-Required {
-    font-size: 12px;
-    width: 100%;
-    padding: 3px 3px;
-    margin: 1px 0;
-    background-color: transparent;
-    border-color: transparent;
-    border-radius: 0px;
-    border-bottom: 1px solid darkgrey;
-    outline: none;
-}
-
-.input-Required:hover {
-    border:2px solid #ff3131;
-}
-
-.non-Required:hover {
-    border-bottom: 2px solid #ff3131;
 }

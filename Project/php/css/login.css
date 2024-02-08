@@ -13,13 +13,19 @@ label:hover {
 }
 
 input {
+    font-size: 12px;
+    width: 100%;
+    padding: 3px 3px;
+    margin: 1px 0;
     background-color: transparent;
     border-color: transparent;
-    border-radius: 10px;
+    border-radius: 0px;
+    border-bottom: 1px solid darkgrey;
+    outline: none;
 }
 
 input:hover {
-    border:2px solid #ff3131;
+    border-bottom: 2px solid #ff3131;
 }
 
 h3 {

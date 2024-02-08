@@ -3,7 +3,7 @@
     <head>   
         <style>
             <?php 
-                include 'css/specifics.css'
+                include 'css/insert.css'
             ?>
         </style>
     </head>
@@ -21,6 +21,7 @@
                 */
             } elseif(isset($_POST["btnInsertQuestion"])) {
                 buildNavbar("question");
+                buildForm("AddQuestion");
 
                 /* permettere l'inserimento mediante query scritta dal docente, con accorgimenti relativi alla sintassi oppure fornire lo scheletro della query 
                     - controlli che siano rispettati i vari constraint
@@ -37,6 +38,23 @@
                     <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
                     <a href="'.$value.'.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
                 </div>
+            ';
+        }
+
+        /* funzione per rendere adattivo il form in base a quale record debba essere inserito nelle tabelle del database */
+        function buildForm($value) {
+            echo '
+                <form action="addRecord.php" method="POST">
+                    <div class="container">
+                        <div class="div-tips">
+                            <input class="input-tips">
+                        </div>
+                        <div class="div-textbox">
+                            <input class="input-textbox" type="text" name="txt'.$value.'" required>
+                        </div>
+                    </div>
+                    <button type="submit" name="btn'.$value.'">Add</button>
+                </form>
             ';
         }
         

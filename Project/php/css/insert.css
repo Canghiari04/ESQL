@@ -1,0 +1,112 @@
+html, body {
+    font-family: 'Public Sans';
+    height: 100%;
+}
+
+button {
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    padding: 12px 28px;
+    margin: 30px 962.5px;
+    text-decoration: none;
+}
+
+button:hover {
+    transition: color .4s;
+    color: #ff3131;
+    border-color: #ff3131;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-button {
+    float: right;
+    color: black;
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid black;
+    margin-top: 5px;
+    margin-left: 1050px;
+    padding: 14px 32px;
+}
+
+.zoom-on-img {
+    margin-top: 15px;
+    margin-left: 15px;
+    transition: transform .4s;
+}
+
+.zoom-on-img:hover {
+    transform: scale(1.099);
+}
+
+.undo {
+    float: right;
+    margin-right: 25px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    margin-top: 75px;
+}
+
+.div-tips {
+    padding: 10px 15px;
+    margin-right: 25px;
+    text-align: center;
+    border-radius: 20px;
+    transition: transform .4s;
+}
+
+.div-tips:hover {
+    transform: scale(1.03);
+}
+
+.input-tips {
+    font-size: 13px;
+    width: 250px;
+    height: 400px;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 5px;
+    border: 2px solid darkgrey;
+    outline: none;
+}
+
+.input-tips:hover {
+    border: 2px solid #ff3131;
+}
+
+.div-textbox {
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 20px;
+    transition: transform .4s;
+}
+
+.input-textbox {
+    font-size: 14px;
+    width: 350px;
+    height: 400px;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 5px;
+    border: 2px solid darkgrey;
+    outline: none;
+}
+
+.input-textbox:hover {
+    border: 2px solid #ff3131;
+}

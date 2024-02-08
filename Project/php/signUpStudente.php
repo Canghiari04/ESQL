@@ -21,31 +21,31 @@
                 <form action="authentication.php" method="POST">
                     <div style="margin-top: 30px;">
                         <label>Email<span>*</span></label>
-                        <input class="input-Required" type="text" id="txtEmailSignupStudente" name="txtEmailSignupStudente" required>
+                        <input type="text" id="txtEmailSignupStudente" name="txtEmailSignupStudente" required>
                     </div>
                     <div style="margin-top: 8px;">
                         <label>Password<span>*</span></label>
-                        <input class="input-Required" type="password" id="txtPasswordSignupStudente" name="txtPasswordSignupStudente" required>
+                        <input type="password" id="txtPasswordSignupStudente" name="txtPasswordSignupStudente" required>
                     </div>
                     <div style="margin-top: 8px;">
                         <label>Nome<span>*</span></label>
-                        <input class="input-Required" type="text" id="txtNomeSignupStudente" name="txtNomeSignupStudente" required>
+                        <input type="text" id="txtNomeSignupStudente" name="txtNomeSignupStudente" required>
                     </div>
                     <div style="margin-top: 8px;">
                         <label>Cognome<span>*</span></label>
-                        <input class="input-Required" type="text" id="txtCognomeSignupStudente" name="txtCognomeSignupStudente" required>
+                        <input type="text" id="txtCognomeSignupStudente" name="txtCognomeSignupStudente" required>
                     </div>
                     <div style="margin-top: 8px;">
                         <label>Recapito telefonico</label>
-                        <input class="no-Required" type="numeric" id="txtTelefonoSignupStudente" name="txtTelefonoSignupStudente" value="NULL">
+                        <input type="numeric" id="txtTelefonoSignupStudente" name="txtTelefonoSignupStudente" value="NULL">
                     </div>
                     <div style="margin-top: 8px;">
                         <label>Anno immatricolazione<span>*</span></label>
-                        <input class="input-Required" type="numeric" id="txtAnnoImmatricolazione" name="txtAnnoImmatricolazione" required>
+                        <input type="numeric" id="txtAnnoImmatricolazione" name="txtAnnoImmatricolazione" required>
                     </div>
                     <div style="margin-top: 8px; margin-bottom: 20px;">
                         <label>Codice<span>*</span></label>
-                        <input class="input-Required" type="numeric" id="txtCodice" name="txtCodice" required>
+                        <input type="numeric" id="txtCodice" name="txtCodice" required>
                     </div>
                     <div>
                         <button type="submit" class="button-Signup" style="margin-right:25px;" name="btnSignup" value="Sign Up">Sign Up</button>

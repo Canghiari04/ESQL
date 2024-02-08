@@ -32,6 +32,22 @@ span {
     color: #ff3131;
 }
 
+input {
+    font-size: 12px;
+    width: 100%;
+    padding: 3px 3px;
+    margin: 1px 0;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 0px;
+    border-bottom: 1px solid darkgrey;
+    outline: none;
+}
+
+input:hover {
+    border-bottom: 2px solid #ff3131;
+}
+
 .navbar {
     overflow: hidden;
     background-color: white;
@@ -111,36 +127,4 @@ span {
     padding-left: 15px;
     background-repeat: no-repeat;
     background-size: cover; /*  */
-}
-
-.input-Required {
-    font-size: 12px;
-    width: 100%;
-    padding: 3px 3px;
-    margin: 1px 0;
-    background-color: transparent;
-    border-color: transparent;
-    border-radius: 0px;
-    border-bottom: 1px solid darkgrey;
-    outline: none;
-}
-
-.no-Required {
-    font-size: 12px;
-    width: 100%;
-    padding: 3px 3px;
-    margin: 1px 0;
-    background-color: transparent;
-    border-color: transparent;
-    border-bottom: 1px solid darkgrey;
-    border-radius: 0px;
-    outline: none;
-}
-
-.input-Required:hover {
-    border:2px solid #ff3131;
-}
-
-.no-Required:hover {
-    border-bottom: 2px solid #ff3131;
 }
