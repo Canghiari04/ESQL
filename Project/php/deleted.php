@@ -13,11 +13,11 @@
         }
         
         function deleteTable($conn, $idTable) {
-            $storedProcedure = "CALL Eliminazione_Tabella_Esercizio(:idTable)";
+            $storedProcedure = "CALL Eliminazione_Tabella_Esercizio(:id)";
             
             try {
                 $result = $conn -> prepare($storedProcedure);
-                $result -> bindValue(":idTable", $idTable);
+                $result -> bindValue(":id", $idTable);
                 $result -> execute();
             } catch (PDOException $e) {
                 echo 'Eccezione: '. $e -> getMessage();
@@ -27,15 +27,17 @@
         }
 
         function deleteQuestion($conn, $idQuestion) {
-            $storedProcedure = "CALL Eliminazione_Quesito(:idQuestion)";
+            $storedProcedure = "CALL Eliminazione_Quesito(:id)";
             
             try {
                 $result = $conn -> prepare($storedProcedure);
-                $result -> bindValue(":idQuestion", $idQuestion);
+                $result -> bindValue(":id", $idQuestion);
                 $result -> execute();
             } catch(PDOException $e) {
-                echo 'Eccezione '. $e -> getMessage();
+                echo 'Eccezione '.$e -> getMessage().'<br>';
             }
+
+            header("Location: question.php");
         }
 
         closeConnection($conn);

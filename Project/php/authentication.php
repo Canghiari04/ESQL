@@ -45,7 +45,7 @@
                     loginError();
                 }
             } catch(PDOException $e) {
-                echo 'Eccezione: '. $e -> getMessage();
+                echo 'Eccezione '.$e -> getMessage().'<br>';
             }   
             
             /* chiusura necessaria, poichè se si indirizza in una nuova pagina php-html potrebbe riportare errori a livello di definition-manipulation del db */
@@ -76,7 +76,7 @@
                     header("Location: login.php");
                 }
             } catch(PDOException $e) {
-                echo 'Eccezione: '. $e -> getMessage();
+                echo 'Eccezione '.$e -> getMessage().'<br>';
             }  
             
             closeConnection($conn);
@@ -105,7 +105,7 @@
                     header("Location: login.php");
                 }
             } catch(PDOException $e) {
-                echo 'Eccezione: '. $e -> getMessage();
+                echo 'Eccezione '.$e -> getMessage().'<br>';
             }  
             
             closeConnection($conn);

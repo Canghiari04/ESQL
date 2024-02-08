@@ -56,7 +56,7 @@
                                 }
                             }
                         } catch (PDOException $e) {
-                            echo 'Eccezione: '. $e -> getMessage(); 
+                            echo 'Eccezione '.$e -> getMessage().'<br>';
                         }
                     } elseif (isset($_GET["btnSpecificQuestion"])) {
                         buildNavbar("question");
@@ -86,7 +86,7 @@
                                 }
                             }
                         } catch (PDOException $e) {
-                            echo 'Eccezione: '. $e -> getMessage();
+                            echo 'Eccezione '.$e -> getMessage().'<br>';
                         }
                     }
                 }
