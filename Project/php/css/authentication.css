@@ -1,3 +1,9 @@
+html, body {
+    font-family: 'Public Sans';
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 div {
     font-family: 'Public Sans';
     position: relative;
