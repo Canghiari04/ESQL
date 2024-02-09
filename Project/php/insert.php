@@ -25,8 +25,6 @@
                 /* */
             } else {
                 if(isset($_POST["btnAddTable"])) {
-                    /* fare controllo della presenza della tabella o meno all'interno del database */
-
                     $sql = $_POST["txtAddTable"];
 
                     /* la query presa da textbox, viene suddivisa in tutti i token che la compongono per controllare se si tratti di una query CREATE */
@@ -39,25 +37,31 @@
                         try {
                             /* prima query per la creazione della tabella effettiva */
                             $result = $conn -> prepare($sql);
-                            /* discutere su come dovremmo salvare i dati effettivamente */
+
                             $result -> execute();
+
+                            /* inserimento della tabella esercizio, quindi per i meta-dati, all'interno del database tramite stored procedure */
+                            insertTableExercise($conn, $tokens[2]);
+                            [$numRows, $idTabellaEsercizio] = getIdTableExercise($conn, $tokens);
+
+                            if($numRows > 0) {
+                                /* trovare il modo di immettere nella tabella effettiva un dominio che si colleghi alla tabella esercizio, per fasi successive di eliminazione del record e della tabella dal database */
+
+                                // updateTable($conn, $idTabellaEsercizio, $tokens[2]);
+                            }
                         } catch(PDOException $e) {
                             echo 'Eccezione '.$e -> getMessage().'<br>';
                         }
 
-                        /* inserimento della tabella esercizio, quindi per i meta-dati, all'interno del database tramite stored procedure*/
-                        insertTableExercise($conn, $tokens[2]);
-
                         foreach($tokensAttributes as $attribute) {
                             $trimAttribute = trim($attribute);
                             $tokensAttribute = explode(" ", $trimAttribute);
-
                             
-                            if(count($tokensAttribute) == 2) {
-                                insertAttribute($conn, $tokens, $tokensAttribute);
-                            } else {
-                                /* qua arriva con tutti i token pronti per l'inserimenti, manca solamente l'eliminazione delle parentesi*/
+                            if($tokensAttribute[0] == "PRIMARY") {
                                 updatePrimaryKey($conn, $tokens, $tokensPrimaryKey);
+                            } else {
+                                /* qua arriva con tutti i token pronti per l'inserimenti, manca solamente l'eliminazione delle parentesi */
+                                insertAttribute($conn, $tokens, $tokensAttribute);
                             }
                         }
 
@@ -65,7 +69,9 @@
                     } else{
                         echo 'Sono valide solo query CREATE';
                     }
-                }   
+                } elseif(isset($_POST["btnAddQuestion"])) {
+
+                } 
             }
         }
 
@@ -79,7 +85,6 @@
             ';
         }
 
-        /* funzione per rendere adattivo il form in base a quale record debba essere inserito nelle tabelle del database */
         function buildForm($value) {
             echo '
                 <form action="" method="POST">
@@ -98,7 +103,7 @@
 
 
         function splitAttributes($value) {
-            /* primo split per rimuovere l'intestazione della query, CREATE TABLE ,,,*/
+            /* primo split per rimuovere l'intestazione della query, CREATE TABLE ,,, */
             $split = explode("(", $value, 2);
 
             /* rimuovo gli ultimo due caratteri ossia ');' */
@@ -140,26 +145,69 @@
             }
         }
 
+
+        function getIdTableExercise($conn, $tokens) {
+            $sql = "SELECT ID FROM Tabella_Esercizio WHERE (NOME=:nome);";
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":nome", $tokens[2]);
+                
+                $result -> execute();
+                $numRows = $result -> rowCount();
+            } catch(PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+
+            $row = $result -> fetch(PDO::FETCH_ASSOC);
+            $idTabellaEsercizio = $row['ID'];
+
+            return array($numRows, $idTabellaEsercizio);
+        }
+
+        function updateTable($conn, $idTabellaEsercizio, $nome) {
+            $storedProcedure = "CALL Aggiornamento_Tabella(:idTabellaEsercizio, :nome);";
+
+            try {
+                $result = $conn -> prepare($storedProcedure);
+                $result -> bindValue(":idTabellaEsercizio", $idTabellaEsercizio);
+                $result -> bindValue(":nome", $nome);
+
+                // $result -> execute();
+            } catch(PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+        }
+
         function insertAttribute($conn, $tokens, $tokensAttribute) {
-            [$numRows, $idTabella] = getIdTable($conn, $tokens);
+            /* ricerca dell'id della tabella per sincronizzare l'inserimento nelle tabella Attributo e Tabella_Esercizio */
+            [$numRows, $idTabellaEsercizio] = getIdTableExercise($conn, $tokens);
+            $primaryKey = false;
+            
+            /* controllo per inserimento di una sola chiave primaria, dipendente dalla sintassi usata per scrivere la query */
+            if(in_array("PRIMARY", $tokensAttribute)) {
+                $primaryKey = true;
+            }
+
 
             if($numRows > 0) {
                 $nome = $tokensAttribute[0];
 
+                /* split per ottenere tipo e possibile dimensione dell'attributo*/
                 $tokensTypeDimension = explode("(", $tokensAttribute[1]);
                 $tipo = $tokensTypeDimension[0];
 
                 /* considerazioni sulla dimensione degli attributi */
                 $dimensione = $tokensTypeDimension[1];
 
-                $storedProcedure = "CALL Inserimento_Attributo(:idTabella, :tipo, :nome, :chiavePrimaria);";
+                $storedProcedure = "CALL Inserimento_Attributo(:id, :tipo, :nome, :chiavePrimaria);";
 
                 try {
                     $stmt = $conn -> prepare($storedProcedure);
-                    $stmt -> bindValue(":idTabella", $idTabella);
+                    $stmt -> bindValue(":id", $idTabellaEsercizio);
                     $stmt -> bindValue(":tipo", $tipo);
                     $stmt -> bindValue(":nome", $nome);
-                    $stmt -> bindValue(":chiavePrimaria", 0);
+                    $stmt -> bindValue(":chiavePrimaria", $primaryKey);
                     
                     $stmt -> execute();
                 } catch (PDOException $e) {
@@ -169,7 +217,7 @@
         }
 
         function updatePrimaryKey($conn, $tokens, $attributesPrimaryKey) {
-            [$numRows, $idTabella] = getIdTable($conn, $tokens);
+            [$numRows, $idTabellaEsercizio] = getIdTableExercise($conn, $tokens);
 
             if($numRows > 0) {                                
                 foreach($attributesPrimaryKey as $value) {
@@ -185,7 +233,7 @@
                     
                     try {
                         $stmt = $conn -> prepare($storedProcedure);
-                        $stmt -> bindValue(":id", $idTabella);
+                        $stmt -> bindValue(":id", $idTabellaEsercizio);
                         $stmt -> bindValue(":attributo", $value);
                         
                         $stmt -> execute();
@@ -194,25 +242,6 @@
                     }
                 }
             }
-        }
-
-        function getIdTable($conn, $tokens) {
-            $sql = "SELECT ID FROM Tabella_Esercizio WHERE (NOME=:nome);";
-
-            try {
-                $result = $conn -> prepare($sql);
-                $result -> bindValue(":nome", $tokens[2]);
-                
-                $result -> execute();
-                $numRows = $result -> rowCount();
-            } catch(PDOException $e) {
-                echo 'Eccezione '.$e -> getMessage().'<br>';
-            }
-
-            $row = $result -> fetch(PDO::FETCH_ASSOC);
-            $idTabella = $row['ID'];
-
-            return array($numRows, $idTabella);
         }
 
         function redirect() {
