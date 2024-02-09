@@ -25,6 +25,7 @@
                         try {
                             $result = $conn -> prepare($sql);
                             $result -> bindValue(':idTable', $idTable);
+
                             $result -> execute();
                             
                             echo '
@@ -38,8 +39,9 @@
                                     </table>
                                 </div>
                             ';
+                            
                             if($result) {
-                                while($row = $result->fetch(PDO::FETCH_OBJ)) {
+                                while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                                     /* metodo che restituisce se l'attributo visualizzato costituisca o meno la chiave primaria dellla tabella */
                                     $primaryKey = convertPrimaryKey($row -> CHIAVE_PRIMARIA);
                                     echo '
@@ -67,10 +69,11 @@
                         try {
                             $result = $conn -> prepare($sql);
                             $result -> bindValue(":idQuestion", $idQuestion);
+                            
                             $result -> execute();
                             
                             if($result) {
-                                while($row = $result->fetch(PDO::FETCH_OBJ)) {
+                                while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                                     echo '
                                         <div class="div-Question">
                                             <table>   
