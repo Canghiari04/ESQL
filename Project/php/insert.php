@@ -18,9 +18,14 @@
                 buildForm("AddTable");
 
                 /* */
-            } elseif(isset($_POST["btnInsertQuestion"])) {
+            } elseif(isset($_POST["btnInsertDomandaChiusa"])) {
                 buildNavbar("question");
-                buildForm("AddQuestion");
+                buildFormQuestion($conn, "AddDomandaChiusa");
+
+                /* */
+            } elseif(isset($_POST["btnInsertDomandaCodice"])) {
+                buildNavbar("question");
+                buildFormQuestion($conn, "AddDomandaCodice");
 
                 /* */
             } else {
@@ -47,7 +52,7 @@
                             if($numRows > 0) {
                                 /* trovare il modo di immettere nella tabella effettiva un dominio che si colleghi alla tabella esercizio, per fasi successive di eliminazione del record e della tabella dal database */
 
-                                // updateTable($conn, $idTabellaEsercizio, $tokens[2]);
+                                //updateTable($conn, $idTabellaEsercizio, $tokens[2]);
                             }
                         } catch(PDOException $e) {
                             echo 'Eccezione '.$e -> getMessage().'<br>';
@@ -65,12 +70,13 @@
                             }
                         }
 
-                        redirect();
+                        redirectToTable();
                     } else{
                         echo 'Sono valide solo query CREATE';
                     }
                 } elseif(isset($_POST["btnAddQuestion"])) {
 
+                    redirectToQuestion();
                 } 
             }
         }
@@ -101,6 +107,28 @@
             ';
         }
 
+        /* creazione dinamica del form, data la necessità di ulteriori campi di inserimento rispetto al metodo buildForm() generale */
+        function buildFormQuestion($conn, $value) {
+            echo '
+                <form action="" method="POST">
+                    <div class="container">
+                        <div class="div-select">
+                            <select name="sltDifficolta" required>
+                                <option value="BASSO">BASSO</option>
+                                <option value="MEDIO">MEDIO</option>
+                                <option value="ALTO">ALTO</option>
+                            </select>
+                            '.getNameTests($conn).'  
+                            <input type="number" name="txtNumeroRisposte" min="1">
+                        </div>
+                        <div class="div-textbox">
+                            <textarea class="input-textbox-question" type="text" name="txt'.$value.'" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" name="btn'.$value.'">Add</button>
+                </form>
+            ';
+        }
 
         function splitAttributes($value) {
             /* primo split per rimuovere l'intestazione della query, CREATE TABLE ,,, */
@@ -173,7 +201,7 @@
                 $result -> bindValue(":idTabellaEsercizio", $idTabellaEsercizio);
                 $result -> bindValue(":nome", $nome);
 
-                // $result -> execute();
+                //$result -> execute();
             } catch(PDOException $e) {
                 echo 'Eccezione '.$e -> getMessage().'<br>';
             }
@@ -244,8 +272,43 @@
             }
         }
 
-        function redirect() {
+        /* restituisce tutti i titoli dei test esistenti, in modo tale da associare il quesito rispetto al test voluto */
+        function getNameTests($conn) {
+            $sql = "SELECT TITOLO FROM Test";
+
+            try {
+                $result = $conn -> prepare($sql); 
+
+                $result -> execute();
+            } catch(PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+
+            echo '
+                <div class="">
+                    <select name="sltNomeTest">
+            ';
+
+            if($result) {
+                while($row = $result -> fetch(PDO::FETCH_OBJ)) {
+                    echo '
+                        <option value="'.$row -> TITOLO.'">'.$row -> TITOLO.'</option>
+                    ';
+                }
+            }
+
+            echo '
+                    </select>
+                </div>
+            ';
+        }
+
+        function redirectToTable() {
             header("Location: table_exercise.php");
+        }
+
+        function redirectToQuestion() {
+            header("Location: question.php");
         }
         
         closeConnection($conn);
