@@ -51,13 +51,14 @@
                         /* inserimento dei record all'interno delle tabelle meta-dati */
                         insertRecord($conn, $sql, $tokens[2]);
 
-                        redirectToTable();
+                        /* DA RICONSIDERARE IL REDIRECT DATO CHE IN CASO DI ERRORI NON SAREBBERO VISUALIZZABILI  */
+                        //redirectToTable();
                     } else{
                         echo 'Sono valide solo query CREATE';
                     }
                 } elseif(isset($_POST["btnAddQuestion"])) {
 
-                    redirectToQuestion();
+                    //redirectToQuestion();
                 } 
             }
         }
