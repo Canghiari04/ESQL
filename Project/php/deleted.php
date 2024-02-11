@@ -6,38 +6,69 @@
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
                 if (isset($_GET["btnDropTable"])) {
-                deleteTable($conn, $idTable = $_GET["btnDropTable"]);    
+                deleteTableExercise($conn, $idTable = $_GET["btnDropTable"]);    
+                //deleteTable($conn, $idTable = $_GET["btnDropTable"]);    
+
+                header("Location: table_exercise.php");
             } elseif (isset($_GET["btnDropQuestion"])) {
                 deleteQuestion($conn, $idQuestion = $_GET["btnDropQuestion"]);
+
+                header("Location: question.php");
             }
         }
         
-        function deleteTable($conn, $idTable) {
-            $storedProcedure = "CALL Eliminazione_Tabella_Esercizio(:id)";
+        function deleteTableExercise($conn, $id) {
+            $storedProcedure = "CALL Eliminazione_Tabella_Esercizio(:id);";
             
             try {
                 $result = $conn -> prepare($storedProcedure);
-                $result -> bindValue(":id", $idTable);
+                $result -> bindValue(":id", $id);
+
                 $result -> execute();
             } catch (PDOException $e) {
-                echo 'Eccezione: '. $e -> getMessage();
+                echo 'Eccezione '.$e -> getMessage().'<br>';
             }
-            
-            header("Location: table_exercise.php");
         }
 
-        function deleteQuestion($conn, $idQuestion) {
-            $storedProcedure = "CALL Eliminazione_Quesito(:id)";
+        function deleteTable($conn, $id) {
+            $sql = "SELECT NOME FROM Tabella_Esercizio WHERE (ID=:id);";
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":id", $id);
+
+                $result -> execute();
+            } catch (PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+            
+            $row = $result -> fetch(PDO::FETCH_ASSOC);
+            $nome = $row['NOME'];
+            echo 'ciao'.$nome.'<br>';
+            $storedProcedure = "CALL Eliminazione_Tabella(:nome);";
+
+            
+            try {
+                $stmt = $conn -> prepare($storedProcedure);
+                $stmt -> bindValue(":nome", $nome);
+
+                $stmt -> execute();
+            } catch (PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+        }
+
+        function deleteQuestion($conn, $id) {
+            $storedProcedure = "CALL Eliminazione_Quesito(:id);";
             
             try {
                 $result = $conn -> prepare($storedProcedure);
-                $result -> bindValue(":id", $idQuestion);
+                $result -> bindValue(":id", $id);
+
                 $result -> execute();
             } catch(PDOException $e) {
                 echo 'Eccezione '.$e -> getMessage().'<br>';
             }
-
-            header("Location: question.php");
         }
 
         closeConnection($conn);

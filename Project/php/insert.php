@@ -32,43 +32,24 @@
                 if(isset($_POST["btnAddTable"])) {
                     $sql = $_POST["txtAddTable"];
 
-                    /* la query presa da textbox, viene suddivisa in tutti i token che la compongono per controllare se si tratti di una query CREATE */
+                    /* la query presa da textbox, viene suddivisa in tutti i token che la compongono per controllare se si tratti di una query CREATE, da cui si ricava il nome della tabella */
                     $tokens = explode(" ", $sql);
 
-                    if($tokens[0] == "CREATE") {
-                        $tokensAttributes = splitAttributes($sql);
-                        $tokensPrimaryKey = splitPrimaryKey($sql);                       
-
+                    if(in_array("CREATE", $tokens)) {
                         try {
                             /* prima query per la creazione della tabella effettiva */
                             $result = $conn -> prepare($sql);
 
                             $result -> execute();
 
-                            /* inserimento della tabella esercizio, quindi per i meta-dati, all'interno del database tramite stored procedure */
+                            /* inserimento della tabella esercizio */
                             insertTableExercise($conn, $tokens[2]);
-                            [$numRows, $idTabellaEsercizio] = getIdTableExercise($conn, $tokens);
-
-                            if($numRows > 0) {
-                                /* trovare il modo di immettere nella tabella effettiva un dominio che si colleghi alla tabella esercizio, per fasi successive di eliminazione del record e della tabella dal database */
-
-                                //updateTable($conn, $idTabellaEsercizio, $tokens[2]);
-                            }
                         } catch(PDOException $e) {
                             echo 'Eccezione '.$e -> getMessage().'<br>';
                         }
 
-                        foreach($tokensAttributes as $attribute) {
-                            $trimAttribute = trim($attribute);
-                            $tokensAttribute = explode(" ", $trimAttribute);
-                            
-                            if($tokensAttribute[0] == "PRIMARY") {
-                                updatePrimaryKey($conn, $tokens, $tokensPrimaryKey);
-                            } else {
-                                /* qua arriva con tutti i token pronti per l'inserimenti, manca solamente l'eliminazione delle parentesi */
-                                insertAttribute($conn, $tokens, $tokensAttribute);
-                            }
-                        }
+                        /* inserimento dei record all'interno delle tabelle meta-dati */
+                        insertRecord($conn, $sql, $tokens[2]);
 
                         redirectToTable();
                     } else{
@@ -130,148 +111,6 @@
             ';
         }
 
-        function splitAttributes($value) {
-            /* primo split per rimuovere l'intestazione della query, CREATE TABLE ,,, */
-            $split = explode("(", $value, 2);
-
-            /* rimuovo gli ultimo due caratteri ossia ');' */
-            $splitting = substr($split[1], 0, -2);
-
-            /* ultimo split per ricavare attributi e tipo dell'attributo, ad esempio (codice INT, nome VARCHAR) --> (codice INT) - (nome VARCHAR) */
-            $splitted = explode(",", $splitting);
-
-            return $splitted;
-        }
-
-        /* funzione necessaria per ottenere i token che compongono la chiave primaria della tabella */
-        function splitPrimaryKey($value) {
-            /* ricava la sezione della chiave primaria, suddividendo in due parti la query, (1 parte - codice sql che precede PRIMARY KEY, quindi gli attributi / 2 - parte codice sql che segue PRIMARY KEY) */
-            $split = explode("PRIMARY KEY", $value, 2);
-
-            /* rimuove gli spazi alla fine ed inizio della stringa, quindi ' (numero, codice) );' --> '(numero, codice));' */
-            $splitting = trim($split[1]);
-
-            /* rimuove gli ultimo due caratteri del vincolo ossia ');' */
-            $splitted = substr($splitting, 0, -2);
-            $splitted = explode(",", $splitted);
-
-            return $splitted;
-        }
-
-        function insertTableExercise($conn, $nomeTable) {
-            $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe);";
-
-            try {
-                $result = $conn -> prepare($storedProcedure);
-                $result -> bindValue(":nome", $nomeTable);
-                $result -> bindValue(":dataCreazione", date("Y-m-d H:i:s"));
-                $result -> bindValue(":numRighe", 0);
-                
-                $result -> execute();
-            } catch(PDOException $e) {
-                echo 'Eccezione '.$e -> getMessage().'<br>';
-            }
-        }
-
-
-        function getIdTableExercise($conn, $tokens) {
-            $sql = "SELECT ID FROM Tabella_Esercizio WHERE (NOME=:nome);";
-
-            try {
-                $result = $conn -> prepare($sql);
-                $result -> bindValue(":nome", $tokens[2]);
-                
-                $result -> execute();
-                $numRows = $result -> rowCount();
-            } catch(PDOException $e) {
-                echo 'Eccezione '.$e -> getMessage().'<br>';
-            }
-
-            $row = $result -> fetch(PDO::FETCH_ASSOC);
-            $idTabellaEsercizio = $row['ID'];
-
-            return array($numRows, $idTabellaEsercizio);
-        }
-
-        function updateTable($conn, $idTabellaEsercizio, $nome) {
-            $storedProcedure = "CALL Aggiornamento_Tabella(:idTabellaEsercizio, :nome);";
-
-            try {
-                $result = $conn -> prepare($storedProcedure);
-                $result -> bindValue(":idTabellaEsercizio", $idTabellaEsercizio);
-                $result -> bindValue(":nome", $nome);
-
-                //$result -> execute();
-            } catch(PDOException $e) {
-                echo 'Eccezione '.$e -> getMessage().'<br>';
-            }
-        }
-
-        function insertAttribute($conn, $tokens, $tokensAttribute) {
-            /* ricerca dell'id della tabella per sincronizzare l'inserimento nelle tabella Attributo e Tabella_Esercizio */
-            [$numRows, $idTabellaEsercizio] = getIdTableExercise($conn, $tokens);
-            $primaryKey = false;
-            
-            /* controllo per inserimento di una sola chiave primaria, dipendente dalla sintassi usata per scrivere la query */
-            if(in_array("PRIMARY", $tokensAttribute)) {
-                $primaryKey = true;
-            }
-
-
-            if($numRows > 0) {
-                $nome = $tokensAttribute[0];
-
-                /* split per ottenere tipo e possibile dimensione dell'attributo*/
-                $tokensTypeDimension = explode("(", $tokensAttribute[1]);
-                $tipo = $tokensTypeDimension[0];
-
-                /* considerazioni sulla dimensione degli attributi */
-                $dimensione = $tokensTypeDimension[1];
-
-                $storedProcedure = "CALL Inserimento_Attributo(:id, :tipo, :nome, :chiavePrimaria);";
-
-                try {
-                    $stmt = $conn -> prepare($storedProcedure);
-                    $stmt -> bindValue(":id", $idTabellaEsercizio);
-                    $stmt -> bindValue(":tipo", $tipo);
-                    $stmt -> bindValue(":nome", $nome);
-                    $stmt -> bindValue(":chiavePrimaria", $primaryKey);
-                    
-                    $stmt -> execute();
-                } catch (PDOException $e) {
-                    echo 'Eccezione '.$e -> getMessage().'<br>';
-                }
-            }
-        }
-
-        function updatePrimaryKey($conn, $tokens, $attributesPrimaryKey) {
-            [$numRows, $idTabellaEsercizio] = getIdTableExercise($conn, $tokens);
-
-            if($numRows > 0) {                                
-                foreach($attributesPrimaryKey as $value) {
-                    $value = trim($value);
-                    
-                    if(substr($value, 0, 1) == "(") {
-                        $value = ltrim($value, "(");
-                    } elseif(substr($value, -1) == ")") {
-                        $value = substr($value, 0, -1);
-                    }
-                    
-                    $storedProcedure = "CALL Aggiornamento_Chiave(:id, :attributo);";
-                    
-                    try {
-                        $stmt = $conn -> prepare($storedProcedure);
-                        $stmt -> bindValue(":id", $idTabellaEsercizio);
-                        $stmt -> bindValue(":attributo", $value);
-                        
-                        $stmt -> execute();
-                    } catch(PDOException $e) {
-                        echo 'Eccezione '.$e -> getMessage().'<br>';
-                    }
-                }
-            }
-        }
-
         /* restituisce tutti i titoli dei test esistenti, in modo tale da associare il quesito rispetto al test voluto */
         function getNameTests($conn) {
             $sql = "SELECT TITOLO FROM Test";
@@ -284,23 +123,195 @@
                 echo 'Eccezione '.$e -> getMessage().'<br>';
             }
 
-            echo '
-                <div class="">
-                    <select name="sltNomeTest">
-            ';
-
             if($result) {
+                echo '
+                    <div class="">
+                        <select name="sltNomeTest">
+                ';
+
                 while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                     echo '
                         <option value="'.$row -> TITOLO.'">'.$row -> TITOLO.'</option>
                     ';
                 }
+
+                echo '
+                        </select>
+                    </div>
+                ';
+            }
+        }
+
+        function insertRecord($conn, $sql, $nomeTabella) {
+            /* flag che consente il corretto inserimento dei record all'interno della tabella Attributo */
+            $flagPrimaryKey = 0;
+
+            /* rimozione dell'intestazione della query e dei due caratteri finali ");" */
+            $tokens = explode("(", $sql, 2);
+            $tokens = substr($tokens[1], 0, -2);
+
+            /* split per ogni riga della query "...,", successiva alla rimozione di spazi iniziali e finali per ogni riga */
+            $tokensQuery = explode(",", trim($tokens));
+
+            /* metodo che restituisce l'id della tabella esercizio di riferimento */
+            [$numRows, $idTabellaEsercizio] = getIdTableExercise($conn, $nomeTabella);
+
+            foreach($tokensQuery as $value) {  
+                /* split inerente allo spazio compreso tra nome e tipo della colonna */
+                $token = explode(" ", trim($value));
+
+                /* condizione che tratta vincoli di chiave primaria oppure esterna */
+                if($token[0] == "PRIMARY") {
+                    /* set del flag a 1 per evitare si inserire colonne già presenti, a causa della sintassi del vincolo di chiave primaria */
+                    $flagPrimaryKey = 1;
+                    updatePrimaryKey($conn, $numRows, $idTabellaEsercizio, splitPrimaryKey($sql));
+                } elseif ($token[0] == "FOREIGN") {
+                    [$tokensForeignKey, $nameTableReferenced, $tokensTableReferenced] = splitForeignKey($sql);
+                    insertForeignKey($conn, $numRows, $idTabellaEsercizio, $tokensForeignKey, $nameTableReferenced, $tokensTableReferenced);
+                    
+                    break;
+                } elseif($flagPrimaryKey == 0) {
+                    insertAttribute($conn, $numRows, $idTabellaEsercizio, $token);
+                }
+            }
+        }
+
+        function insertAttribute($conn, $numRows, $idTabellaEsercizio, $tokensAttribute) {
+            $primaryKey = 0;
+
+            /* controllo per inserimento di una singola chiave primaria */
+            if(in_array("PRIMARY", $tokensAttribute)) {
+                $primaryKey = 1;
+            }
+            
+            if($numRows > 0) { 
+                $nome = $tokensAttribute[0];
+                
+                /* split per ottenere tipo e dimensione dell'attributo */
+                $tokensTypeDimension = explode("(", $tokensAttribute[1]);
+                $tipo = $tokensTypeDimension[0];
+                $dimensione = substr($tokensTypeDimension[1], 0, -1);
+                
+                $storedProcedure = "CALL Inserimento_Attributo(:id, :tipo, :nome, :chiavePrimaria);";
+                
+                try {
+                    $stmt = $conn -> prepare($storedProcedure);
+
+                    $stmt -> bindValue(":id", $idTabellaEsercizio);
+                    $stmt -> bindValue(":tipo", $tipo);
+                    $stmt -> bindValue(":nome", $nome);
+                    $stmt -> bindValue(":chiavePrimaria", $primaryKey);
+
+                    $stmt -> execute();
+                } catch (PDOException $e) {
+                    echo 'Eccezione '.$e -> getMessage().'<br>';
+                }
+            }
+        }
+
+        function updatePrimaryKey($conn, $numRows, $idTabellaEsercizio, $tokensPrimaryKey) {
+            if($numRows > 0) {                                
+                foreach($tokensPrimaryKey as $value) {
+                    $attribute = trim($value);
+                    
+                    /* condizioni per verificare se si tratti della prima oppure dell'ultima colonna che compone la chiave composta */
+                    if(substr($attribute, 0, 1) == "(") {
+                        $attribute = ltrim($attribute, "(");
+                    } elseif(substr($attribute, -1) == ")") {
+                        $attribute = substr($attribute, 0, -1);
+                    }
+                    
+                    $storedProcedure = "CALL Aggiornamento_Chiave(:id, :attributo);";
+                    
+                    try {
+                        $stmt = $conn -> prepare($storedProcedure);
+                        $stmt -> bindValue(":id", $idTabellaEsercizio);
+                        $stmt -> bindValue(":attributo", $attribute);
+                        
+                        $stmt -> execute();
+                    } catch(PDOException $e) {
+                        echo 'Eccezione '.$e -> getMessage().'<br>';
+                    }
+                }
+            }
+        }
+
+        function splitPrimaryKey($sql) {
+            $split = explode("(", $sql, 2);
+            $splitting = substr($split[1], 0, -2);
+
+            $tokensAttributesKey = explode("PRIMARY KEY", $splitting);
+            $tokensPrimaryForeignKey = explode("FOREIGN KEY", $tokensAttributesKey[1]);
+            $tokensPrimaryKey = explode(",", $tokensPrimaryForeignKey[0]);
+
+            return $tokensPrimaryKey;
+        }
+
+        function insertForeignKey($conn, $numRows, $idTabellaEsercizio, $tokensForeignKey, $nameTableReferenced, $tokensTableReferenced) {
+            //Ricordarsi di usare sempre trim quando si opera su valori dell'array
+            if($numRows > 0) {
+                foreach($tokensForeignKey as $value) {
+                    $value = trim($value);
+                    /* */
+                }
+
+                foreach($tokensTableReferenced as $value) {
+                    $value = trim($value);
+                    /* */
+                }
+            }
+        }
+
+        /* split che restituisce in ordine --> colonne della tabella referenziante, nome della tabella referenziata e colonne della tabella referenziata */
+        function splitForeignKey($sql) {
+            $split = explode("(", $sql, 2);
+            $splitting = substr($split[1], 0, -2);
+
+            $tokensAttributes = explode("PRIMARY KEY", $splitting);
+            $tokensPrimaryForeignKey = explode("FOREIGN KEY", trim($tokensAttributes[1]));
+            $tokensForeignKeyReferences = explode("REFERENCES", trim($tokensPrimaryForeignKey[1]));
+
+            $tokensForeignKey = explode(",", trim($tokensForeignKeyReferences[0]));
+            $tokensReferences = explode("(", trim($tokensForeignKeyReferences[1]));
+            
+            $nameTableReferenced = trim($tokensReferences[0]);
+            $tokensTableReferenced = explode(",", trim($tokensReferences[1]));
+
+            return array($tokensForeignKey, $nameTableReferenced, $tokensTableReferenced);
+        }
+
+        function insertTableExercise($conn, $nomeTabella) {
+            $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe);";
+
+            try {
+                $result = $conn -> prepare($storedProcedure);
+                $result -> bindValue(":nome", $nomeTabella);
+                $result -> bindValue(":dataCreazione", date("Y-m-d H:i:s"));
+                $result -> bindValue(":numRighe", 0);
+                
+                $result -> execute();
+            } catch(PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+        }
+
+        function getIdTableExercise($conn, $nomeTabella) {
+            $sql = "SELECT ID FROM Tabella_Esercizio WHERE (NOME=:nome);";
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":nome", $nomeTabella);
+                
+                $result -> execute();
+                $numRows = $result -> rowCount();
+            } catch(PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
             }
 
-            echo '
-                    </select>
-                </div>
-            ';
+            $row = $result -> fetch(PDO::FETCH_ASSOC);
+            $idTabellaEsercizio = $row['ID'];
+
+            return array($numRows, $idTabellaEsercizio);
         }
 
         function redirectToTable() {
