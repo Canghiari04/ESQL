@@ -94,6 +94,18 @@ button:hover, select:hover, input:hover {
     transform: scale(1.03);
 }
 
+.div-query {
+    padding: 10px 15px;
+    margin-right: 25px;
+    text-align: center;
+    border-radius: 20px;
+    transition: transform .4s;
+}
+
+.div-query:hover {
+    transform: scale(1.03);
+}
+
 .div-select {
     padding: 10px 15px;
     border-radius: 20px;
@@ -119,6 +131,21 @@ button:hover, select:hover, input:hover {
 }
 
 .input-tips:hover {
+    border: 2px solid #ff3131;
+}
+
+.input-text {
+    font-size: 13px;
+    width: 250px;
+    height: 400px;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 5px;
+    border: 2px solid darkgrey;
+    outline: none;
+}
+
+.input-text:hover {
     border: 2px solid #ff3131;
 }
 
