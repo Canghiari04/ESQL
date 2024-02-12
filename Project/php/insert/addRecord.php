@@ -1,29 +1,26 @@
 <?php 
     function insertRecord($conn, $sql, $nameTable) {
-        /* flag che consente il corretto inserimento dei record all'interno della tabella Attributo */
+        /* flag utilizzato per eliminare la possibilità di inserimenti errati all'interno della tabella Attributo */
         $flagPrimaryKey = 0;
 
-        /* rimozione dell'intestazione della query e dei due caratteri finali ");" */
+        /* rimozione di tutti i token superflui, per risalire alle colonne e ai vincoli di chiave */
         $tokens = explode("(", $sql, 2);
         $tokens = substr($tokens[1], 0, -2);
-
-        /* split per ogni riga della query "...,", successiva alla rimozione di spazi iniziali e finali per ogni riga */
         $tokensQuery = explode(",", trim($tokens));
 
         /* metodo che restituisce l'id della tabella esercizio di riferimento */
         [$numRows, $idTableReferential] = getIdTableExercise($conn, $nameTable);
 
         foreach($tokensQuery as $value) {  
-            /* split inerente allo spazio compreso tra nome e tipo della colonna */
+            /* split per ottenere i token che costituiscono la singola riga */
             $token = explode(" ", trim($value));
 
-            /* condizione che tratta vincoli di chiave primaria oppure esterna */
             if($token[0] == "PRIMARY") {
-                /* set del flag a 1 per evitare si inserire colonne già presenti, a causa della sintassi del vincolo di chiave primaria */
                 $flagPrimaryKey = 1;
                 updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql));
             } elseif ($token[0] == "FOREIGN") {
-                /* trovare modo che gestisca FOREIGN KEY su più righe */
+                /* TROVARE MODO PER INSERIMENTI DI PIU' VINCOLI DI CHIAVE ESTERNA */
+
                 [$arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced] = splitForeignKey($sql);
                 insertForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
                 break;
@@ -38,7 +35,7 @@
     function insertAttribute($conn, $numRows, $idTableReferential, $tokensAttribute) {
         $primaryKey = 0;
 
-        /* controllo per inserimento di una singola chiave primaria */
+        /* controllo per inserimento della singola chiave primaria */
         if(in_array("PRIMARY", $tokensAttribute)) {
             $primaryKey = 1;
         }
@@ -68,6 +65,7 @@
         }
     }
 
+    /* aggiornamento del campo Chiave_Primaria degli attributi che costituiscono il vincolo di primary key  */
     function updatePrimaryKey($conn, $numRows, $idTableReferential, $tokensPrimaryKey) {
         if($numRows > 0) {                                
             foreach($tokensPrimaryKey as $value) {
@@ -95,11 +93,14 @@
         }
     }
 
+    /* funzione restituente tutte le colonne che costituiscano la chiave primaria composta */
     function splitPrimaryKey($sql) {
         $split = explode("(", $sql, 2);
         $splitting = substr($split[1], 0, -2);
 
         $tokensAttributesKey = explode("PRIMARY KEY", $splitting);
+
+        /* explode mediante la foreign key qualora sia presente, altrimenti restituisce la stessa stringa definita dall'explode per primary key  */
         $tokensPrimaryForeignKey = explode("FOREIGN KEY", $tokensAttributesKey[1]);
         $tokensPrimaryKey = explode(",", $tokensPrimaryForeignKey[0]);
 
@@ -108,12 +109,12 @@
 
     function insertForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced) {
         if($numRows > 0) {
+            /* ciclo for basato su un medesimo array dato lo stesso numero di variabili contenuto */
             for($i = 0; $i <= sizeof($arrayForeignKey) - 1; $i++) {
                 $nameAttributeReferential = $arrayForeignKey[$i];
                 $nameAttributeReferenced = $arrayAttributeReferenced[$i];
 
-                //echo ''.$nameAttributeReferential.'<br>'.$nameAttributeReferenced.'';
-
+                /* individuazione dell'id della tabella referenziata, per la costruzione del vincolo di integrità */
                 [$numRows, $idTableReferenced] = getIdTableExercise($conn, $nameTableReferenced);
                 
                 $sqlReferential = "SELECT Attributo.ID FROM Attributo JOIN Tabella_Esercizio ON (Attributo.ID_TABELLA=Tabella_Esercizio.ID) WHERE (Attributo.ID_TABELLA=:idTabellaReferenziante) AND (Attributo.NOME=:nomeAttributoReferenziante)";
@@ -123,11 +124,9 @@
                     $resultReferential = $conn -> prepare($sqlReferential);
                     $resultReferenced = $conn -> prepare($sqlReferenced);
                     
-                    /* */
                     $resultReferential -> bindValue(":idTabellaReferenziante", $idTableReferential);
                     $resultReferential -> bindValue(":nomeAttributoReferenziante", $nameAttributeReferential);
                     
-                    /* */
                     $resultReferenced -> bindValue(":idTabellaReferenziata", $idTableReferenced);
                     $resultReferenced -> bindValue(":nomeAttributoReferenziato", $nameAttributeReferenced);
                     
@@ -137,6 +136,7 @@
                     echo 'Eccezione '.$e -> getMessage().'<br>';
                 }
 
+                /* acquisizione dei valori necessari per inserimento di record nella tabella Vincolo_Integrita, prima della collezione referenziante e poi della collezione referenziata */
                 $rowReferential = $resultReferential -> fetch(PDO::FETCH_ASSOC);
                 $rowReferenced = $resultReferenced -> fetch(PDO::FETCH_ASSOC);
                 
@@ -158,27 +158,26 @@
         }
     }
 
-    /* split che restituisce in ordine --> colonne della tabella referenziante, nome della tabella referenziata e colonne della tabella referenziata */
+    /* split che restituisce in ordine: colonne della tabella referenziante, nome della tabella referenziata e colonne della tabella referenziata */
     function splitForeignKey($sql) {
         $split = explode("(", $sql, 2);
         $splitting = substr($split[1], 0, -2);
         
         $tokensPrimaryForeignKey = explode("FOREIGN KEY", trim($splitting));
-        $tokensForeignKeyReferences = explode("REFERENCES", trim($tokensPrimaryForeignKey[1]));
+        $tokensForeignReferences = explode("REFERENCES", trim($tokensPrimaryForeignKey[1]));
         
-        $tokensForeignKey = explode(",", trim($tokensForeignKeyReferences[0]));
-        
-        $tokensReferences = explode("(", trim($tokensForeignKeyReferences[1]));
+        $tokensForeignKey = explode(",", trim($tokensForeignReferences[0]));
+        $tokensReferences = explode("(", trim($tokensForeignReferences[1]));
         $nameTableReferenced = trim($tokensReferences[0]);
         $tokensTableReferenced = explode(",", trim($tokensReferences[1]));
 
         $arrayForeignKey = convertToArray($tokensForeignKey);
         $arrayAttributeReferenced = convertToArray($tokensTableReferenced);
 
-
         return array($arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
     }
 
+    /* metodo che permette di convertire i token della foreign key negli attributi necessari per la realizzazione del vincolo di chiave esterna */
     function convertToArray($tokensForeignKey) {
         $array = array();
 
@@ -198,6 +197,7 @@
         return $array;
     }
 
+    /* inserimento della tabella di esercizio, riferita alla collezione di meta-dati */
     function insertTableExercise($conn, $nameTable) {
         $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe);";
 
@@ -213,6 +213,7 @@
         }
     }
 
+    /* funzione restituente l'id della tabella e il numero di righe della query, per successive condizioni */
     function getIdTableExercise($conn, $nameTable) {
         $sql = "SELECT ID FROM Tabella_Esercizio WHERE (NOME=:nome);";
 
