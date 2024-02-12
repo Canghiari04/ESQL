@@ -14,12 +14,7 @@
         $conn = openConnection();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if(isset($_POST["btnInsertTable"])) {
-                buildNavbar("table_exercise");
-                buildForm("AddTable");
-
-                /* */
-            } elseif(isset($_POST["btnInsertDomandaChiusa"])) {
+            if(isset($_POST["btnInsertDomandaChiusa"])) {
                 buildNavbar("question");
                 buildFormQuestion($conn, "AddDomandaChiusa");
 
@@ -30,29 +25,8 @@
 
                 /* */
             } else {
-                if(isset($_POST["btnAddTable"])) {
-                    $sql = $_POST["txtAddTable"];
-
-                    /* suddivisione della query nei token principali, per ottenere il nome della tabella di riferimento */
-                    $tokens = explode(" ", $sql);
-
-                    try {
-                        $result = $conn -> prepare($sql);
-
-                        /* creazione della tabella effettiva */
-                        $result -> execute();
-
-                        /* inserimento di tutti i dati all'interno delle collezioni di meta-dati */
-                        insertTableExercise($conn, $tokens[2]);
-                    } catch(PDOException $e) {
-
-                    }
-
-                    /* inserimento dei record all'interno delle tabelle meta-dati */
-                    insertRecord($conn, $sql, $tokens[2]);
-                } elseif(isset($_POST["btnAddQuestion"])) {
-
-                } 
+                /* RICORDARE DI PASSARE TUTTI I CAMPI DEL FORM */
+                insertQuestion($conn); 
             }
         }
 
@@ -66,7 +40,7 @@
             ';
         }
 
-        /* creazione dinamica del form, data la necessità di ulteriori campi di inserimento rispetto al metodo buildForm() generale */
+        /* creazione dinamica del form, data la necessità di ulteriori campi di inserimento */
         function buildFormQuestion($conn, $value) {
             echo '
                 <form action="" method="POST">
