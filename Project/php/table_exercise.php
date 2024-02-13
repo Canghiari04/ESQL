@@ -50,7 +50,7 @@
                                             <th>'.$row -> NOME.'</th>
                                             <th>'.$row -> DATA_CREAZIONE.'</th>
                                             <th>'.$row -> NUM_RIGHE.'</th>
-                                            <form action="specifics.php" method="GET">
+                                            <form action="specifics/specifics.php" method="GET">
                                                 <th><button class="table-button" type="submit" name="btnSpecificTable" value='.$row -> ID.'>Specifics</button></th>
                                             </form>
                                             <form action="deleted.php" method="GET">

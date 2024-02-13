@@ -17,15 +17,16 @@
 
             if($token[0] == "PRIMARY") {
                 $flagPrimaryKey = 1;
-                updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql));
+                //updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql));
             } elseif ($token[0] == "FOREIGN") {
                 /* TROVARE MODO PER INSERIMENTI DI PIU' VINCOLI DI CHIAVE ESTERNA */
 
-                [$arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced] = splitForeignKey($sql);
-                insertForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
+                [$arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced] = splitForeignKey($value);
+                echo ''.$nameTableReferenced.'<br>';
+                //insertForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
                 break;
             } elseif($flagPrimaryKey == 0) {
-                insertAttribute($conn, $numRows, $idTableReferential, $token);
+                //insertAttribute($conn, $numRows, $idTableReferential, $token);
             }
         }
 
@@ -159,11 +160,8 @@
     }
 
     /* split che restituisce in ordine: colonne della tabella referenziante, nome della tabella referenziata e colonne della tabella referenziata */
-    function splitForeignKey($sql) {
-        $split = explode("(", $sql, 2);
-        $splitting = substr($split[1], 0, -2);
-        
-        $tokensPrimaryForeignKey = explode("FOREIGN KEY", trim($splitting));
+    function splitForeignKey($rowQuery) {
+        $tokensPrimaryForeignKey = explode("FOREIGN KEY", trim($rowQuery));
         $tokensForeignReferences = explode("REFERENCES", trim($tokensPrimaryForeignKey[1]));
         
         $tokensForeignKey = explode(",", trim($tokensForeignReferences[0]));
