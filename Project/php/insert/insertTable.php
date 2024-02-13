@@ -24,6 +24,7 @@
                     $tokens = explode(" ", $sql);
                     $nome = $tokens[2];
 
+                    /* TROVARE IL MODO PER SUDDIVIDERE CORRETTAMENTE CON EXPLODE QUALORA IL NOME DELLA TABELLA SIA ATTACCATO ALLA PARENTESI --> NAMETABLE( ATTRIBUTE */
                     try {
                         $result = $conn -> prepare($sql);
 

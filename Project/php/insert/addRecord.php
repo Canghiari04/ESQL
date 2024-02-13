@@ -17,16 +17,13 @@
 
             if($token[0] == "PRIMARY") {
                 $flagPrimaryKey = 1;
-                //updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql));
+                updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql));
             } elseif ($token[0] == "FOREIGN") {
-                /* TROVARE MODO PER INSERIMENTI DI PIU' VINCOLI DI CHIAVE ESTERNA */
-
                 [$arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced] = splitForeignKey($value);
                 echo ''.$nameTableReferenced.'<br>';
-                //insertForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
-                break;
+                InsertForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
             } elseif($flagPrimaryKey == 0) {
-                //insertAttribute($conn, $numRows, $idTableReferential, $token);
+                insertAttribute($conn, $numRows, $idTableReferential, $token);
             }
         }
 

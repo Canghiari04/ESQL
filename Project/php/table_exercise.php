@@ -53,7 +53,7 @@
                                             <form action="specifics/specifics.php" method="GET">
                                                 <th><button class="table-button" type="submit" name="btnSpecificTable" value='.$row -> ID.'>Specifics</button></th>
                                             </form>
-                                            <form action="deleted.php" method="GET">
+                                            <form action="delete/deleted.php" method="GET">
                                                 <th><button class="table-button" type="submit" name="btnDropTable" value='.$row -> ID.'>Drop Table</button></th>
                                             </form>
                                             <form action="" method="GET">

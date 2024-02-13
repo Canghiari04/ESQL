@@ -3,9 +3,9 @@
     <head>   
         <style>
             <?php 
-                include 'connectionDB.php';
-                include 'insert/insertTable.php';
-                include 'css/insert.css';
+                include 'addQuestion.php';
+                include '../connectionDB.php';
+                include '../css/insert.css';
             ?>
         </style>
     </head>
@@ -34,8 +34,8 @@
         function buildNavbar($value) {
             echo '
                 <div class="navbar">
-                    <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
-                    <a href="'.$value.'.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
+                    <a><img class="zoom-on-img" width="112" height="48" src="../img/ESQL.png"></a>
+                    <a href="../'.$value.'.php"><img class="zoom-on-img undo" width="32" height="32" src="../img/undo.png"></a>
                 </div>
             ';
         }
