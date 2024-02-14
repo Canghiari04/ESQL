@@ -1,4 +1,4 @@
-<?php
+<?php    
     function openConnection() {
         try {
             $pdo = new PDO('mysql:host=localhost;dbname=ESQLDB', 'root', 'password');
@@ -11,7 +11,7 @@
             return null;
         }
     }
-
+    
     function closeConnection($pdo) {
         $pdo = null;
     }

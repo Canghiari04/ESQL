@@ -1,3 +1,6 @@
+<?php 
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -34,6 +37,7 @@
                 
                 if($numRows > 0){
                     $tipo =  loginUtente($conn, $email);
+                    $_SESSION["email"] = $email;
                     
                     if($tipo == "Studente") {
                         /* metodo per reindirizzare tramite uso di HTTP */
