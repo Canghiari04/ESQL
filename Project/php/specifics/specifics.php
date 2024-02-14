@@ -38,6 +38,7 @@
                                     </table>
                                 </div>
                             ';
+                            
                             if($result) {
                                 while($row = $result->fetch(PDO::FETCH_OBJ)) {
                                     /* metodo che restituisce se l'attributo visualizzato costituisca o meno la chiave primaria dellla tabella */
