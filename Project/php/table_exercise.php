@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -22,10 +25,13 @@
                 include 'connectionDB.php';
                 $conn = openConnection();
 
-                $sql = "SELECT * FROM Tabella_Esercizio";
+                $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente)";
+                $emailTeacher = $_SESSION["email"];
                 
                 try {
                     $result = $conn -> prepare($sql);
+                    $result -> bindValue(":emailDocente", $emailTeacher);
+
                     $result -> execute();
                     $numRows = $result -> rowCount();
 
