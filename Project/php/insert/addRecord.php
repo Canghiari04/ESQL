@@ -1,7 +1,24 @@
 <?php 
+    /* inserimento della tabella di esercizio, riferita alla collezione di meta-dati */
+    function insertTableExercise($conn, $nameTable, $emailTeacher) {
+        $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe, :emailDocente);";
+
+        try {
+            $result = $conn -> prepare($storedProcedure);
+            $result -> bindValue(":nome", $nameTable);
+            $result -> bindValue(":dataCreazione", date("Y-m-d H:i:s"));
+            $result -> bindValue(":numRighe", 0);
+            $result -> bindValue(":emailDocente", $emailTeacher);
+            
+            $result -> execute();
+        } catch(PDOException $e) {
+            echo 'Eccezione '.$e -> getMessage().'<br>';
+        }
+    }
+
     function insertRecord($conn, $sql, $nameTable) {
-        /* flag utilizzato per eliminare la possibilità di inserimenti errati all'interno della tabella Attributo */
-        $flagPrimaryKey = 0;
+        /* flag utilizzati per eliminare la possibilità di inserimenti errati all'interno della tabella Attributo */
+        $flagPrimaryKey = false;
 
         /* rimozione di tutti i token superflui, per risalire alle colonne e ai vincoli di chiave */
         $tokens = explode("(", $sql, 2);
@@ -16,18 +33,37 @@
             $token = explode(" ", trim($value));
 
             if($token[0] == "PRIMARY") {
-                $flagPrimaryKey = 1;
+                $flagPrimaryKey = true;
                 updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql));
             } elseif ($token[0] == "FOREIGN") {
-                [$arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced] = splitForeignKey($value);
-                echo ''.$nameTableReferenced.'<br>';
-                InsertForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
-            } elseif($flagPrimaryKey == 0) {
+                insertForeignKey($conn, $sql, $numRows, $idTableReferential);
+                break;
+            } elseif($flagPrimaryKey == false) {
                 insertAttribute($conn, $numRows, $idTableReferential, $token);
             }
         }
 
         header("Location: insertTable.php");
+    }
+
+    /* funzione restituente l'id della tabella e il numero di righe della query, per successive condizioni */
+    function getIdTableExercise($conn, $nameTable) {
+        $sql = "SELECT ID FROM Tabella_Esercizio WHERE (NOME=:nome);";
+
+        try {
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":nome", $nameTable);
+            
+            $result -> execute();
+            $numRows = $result -> rowCount();
+        } catch(PDOException $e) {
+            echo 'Eccezione '.$e -> getMessage().'<br>';
+        }
+
+        $row = $result -> fetch(PDO::FETCH_ASSOC);
+        $idTableReferential = $row['ID'];
+
+        return array($numRows, $idTableReferential);
     }
 
     function insertAttribute($conn, $numRows, $idTableReferential, $tokensAttribute) {
@@ -105,7 +141,16 @@
         return $tokensPrimaryKey;
     }
 
-    function insertForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced) {
+    function insertForeignKey($conn, $sql, $numRows, $idTableReferential) {
+        $tokensQuery = explode("FOREIGN KEY", substr($sql, 0, -2));
+
+        for($i = 1; $i < sizeof($tokensQuery); $i++) {
+            [$arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced] = splitForeignKey(trim($tokensQuery[$i]));
+            updateForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
+        }
+    }
+
+    function updateForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced) {
         if($numRows > 0) {
             /* ciclo for basato su un medesimo array dato lo stesso numero di variabili contenuto */
             for($i = 0; $i <= sizeof($arrayForeignKey) - 1; $i++) {
@@ -114,7 +159,6 @@
 
                 /* individuazione dell'id della tabella referenziata, per la costruzione del vincolo di integrità */
                 [$numRows, $idTableReferenced] = getIdTableExercise($conn, $nameTableReferenced);
-                
                 $sqlReferential = "SELECT Attributo.ID FROM Attributo JOIN Tabella_Esercizio ON (Attributo.ID_TABELLA=Tabella_Esercizio.ID) WHERE (Attributo.ID_TABELLA=:idTabellaReferenziante) AND (Attributo.NOME=:nomeAttributoReferenziante)";
                 $sqlReferenced = "SELECT Attributo.ID FROM Attributo JOIN Tabella_Esercizio ON (Attributo.ID_TABELLA=Tabella_Esercizio.ID) WHERE (Attributo.ID_TABELLA=:idTabellaReferenziata) AND (Attributo.NOME=:nomeAttributoReferenziato)";
                 
@@ -140,7 +184,7 @@
                 
                 $idAttributeReferential = $rowReferential['ID'];
                 $idAttributeReferenced = $rowReferenced['ID'];
-
+                
                 $storedProcedure = "CALL Inserimento_Vincolo_Integrita(:idAttributoReferenziante, :idAttributoReferenziato)";
 
                 try {
@@ -157,15 +201,14 @@
     }
 
     /* split che restituisce in ordine: colonne della tabella referenziante, nome della tabella referenziata e colonne della tabella referenziata */
-    function splitForeignKey($rowQuery) {
-        $tokensPrimaryForeignKey = explode("FOREIGN KEY", trim($rowQuery));
-        $tokensForeignReferences = explode("REFERENCES", trim($tokensPrimaryForeignKey[1]));
-        
+    function splitForeignKey($tokensQuery) {
+        $tokensForeignReferences = explode("REFERENCES", trim($tokensQuery));
         $tokensForeignKey = explode(",", trim($tokensForeignReferences[0]));
+
         $tokensReferences = explode("(", trim($tokensForeignReferences[1]));
         $nameTableReferenced = trim($tokensReferences[0]);
         $tokensTableReferenced = explode(",", trim($tokensReferences[1]));
-
+        
         $arrayForeignKey = convertToArray($tokensForeignKey);
         $arrayAttributeReferenced = convertToArray($tokensTableReferenced);
 
@@ -185,46 +228,12 @@
             if(substr($attribute, -1) == ")") {
                 $attribute = substr($attribute, 0, -1);
             }
-            
-            array_push($array, $attribute);
+
+            if(!is_null($attribute)) {
+                array_push($array, $attribute);
+            }
         }
 
         return $array;
-    }
-
-    /* inserimento della tabella di esercizio, riferita alla collezione di meta-dati */
-    function insertTableExercise($conn, $nameTable) {
-        $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe);";
-
-        try {
-            $result = $conn -> prepare($storedProcedure);
-            $result -> bindValue(":nome", $nameTable);
-            $result -> bindValue(":dataCreazione", date("Y-m-d H:i:s"));
-            $result -> bindValue(":numRighe", 0);
-            
-            $result -> execute();
-        } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
-        }
-    }
-
-    /* funzione restituente l'id della tabella e il numero di righe della query, per successive condizioni */
-    function getIdTableExercise($conn, $nameTable) {
-        $sql = "SELECT ID FROM Tabella_Esercizio WHERE (NOME=:nome);";
-
-        try {
-            $result = $conn -> prepare($sql);
-            $result -> bindValue(":nome", $nameTable);
-            
-            $result -> execute();
-            $numRows = $result -> rowCount();
-        } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
-        }
-
-        $row = $result -> fetch(PDO::FETCH_ASSOC);
-        $idTableReferential = $row['ID'];
-
-        return array($numRows, $idTableReferential);
     }
 ?>

@@ -1,3 +1,6 @@
+<?php 
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -22,9 +25,8 @@
 
                     /* suddivisione della query nei token principali, per ottenere il nome della tabella di riferimento */
                     $tokens = explode(" ", $sql);
-                    $nome = $tokens[2];
+                    $tokenName = explode("(", $tokens[2]);
 
-                    /* TROVARE IL MODO PER SUDDIVIDERE CORRETTAMENTE CON EXPLODE QUALORA IL NOME DELLA TABELLA SIA ATTACCATO ALLA PARENTESI --> NAMETABLE( ATTRIBUTE */
                     try {
                         $result = $conn -> prepare($sql);
 
@@ -32,10 +34,11 @@
                         $result -> execute();
 
                         /* creazione della tabella di esercizio, contenente tutti i meta-dati */
-                        insertTableExercise($conn, $nome);
+                        $emailTeacher = $_SESSION["email"];
+                        insertTableExercise($conn, $tokenName[0], $emailTeacher);
 
                         /* inserimento dei record all'interno della tabella contenente meta-dati */
-                        insertRecord($conn, $sql, $nome);
+                        insertRecord($conn, $sql, $tokenName[0]);
                     } catch(PDOException $e) {
                         /* funzioni che rendono compatibili caratteri speciali rispetto allo script, dovuto principalmente ad un uso spropositato di spaziature */
                         echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";
