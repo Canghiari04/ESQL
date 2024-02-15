@@ -22,10 +22,12 @@
                 $numAnswers = $_POST["txtNumeroRisposte"];
                 $nameTable = $_POST["sltNomeTabella"];
 
-                insertRecord($conn, $type, $difficulty, $description, $numAnswers, $nameTable);
+                insertQuestion($conn, $type, $difficulty, $description, $numAnswers, $nameTable);
+            } elseif(isset($_POST["btnAddRisposta"])) {
+
             }
         }
-        
+
         closeConnection($conn);
     ?>
 </html>

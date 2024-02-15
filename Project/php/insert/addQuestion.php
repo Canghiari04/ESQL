@@ -1,5 +1,5 @@
 <?php
-    function insertRecord($conn, $type, $difficulty, $description, $numAnswers, $nameTable) {
+    function insertQuestion($conn, $type, $difficulty, $description, $numAnswers, $nameTable) {
         $storedProcedure = "CALL Inserimento_Quesito(:difficolta, :descrizione, :numRisposte)";
 
         try {
@@ -13,6 +13,7 @@
             echo 'Eccezione '.$e -> getMessage().'<br>';
         }
 
+        /* query che permette di risalire all'ID dell'ultimo record inserito */
         $sql = "SELECT LAST_INSERT_ID() AS ID";
 
         try {

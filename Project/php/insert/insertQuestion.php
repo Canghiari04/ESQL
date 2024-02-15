@@ -6,7 +6,6 @@
     <head>   
         <style>
             <?php 
-                include 'addQuestion.php';
                 include '../css/insertQuestion.css';
                 include '../connectionDB.php';
             ?>
