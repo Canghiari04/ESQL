@@ -39,7 +39,7 @@
 
         function deleteTable($conn, $id) {
             $sql = "SELECT NOME FROM Tabella_Esercizio WHERE (ID=:id);";
-
+            
             try {
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":id", $id);
@@ -48,18 +48,16 @@
             } catch (PDOException $e) {
                 echo 'Eccezione '.$e -> getMessage().'<br>';
             }
-            
+
             $row = $result -> fetch(PDO::FETCH_ASSOC);
             $nome = $row['NOME'];
-            echo 'ciao'.$nome.'<br>';
-            $storedProcedure = "CALL Eliminazione_Tabella(:nome);";
 
-            
+            $sql = "DROP TABLE '.$nome.';";
+
             try {
-                $stmt = $conn -> prepare($storedProcedure);
-                $stmt -> bindValue(":nome", $nome);
+                $result = $conn -> prepare($sql);
 
-                $stmt -> execute();
+                $result -> execute();
             } catch (PDOException $e) {
                 echo 'Eccezione '.$e -> getMessage().'<br>';
             }

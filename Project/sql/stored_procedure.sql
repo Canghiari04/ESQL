@@ -8,7 +8,6 @@ DROP PROCEDURE IF EXISTS Inserimento_Test;
 DROP PROCEDURE IF EXISTS Inserimento_Vincolo_Integrita;
 DROP PROCEDURE IF EXISTS Aggiornamento_Chiave;
 DROP PROCEDURE IF EXISTS Eliminazione_Tabella_Esercizio;
-DROP PROCEDURE IF EXISTS Eliminazione_Tabella;
 DROP PROCEDURE IF EXISTS Eliminazione_Quesito;
 DROP PROCEDURE IF EXISTS Eliminazione_Test;
 
@@ -101,14 +100,6 @@ BEGIN
 	IF (countTabella>0) THEN
 		DELETE FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA);
 	END IF;
-END ;
-| 
-DELIMITER ;
-
-DELIMITER |
-CREATE PROCEDURE Eliminazione_Tabella(IN NOME VARCHAR(255))
-BEGIN
-	DROP TABLE NOME;
 END ;
 | 
 DELIMITER ;
