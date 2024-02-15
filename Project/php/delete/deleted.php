@@ -12,10 +12,7 @@
                 if (isset($_GET["btnDropTable"])) {
                 echo 'cia';
                 deleteTableExercise($conn, $idTable = $_GET["btnDropTable"]);    
-
-                /* trovare il modo di eliminare tabella in base al nome della collezione */
-                //deleteTable($conn, $idTable = $_GET["btnDropTable"]);    
-
+                deleteTable($conn, $idTable = $_GET["btnDropTable"]);
                 header("Location: ../table_exercise.php");
             } elseif (isset($_GET["btnDropQuestion"])) {
                 deleteQuestion($conn, $idQuestion = $_GET["btnDropQuestion"]);
