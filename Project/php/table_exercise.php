@@ -8,6 +8,7 @@
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
         <style>
             <?php 
+                include 'connectionDB.php';
                 include 'css/table_exercise.css';
             ?>
         </style>
@@ -22,7 +23,6 @@
         </form>
         <div>
             <?php 
-                include 'connectionDB.php';
                 $conn = openConnection();
 
                 $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente)";

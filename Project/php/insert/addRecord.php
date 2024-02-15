@@ -37,6 +37,8 @@
                 updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql));
             } elseif ($token[0] == "FOREIGN") {
                 insertForeignKey($conn, $sql, $numRows, $idTableReferential);
+
+                /* break necessario per interrompere il ciclo foreach, dato l'inserimento delle foreign key da metodo soprastante */
                 break;
             } elseif($flagPrimaryKey == false) {
                 insertAttribute($conn, $numRows, $idTableReferential, $token);

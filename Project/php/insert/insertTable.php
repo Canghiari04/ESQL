@@ -25,24 +25,29 @@
 
                     /* suddivisione della query nei token principali, per ottenere il nome della tabella di riferimento */
                     $tokens = explode(" ", $sql);
-                    $tokenName = explode("(", $tokens[2]);
 
-                    try {
-                        $result = $conn -> prepare($sql);
-
-                        /* creazione della tabella effettiva contenuta nello stesso DB, ESQLDB */
-                        $result -> execute();
-
-                        /* creazione della tabella di esercizio, contenente tutti i meta-dati */
-                        $emailTeacher = $_SESSION["email"];
-                        insertTableExercise($conn, $tokenName[0], $emailTeacher);
-
-                        /* inserimento dei record all'interno della tabella contenente meta-dati */
-                        insertRecord($conn, $sql, $tokenName[0]);
-                    } catch(PDOException $e) {
-                        /* funzioni che rendono compatibili caratteri speciali rispetto allo script, dovuto principalmente ad un uso spropositato di spaziature */
-                        echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";
-                        echo "<script>document.querySelector('.input-text').value=".json_encode($sql).";</script>";
+                    if($tokens[0] == "CREATE") {
+                        $tokenName = explode("(", $tokens[2]);
+                        
+                        try {
+                            $result = $conn -> prepare($sql);
+                            
+                            /* creazione della tabella effettiva contenuta nello stesso DB, ESQLDB */
+                            $result -> execute();
+                            
+                            /* creazione della tabella di esercizio, contenente tutti i meta-dati */
+                            $emailTeacher = $_SESSION["email"];
+                            insertTableExercise($conn, $tokenName[0], $emailTeacher);
+                            
+                            /* inserimento dei record all'interno della tabella contenente meta-dati */
+                            insertRecord($conn, $sql, $tokenName[0]);
+                        } catch(PDOException $e) {
+                            /* funzioni che rendono compatibili caratteri speciali rispetto allo script, dovuto principalmente ad un uso spropositato di spaziature */
+                            echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";
+                            echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";
+                        }
+                    } else {
+                        echo "<script>document.querySelector('.input-tips').value='Sono accettate solo query CREATE';</script>";
                     }
                 }
             }
@@ -62,9 +67,6 @@
                         <div class="container">
                             <div class="div-tips">
                                 <textarea class="input-tips" disabled></textarea>
-                            </div>
-                            <div class="div-query">
-                                <textarea class="input-text" disabled></textarea>
                             </div>
                             <div class="div-textbox">
                                 <textarea class="input-textbox" type="text" name="txtAddTable" required></textarea>
