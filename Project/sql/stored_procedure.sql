@@ -8,7 +8,6 @@ DROP PROCEDURE IF EXISTS Inserimento_Test;
 DROP PROCEDURE IF EXISTS Inserimento_Vincolo_Integrita;
 DROP PROCEDURE IF EXISTS Aggiornamento_Chiave;
 DROP PROCEDURE IF EXISTS Eliminazione_Tabella_Esercizio;
-DROP PROCEDURE IF EXISTS Eliminazione_Tabella;
 DROP PROCEDURE IF EXISTS Eliminazione_Quesito;
 DROP PROCEDURE IF EXISTS Eliminazione_Test;
 

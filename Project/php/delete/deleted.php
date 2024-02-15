@@ -12,10 +12,7 @@
                 if (isset($_GET["btnDropTable"])) {
                 echo 'cia';
                 deleteTableExercise($conn, $idTable = $_GET["btnDropTable"]);    
-
-                /* trovare il modo di eliminare tabella in base al nome della collezione */
-                //deleteTable($conn, $idTable = $_GET["btnDropTable"]);    
-
+                deleteTable($conn, $idTable = $_GET["btnDropTable"]);
                 header("Location: ../table_exercise.php");
             } elseif (isset($_GET["btnDropQuestion"])) {
                 deleteQuestion($conn, $idQuestion = $_GET["btnDropQuestion"]);
@@ -39,7 +36,7 @@
 
         function deleteTable($conn, $id) {
             $sql = "SELECT NOME FROM Tabella_Esercizio WHERE (ID=:id);";
-
+            
             try {
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":id", $id);
@@ -48,18 +45,16 @@
             } catch (PDOException $e) {
                 echo 'Eccezione '.$e -> getMessage().'<br>';
             }
-            
+
             $row = $result -> fetch(PDO::FETCH_ASSOC);
             $nome = $row['NOME'];
-            echo 'ciao'.$nome.'<br>';
-            $storedProcedure = "CALL Eliminazione_Tabella(:nome);";
 
-            
+            $sql = "DROP TABLE '.$nome.';";
+
             try {
-                $stmt = $conn -> prepare($storedProcedure);
-                $stmt -> bindValue(":nome", $nome);
+                $result = $conn -> prepare($sql);
 
-                $stmt -> execute();
+                $result -> execute();
             } catch (PDOException $e) {
                 echo 'Eccezione '.$e -> getMessage().'<br>';
             }
