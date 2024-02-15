@@ -19,13 +19,53 @@ button:hover {
     align-items: center;
 }
 
-.navbar-button {
-    color: black;
-    background-color: white;
-    border-radius: 10px;
-    border: 2px solid black;
+.dropdown {
+    float: right;
+    margin-left: 1050px;
     margin-top: 20px;
-    padding: 14px 32px;
+}
+
+.dropdown .dropbtn {
+    border: none;
+    outline: none;
+    color: darkgray;
+    background-color: inherit;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.dropbtn:hover {
+    transition: color .4s;
+    color: #ff3131;
+}
+
+.dropdown-content {
+    float: right;
+    position: absolute;
+    display: none;
+    background-color: white;
+    min-width: 90px;
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    font-size: 13px;
+    color: darkgray;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+.dropdown-content a:hover {
+    transition: color .4s;
+    background-color: rgba(195, 195, 195, 0.70);
+    color: #ff3131;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 .zoom-on-img {

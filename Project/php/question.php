@@ -13,8 +13,13 @@
         <form action="insert/insertQuestion.php" method="POST">
             <div class="navbar">
                 <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
-                <a><button class="navbar-button" type="submit" name="btnInsertDomandaChiusa">Add Chiusa</button></a>
-                <a><button class="navbar-button" type="submit" name="btnInsertDomandaCodice">Add Codice</button></a>
+                <div class="dropdown">
+                    <button class="dropbtn">Add Question</button>
+                    <div class="dropdown-content">
+                        <a href="insert/insertQuestion.php?chiusa">Chiusa</a>
+                        <a href="insert/insertQuestion.php?codice">Codice</a>
+                    </div>
+                </div>
                 <a href="handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
             </div>
         </form>
@@ -44,17 +49,17 @@
                         ';
 
                         while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                            echo '
+                            echo '  
                                 <div class="div-td">
                                     <table class="table-list">
                                         <tr>
                                             <th>'.$row -> DIFFICOLTA.'</th>
                                             <th>'.$row -> DESCRIZIONE.'</th>
                                             <th>'.$row -> NUM_RISPOSTE.'</th>
-                                            <form action="specifics.php" method="GET">
+                                            <form action="specifics/specifics.php" method="GET">
                                                 <th><button class="table-button" type="submit" name="btnSpecificQuestion" value='.$row -> ID.'>Options</button></th>
                                             </form>
-                                            <form action="deleted.php" method="GET">
+                                            <form action="delete/deleted.php" method="GET">
                                                 <th><button class="table-button" type="submit" name="btnDropQuestion" value='.$row -> ID.'>Drop Question</button></th>
                                             </form>
                                             <form action="" method="GET">
