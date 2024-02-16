@@ -17,8 +17,6 @@
 
         $mongoHost = 'localhost';
         $mongoPort = 27017;
-        $mongoDatabase = 'ESQL';
-        $mongoCollection = 'logs';
 
         $manager = new MongoDB\Driver\Manager("mongodb://$mongoHost:$mongoPort");
 
