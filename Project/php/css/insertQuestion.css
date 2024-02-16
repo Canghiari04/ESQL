@@ -6,7 +6,7 @@ html, body {
 }
 
 input {
-    width: 90px;
+    width: 150px;
     height: 25px;
     color: black;
     background-color: white;
@@ -30,7 +30,7 @@ button {
     border-radius: 10px;
     text-align: center;
     padding: 12px 28px;
-    margin: 30px 987.5px;
+    margin: 30px 1017.5px;
     text-decoration: none;
 }
 
