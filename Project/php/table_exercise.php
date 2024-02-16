@@ -26,6 +26,7 @@
                 $conn = openConnection();
 
                 $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente)";
+                
                 $emailTeacher = $_SESSION["email"];
                 
                 try {
@@ -56,10 +57,10 @@
                                             <th>'.$row -> NOME.'</th>
                                             <th>'.$row -> DATA_CREAZIONE.'</th>
                                             <th>'.$row -> NUM_RIGHE.'</th>
-                                            <form action="specifics/specifics.php" method="GET">
+                                            <form action="specifics/specificTable.php" method="POST">
                                                 <th><button class="table-button" type="submit" name="btnSpecificTable" value='.$row -> ID.'>Specifics</button></th>
                                             </form>
-                                            <form action="delete/deleted.php" method="GET">
+                                            <form action="delete/deleteTable.php" method="POST">
                                                 <th><button class="table-button" type="submit" name="btnDropTable" value='.$row -> ID.'>Drop Table</button></th>
                                             </form>
                                             <form action="" method="GET">

@@ -60,7 +60,7 @@
                                     <form action="specifics/specificQuestion.php" method="POST">
                                         <th><button class="table-button" type="submit" name="btnSpecificQuestion" value='.$row -> ID.'>Options</button></th>
                                     </form>
-                                    <form action="delete/deleted.php" method="GET">
+                                    <form action="delete/deleteQuestion.php" method="POST">
                                         <th><button class="table-button" type="submit" name="btnDropQuestion" value='.$row -> ID.'>Drop Question</button></th>
                                     </form>
                                     <form action="" method="GET">
