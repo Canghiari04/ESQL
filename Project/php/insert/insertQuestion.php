@@ -2,6 +2,8 @@
 <html>
     <style>
         <?php 
+            include 'addQuestion.php';
+            include '../connectionDB.php';
             include '../css/insertQuestion.css';
         ?>
     </style>
@@ -18,19 +20,16 @@
                         <option value="MEDIO">MEDIO</option>
                         <option value="ALTO">ALTO</option>
                     </select>
-                    <input type="number" name="txtNumeroRisposte" min="1" required>  
+                    <input type="number" name="txtNumeroRisposte" min="1" placeholder="NUMERO RISPOSTE" required>  
                 </div>
                 <div class="div-textbox">
-                    <textarea class="input-textbox-question" type="text" name="txtDescrizione" required></textarea>
+                    <textarea class="input-textbox-question" type="text" name="txtDescrizione" placeholder="TESTO DELLA DOMANDA" required></textarea>
                 </div>
             </div>
-            <button type="submit" name="btnAddQuestion" value="'.$type.'">Add</button>
+            <button type="submit" name="btnAddQuestion">Add</button>
         </form>
     </body>
     <?php 
-        include 'addQuestion.php';
-        include '../connectionDB.php';
-        
         $conn = openConnection();
 
         $url = $_SERVER['REQUEST_URI'];
@@ -38,12 +37,14 @@
         $type = $str[1];
 
         $_SESSION["typeQuestion"] = $type;
-
+        
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["btnAddQuestion"])) {
                 $difficulty = $_POST["sltDifficolta"];
                 $numAnswers = $_POST["txtNumeroRisposte"];
                 $description = $_POST["txtDescrizione"];
+
+                $_SESSION["txtQuestion"] = $description;
                 
                 insertQuestion($conn, $type, $difficulty, $numAnswers, $description);
                 header("Location: insertAnswer.php");
