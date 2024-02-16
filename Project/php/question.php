@@ -5,6 +5,7 @@
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
         <style>
             <?php
+                include 'connectionDB.php';
                 include 'css/question.css';
             ?>
         </style>
@@ -22,7 +23,6 @@
             <a href="handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
         </div>
         <?php 
-            include 'connectionDB.php';
             $conn = openConnection();
 
             $sql = "SELECT * FROM Quesito";
@@ -37,17 +37,17 @@
             }
 
             if($numRows > 0) {
-                    echo '
-                        <div class="div-th"> 
-                            <table class="table-head">   
-                                <tr>  
-                                    <th>Descrizione</th>
-                                    <th>Difficoltà</th>
-                                    <th>Numero risposte</th>
-                                </tr>
-                            </table>
-                        </div>
-                    ';
+                echo '
+                    <div class="div-th"> 
+                        <table class="table-head">   
+                            <tr>  
+                                <th>Descrizione</th>
+                                <th>Difficoltà</th>
+                                <th>Numero risposte</th>
+                            </tr>
+                        </table>
+                    </div>
+                ';
 
                 while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                     echo '  
