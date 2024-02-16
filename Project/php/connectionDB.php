@@ -29,7 +29,12 @@
 
         $bulkWrite = new MongoDB\Driver\BulkWrite;
         $bulkWrite->insert($document);
-        $manager->executeBulkWrite("$mongoDatabase.$mongoCollection", $bulkWrite);
+
+        try{
+            $manager->executeBulkWrite("$mongoDatabase.$mongoCollection", $bulkWrite);
+        } catch (Exception $e){
+            //echo($e -> getMessage());
+        }
     }
     
     function closeConnection($pdo) {

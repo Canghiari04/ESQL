@@ -60,7 +60,7 @@
             $row = $result -> fetch(PDO::FETCH_ASSOC);
             $nome = $row['NOME'];
 
-            $sql = "DROP TABLE '.$nome.';";
+            $sql = 'DROP TABLE '.$nome.';';
 
             try {
                 $result = $conn -> prepare($sql);
