@@ -68,39 +68,6 @@
         return array($numRows, $idTableReferential);
     }
 
-    function insertAttribute($conn, $numRows, $idTableReferential, $tokensAttribute) {
-        $primaryKey = 0;
-
-        /* controllo per inserimento della singola chiave primaria */
-        if(in_array("PRIMARY", $tokensAttribute)) {
-            $primaryKey = 1;
-        }
-        
-        if($numRows > 0) { 
-            $name = $tokensAttribute[0];
-            
-            /* split per ottenere tipo e dimensione dell'attributo */
-            $tokensTypeDimension = explode("(", $tokensAttribute[1]);
-            $type = $tokensTypeDimension[0];
-            $dimension = substr($tokensTypeDimension[1], 0, -1);
-            
-            $storedProcedure = "CALL Inserimento_Attributo(:id, :tipo, :nome, :chiavePrimaria);";
-            
-            try {
-                $stmt = $conn -> prepare($storedProcedure);
-
-                $stmt -> bindValue(":id", $idTableReferential);
-                $stmt -> bindValue(":tipo", $type);
-                $stmt -> bindValue(":nome", $name);
-                $stmt -> bindValue(":chiavePrimaria", $primaryKey);
-
-                $stmt -> execute();
-            } catch (PDOException $e) {
-                echo 'Eccezione '.$e -> getMessage().'<br>';
-            }
-        }
-    }
-
     /* aggiornamento del campo Chiave_Primaria degli attributi che costituiscono il vincolo di primary key  */
     function updatePrimaryKey($conn, $numRows, $idTableReferential, $tokensPrimaryKey) {
         if($numRows > 0) {                                
@@ -150,6 +117,43 @@
             [$arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced] = splitForeignKey(trim($tokensQuery[$i]));
             updateForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
         }
+    }
+
+    /* split che restituisce in ordine: colonne della tabella referenziante, nome della tabella referenziata e colonne della tabella referenziata */
+    function splitForeignKey($tokensQuery) {
+        $tokensForeignReferences = explode("REFERENCES", trim($tokensQuery));
+        $tokensForeignKey = explode(",", trim($tokensForeignReferences[0]));
+
+        $tokensReferences = explode("(", trim($tokensForeignReferences[1]));
+        $nameTableReferenced = trim($tokensReferences[0]);
+        $tokensTableReferenced = explode(",", trim($tokensReferences[1]));
+        
+        $arrayForeignKey = convertToArray($tokensForeignKey);
+        $arrayAttributeReferenced = convertToArray($tokensTableReferenced);
+
+        return array($arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
+    }
+
+    /* metodo che permette di convertire i token della foreign key negli attributi necessari per la realizzazione del vincolo di chiave esterna */
+    function convertToArray($tokensForeignKey) {
+        $array = array();
+
+        foreach($tokensForeignKey as $value) {
+            $attribute = trim($value);
+            
+            if(substr($attribute, 0, 1) == "(") {
+                $attribute = ltrim($attribute, "(");
+            } 
+            if(substr($attribute, -1) == ")") {
+                $attribute = substr($attribute, 0, -1);
+            }
+
+            if(!is_null($attribute)) {
+                array_push($array, $attribute);
+            }
+        }
+
+        return $array;
     }
 
     function updateForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced) {
@@ -202,40 +206,36 @@
         }
     }
 
-    /* split che restituisce in ordine: colonne della tabella referenziante, nome della tabella referenziata e colonne della tabella referenziata */
-    function splitForeignKey($tokensQuery) {
-        $tokensForeignReferences = explode("REFERENCES", trim($tokensQuery));
-        $tokensForeignKey = explode(",", trim($tokensForeignReferences[0]));
+    function insertAttribute($conn, $numRows, $idTableReferential, $tokensAttribute) {
+        $primaryKey = 0;
 
-        $tokensReferences = explode("(", trim($tokensForeignReferences[1]));
-        $nameTableReferenced = trim($tokensReferences[0]);
-        $tokensTableReferenced = explode(",", trim($tokensReferences[1]));
+        /* controllo per inserimento della singola chiave primaria */
+        if(in_array("PRIMARY", $tokensAttribute)) {
+            $primaryKey = 1;
+        }
         
-        $arrayForeignKey = convertToArray($tokensForeignKey);
-        $arrayAttributeReferenced = convertToArray($tokensTableReferenced);
-
-        return array($arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
-    }
-
-    /* metodo che permette di convertire i token della foreign key negli attributi necessari per la realizzazione del vincolo di chiave esterna */
-    function convertToArray($tokensForeignKey) {
-        $array = array();
-
-        foreach($tokensForeignKey as $value) {
-            $attribute = trim($value);
+        if($numRows > 0) { 
+            $name = $tokensAttribute[0];
             
-            if(substr($attribute, 0, 1) == "(") {
-                $attribute = ltrim($attribute, "(");
-            } 
-            if(substr($attribute, -1) == ")") {
-                $attribute = substr($attribute, 0, -1);
-            }
+            /* split per ottenere tipo e dimensione dell'attributo */
+            $tokensTypeDimension = explode("(", $tokensAttribute[1]);
+            $type = $tokensTypeDimension[0];
+            $dimension = substr($tokensTypeDimension[1], 0, -1);
+            
+            $storedProcedure = "CALL Inserimento_Attributo(:id, :tipo, :nome, :chiavePrimaria);";
+            
+            try {
+                $stmt = $conn -> prepare($storedProcedure);
 
-            if(!is_null($attribute)) {
-                array_push($array, $attribute);
+                $stmt -> bindValue(":id", $idTableReferential);
+                $stmt -> bindValue(":tipo", $type);
+                $stmt -> bindValue(":nome", $name);
+                $stmt -> bindValue(":chiavePrimaria", $primaryKey);
+
+                $stmt -> execute();
+            } catch (PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
             }
         }
-
-        return $array;
     }
 ?>
