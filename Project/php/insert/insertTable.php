@@ -15,6 +15,7 @@
     <body>
         <?php 
             $conn = openConnection();
+            $manager = openConnectionMongoDB();
 
             buildNavbar();
             buildForm();
@@ -41,6 +42,10 @@
                             
                             /* inserimento dei record all'interno della tabella contenente meta-dati */
                             insertRecord($conn, $sql, $tokenName[0]);
+
+                            //log mongodb
+                            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento tabella: ' .$tokenName[0]. ' dal docente: ' .$emailTeacher. '', 'Timestamp' => date('Y-m-d H:i:s')];
+                            writeLog($manager, $document);
                         } catch(PDOException $e) {
                             /* funzioni che rendono compatibili caratteri speciali rispetto allo script, dovuto principalmente ad un uso spropositato di spaziature */
                             echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";

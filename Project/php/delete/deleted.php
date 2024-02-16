@@ -7,15 +7,26 @@
     </head>
     <?php 
         $conn = openConnection();
+        $manager = openConnectionMongoDB();
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
                 if (isset($_GET["btnDropTable"])) {
                 echo 'cia';
-                deleteTableExercise($conn, $idTable = $_GET["btnDropTable"]);    
+                
                 deleteTable($conn, $idTable = $_GET["btnDropTable"]);
+                deleteTableExercise($conn, $idTable = $_GET["btnDropTable"]);
+
+                //log mongodb
+                $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione tabella id: ' .$idTable. '', 'Timestamp' => date('Y-m-d H:i:s')];
+                writeLog($manager, $document);
+
                 header("Location: ../table_exercise.php");
             } elseif (isset($_GET["btnDropQuestion"])) {
                 deleteQuestion($conn, $idQuestion = $_GET["btnDropQuestion"]);
+
+                //log mongodb
+                $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: ' .$idQuestion. '', 'Timestamp' => date('Y-m-d H:i:s')];
+                writeLog($manager, $document);
 
                 header("Location: ../question.php");
             }

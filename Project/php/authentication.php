@@ -17,6 +17,7 @@
 <?php
     include 'connectionDB.php';
     $conn = openConnection();
+    $manager = openConnectionMongoDB();
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST["txtEmailLogin"])) {
@@ -77,6 +78,11 @@
                     /* controllo per verifica assenza di recapito telefonico */
                     $telefono = checkTelefono($telefono);
                     insertStudente($conn, $email, $password, $nome, $cognome, $telefono, $annoImmatricolazione, $codice);
+
+                    //log mongodb
+                    $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento studente: ' .$email. '', 'Timestamp' => date('Y-m-d H:i:s')];
+                    writeLog($manager, $document);
+
                     header("Location: login.php");
                 }
             } catch(PDOException $e) {
@@ -106,6 +112,11 @@
                 } else {
                     $telefono = checkTelefono($telefono);
                     insertDocente($conn, $email, $password, $nome, $cognome, $telefono, $dipartimento, $corso);
+
+                    //log mongodb
+                    $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento docente: ' .$email. '', 'Timestamp' => date('Y-m-d H:i:s')];
+                    writeLog($manager, $document);
+                    
                     header("Location: login.php");
                 }
             } catch(PDOException $e) {
