@@ -6,8 +6,8 @@ html, body {
 }
 
 input {
-    width: 90px;
-    height: 25px;
+    width: 60px;
+    height: 20px;
     color: black;
     background-color: white;
     border: 2px solid black;
@@ -15,8 +15,8 @@ input {
 }
 
 select {
-    width: 180px;
-    height: 30px;
+    width: 120px;
+    height: 25px;
     color: black;
     background-color: white;
     border: 2px solid black;
@@ -30,7 +30,7 @@ button {
     border-radius: 10px;
     text-align: center;
     padding: 12px 28px;
-    margin: 30px 987.5px;
+    margin: 30px 962.5px;
     text-decoration: none;
 }
 
@@ -79,7 +79,19 @@ button:hover, select:hover, input:hover {
 .container {
     display: flex;
     justify-content: center;
-    margin-top: 150px;
+    margin-top: 75px;
+}
+
+.div-tips {
+    padding: 10px 15px;
+    margin-right: 25px;
+    text-align: center;
+    border-radius: 20px;
+    transition: transform .4s;
+}
+
+.div-tips:hover {
+    transform: scale(1.03);
 }
 
 .div-select {
@@ -98,7 +110,7 @@ button:hover, select:hover, input:hover {
 .input-tips {
     font-size: 13px;
     width: 250px;
-    height: 400px;
+    height: 200px;
     background-color: transparent;
     border-color: transparent;
     border-radius: 5px;
@@ -134,8 +146,8 @@ button:hover, select:hover, input:hover {
 
 .input-textbox-question{
     font-size: 14px;
-    width: 400px;
-    height: 250px;
+    width: 350px;
+    height: 200px;
     background-color: transparent;
     border-color: transparent;
     border-radius: 5px;

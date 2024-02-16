@@ -1,12 +1,14 @@
 <?php
-    function insertQuestion($conn, $type, $difficulty, $description, $numAnswers, $nameTable) {
-        $storedProcedure = "CALL Inserimento_Quesito(:difficolta, :descrizione, :numRisposte)";
+    session_start();
+
+    function insertQuestion($conn, $type, $difficulty, $numAnswers, $description) {
+        $storedProcedure = "CALL Inserimento_Quesito(:difficolta, :numRisposte, :descrizione)";
 
         try {
             $stmt = $conn -> prepare($storedProcedure);
             $stmt -> bindValue(":difficolta", $difficulty);
-            $stmt -> bindValue(":descrizione", $description);
             $stmt -> bindValue(":numRisposte", $numAnswers);
+            $stmt -> bindValue(":descrizione", $description);
             
             $stmt -> execute();
         } catch (PDOException $e) {
@@ -26,10 +28,11 @@
             echo 'Eccezione '.$e -> getMessage().'<br>';
         }
 
-        addDomanda($conn, strtoupper($type), $id, $nameTable);
+        $_SESSION["idCurrentQuestion"] = $id;
+        addDomanda($conn, strtoupper($type), $id);
     }
 
-    function addDomanda($conn, $type, $id, $nameTable) {
+    function addDomanda($conn, $type, $id) {
         if($type == "CHIUSA") {
             $storedProcedure = "CALL Inserimento_Domanda_Chiusa(:id);";
         } elseif($type == "CODICE") {
@@ -41,19 +44,6 @@
             $stmt -> bindValue(":id", $id);
 
             $stmt -> execute();
-        } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
-        }
-
-        $storedProcedure = "CALL Inserimento_Afferenza(:id, :nomeTabella);";
-
-        /* STORED PROCEDURE PER LA CREAZIONE DI AFFERENZE */
-        try {
-            $stmt = $conn -> prepare($storedProcedure);
-            $stmt -> bindValue(":id", $id);
-            $stmt -> bindValue(":id", $nameTable);
-
-            //$stmt -> execute();
         } catch(PDOException $e) {
             echo 'Eccezione '.$e -> getMessage().'<br>';
         }

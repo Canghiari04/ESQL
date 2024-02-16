@@ -26,3 +26,7 @@ NON SERVE SCENDERE NEI DETTAGLI DELLE DROP TABLE, QUINDI BASTA ANCHE SOLO NELLO 
 METTERE A POSTO LA TABELLA TRA QUESITO E TEST, DATO CHE LO STESSO QUESITO PUÒ APPARTENERE A PIÙ TEST
 
 DOMANDE CHIUSE SONO SEMPRE RIFERITE TABELLE?
+
+fare install mongodb-community, per far partire il demeon
+avere i vari path che puntano a php e a mongodb
+occorre osservare dove sia il driver di mongodb
