@@ -15,11 +15,11 @@
             <div class="dropdown">
                 <button class="dropbtn">Sign Up</button>
                 <div class="dropdown-content">
-                    <a href="signUpStudente.php">Studente</a>
-                    <a href="signUpDocente.php">Docente</a>
+                    <a href="login/signUpStudente.php">Studente</a>
+                    <a href="login/signUpDocente.php">Docente</a>
                 </div>
             </div>
-            <form action="login.php">
+            <form action="login/login.php">
                 <button class="button-Login" type="submit">Login</button>
             </form>
         </div>
