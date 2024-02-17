@@ -15,7 +15,7 @@
             <a class="a-href" href="#">Messaggi</a>
             <a class="a-href" href="#">Risposte</a>
             <a class="a-href" href="#">Test</a>
-            <a href="login.php?"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
+            <a href="login/login.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
         </div>
     </body>
 </html>

@@ -9,6 +9,7 @@
         <style>
             <?php
                 include '../connectionDB.php';
+                include '../css/authentication.css';
             ?>
         </style>
     </head>

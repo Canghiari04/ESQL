@@ -17,7 +17,7 @@
             <a class="a-href" href="table_exercise.php">Tabelle</a>
             <a class="a-href" href="#">Test</a>
             <a class="a-href" href="question.php">Quesiti</a>
-            <a href="login.php?"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
+            <a href="login/login.php?"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
         </div>
     </body>
 </html>
