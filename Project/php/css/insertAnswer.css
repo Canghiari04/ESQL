@@ -30,7 +30,7 @@ button {
     border-radius: 10px;
     text-align: center;
     padding: 12px 28px;
-    margin: 30px 962.5px;
+    margin: 30px 975px;
     text-decoration: none;
 }
 
@@ -109,7 +109,7 @@ button:hover, select:hover, input:hover {
 
 .input-tips {
     font-size: 13px;
-    width: 250px;
+    width: 275px;
     height: 200px;
     background-color: transparent;
     border-color: transparent;

@@ -1,0 +1,106 @@
+html, body {
+    font-family: 'Public Sans';
+    max-width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+textarea {
+    font-size: 13px;
+    width: 350px;
+    height: 125px;
+    margin-top: 50px;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 5px;
+    border: 2px solid darkgrey;
+    outline: none;
+}
+
+button {
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    padding: 12px 28px;
+    margin: 30px 962.5px;
+    margin-top: 75px;
+    text-decoration: none;
+}
+
+textarea:hover {
+    transition: color .4s;
+    border-color: #ff3131;
+}
+
+button:hover, select:hover, input:hover {
+    transition: color .4s;
+    color: #ff3131;
+    border-color: #ff3131;
+}
+
+input {
+    display: inline-block;
+    width: 17.5px;
+    height: 17.5px;
+    color: black;
+    background-color: white;
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 5px;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.zoom-on-img {
+    margin-top: 10px;
+    margin-left: 15px;
+    transition: transform .4s;
+}
+
+.zoom-on-img:hover {
+    transform: scale(1.099);
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.div-textbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.div-checkbox {
+    display: flex;
+    align-items: center;
+    float: left;
+    width: 150px;
+    height: 50px;
+    padding: 15px; 
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+    border: 2.25px solid rgb(224, 224, 224);
+    border-radius: 10px;
+}
+
+.div-checkbox input {
+    margin-left: 20px;
+    margin-right: 10px; 
+}
+
+.div-checkbox:hover {
+    transition: border-color .4s; 
+    border-color: #ff3131;
+}

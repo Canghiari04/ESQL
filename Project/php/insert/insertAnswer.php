@@ -32,7 +32,7 @@
         $conn = openConnection();
 
         /* funzione che sovrascrive il placeholder della textarea tips, per visualizzare la domanda in questione, durante la stesura delle risposte collegate */
-        printQuestion($_SESSION["txtQuestion"]);
+        printQuestion($conn, $_SESSION['idCurrentQuestion'], $_SESSION["txtQuestion"]);
 
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['btnAddRisposta'])) {
@@ -43,12 +43,13 @@
 
                 /* controllo che il numero di risposte fornito sia coerente rispetto al numero atteso dalla domanda; in caso affermativo reindirizzamento alla main page */
                 if(checkNumAnswer($conn, strtoupper(($_SESSION['typeQuestion'])), $_SESSION['idCurrentQuestion'])) {
-                    header('Location: ../question.php');
+                    header('Location: insertAfferent.php');
                 }
             }
         }
 
-        function printQuestion($textQuestion) {
+        function printQuestion($conn, $idQuestion, $textQuestion) {
+            $textQuestion = "QUESITO: ".$textQuestion."\r\n\r\nNUMERO DI RISPOSTE ATTESE: ".getNumberAnswers($conn, $idQuestion);
             echo "<script>document.querySelector('.input-tips').value=".json_encode($textQuestion).";</script>";
         }
 

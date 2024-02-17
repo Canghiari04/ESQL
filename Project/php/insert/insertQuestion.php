@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
     <style>
@@ -32,22 +35,29 @@
     <?php 
         $conn = openConnection();
 
+        /* attraverso l'url viene estrapolata la tipologia di domanda, da cui ne scaturisce un successivo inserimento all'interno dell'apposita tabella */
         $url = $_SERVER['REQUEST_URI'];
         $str = explode("?", $url);
         $type = $str[1];
 
+        /* viene salvato il tipo della domanda tramite la sessione, dati i controlli successivi inerenti all'inserimento */
         $_SESSION["typeQuestion"] = $type;
         
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["btnAddQuestion"])) {
-                $difficulty = $_POST["sltDifficolta"];
-                $numAnswers = $_POST["txtNumeroRisposte"];
-                $description = $_POST["txtDescrizione"];
-
-                $_SESSION["txtQuestion"] = $description;
-                
-                insertQuestion($conn, $type, $difficulty, $numAnswers, $description);
-                header("Location: insertAnswer.php");
+                if(checkTable($conn, $_SESSION['email'])) {
+                    $difficulty = $_POST["sltDifficolta"];
+                    $numAnswers = $_POST["txtNumeroRisposte"];
+                    $description = $_POST["txtDescrizione"];
+                    
+                    $_SESSION["txtQuestion"] = $description;
+                    
+                    insertQuestion($conn, $type, $difficulty, $numAnswers, $description);
+                    header("Location: insertAnswer.php");
+                } else {
+                    $errorQuestion = 'NESSUNA TABELLA PRESENTE, INSERISCI QUALCHE COLLEZIONE PRIMA DI CREARE DEI QUESITI';
+                    echo "<script>document.querySelector('.input-textbox-question').value=".json_encode($errorQuestion).";</script>";
+                }
             }
         }
         
