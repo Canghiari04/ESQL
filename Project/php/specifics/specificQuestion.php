@@ -20,14 +20,14 @@
 
             if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if(isset($_POST['btnSpecificQuestion'])) {
-                    $idQuestion = $_POST["btnSpecificQuestion"];
+                    $idQuestion = $_POST['btnSpecificQuestion'];
 
                     $type = getTypeQuestion($conn, $idQuestion);
 
                     if($type == 'CHIUSA') {
-                        $sql = 'SELECT TESTO FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito)';
+                        $sql = 'SELECT TESTO FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito);';
                     } else {
-                        $sql = 'SELECT TESTO FROM Sketch_Codice  WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito)';
+                        $sql = 'SELECT TESTO FROM Sketch_Codice  WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito);';
                     }
 
                     try {

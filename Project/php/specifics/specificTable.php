@@ -3,12 +3,10 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <style>
-            <?php
-                include '../connectionDB.php';
-                include '../css/specifics.css';
-            ?>
-        </style>
+        <link rel="stylesheet" type="text/css" href="../css/specifics.css">
+        <?php
+            include '../connectionDB.php';
+        ?>
     </head>
     <body>
         <div class="navbar">
@@ -23,7 +21,7 @@
                     if(isset($_POST['btnSpecificTable'])) {
                         $idTable = $_POST['btnSpecificTable'];    
 
-                        $sql = 'SELECT Attributo.TIPO, Attributo.NOME, Attributo.CHIAVE_PRIMARIA FROM Tabella_Esercizio JOIN Attributo ON (Tabella_Esercizio.ID=Attributo.ID_TABELLA) WHERE (Tabella_Esercizio.ID=:idTable)';
+                        $sql = 'SELECT Attributo.TIPO, Attributo.NOME, Attributo.CHIAVE_PRIMARIA FROM Tabella_Esercizio JOIN Attributo ON (Tabella_Esercizio.ID=Attributo.ID_TABELLA) WHERE (Tabella_Esercizio.ID=:idTable);';
                         
                         try {
                             $result = $conn -> prepare($sql);
