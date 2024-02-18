@@ -3,12 +3,10 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <style>
-            <?php
-                include '../connectionDB.php';
-                include '../css/specifics.css';
-            ?>
-        </style>
+        <link rel="stylesheet" type="text/css" href="../css/specifics.css">
+        <?php
+            include '../connectionDB.php';
+        ?>
     </head>
     <body>
         <div class="navbar">
@@ -39,7 +37,7 @@
                         echo 'Eccezione '.$e -> getMessage().'<br>';
                     }
                         
-                    if($result) {
+                    if(isset($result)) {
                         while($row = $result->fetch(PDO::FETCH_OBJ)) {
                             echo '
                                 <div class="div-question">

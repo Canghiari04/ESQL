@@ -25,8 +25,8 @@
                         
                         try {
                             $result = $conn -> prepare($sql);
-
                             $result -> bindValue(':idTable', $idTable);
+
                             $result -> execute();
                         } catch (PDOException $e) {
                             echo 'Eccezione: '.$e -> getMessage().'<br>'; 
@@ -44,7 +44,7 @@
                             </div>
                         ';
                             
-                        if($result) {
+                        if(isset($result)) {
                             while($row = $result->fetch(PDO::FETCH_OBJ)) {
                                 /* metodo che restituisce se l'attributo visualizzato costituisca o meno la chiave primaria della tabella */
                                 $primaryKey = convertPrimaryKey($row -> CHIAVE_PRIMARIA);
