@@ -14,6 +14,12 @@ input {
     border-radius: 5px;
 }
 
+input[type=file] {
+    width: 0px;
+    border: transparent;
+    color: transparent;
+}
+
 select {
     width: 180px;
     height: 30px;
@@ -34,7 +40,7 @@ button {
     text-decoration: none;
 }
 
-button:hover, select:hover, input:hover {
+button:hover, select:hover, input:hover, label:hover{
     transition: color .4s;
     color: #ff3131;
     border-color: #ff3131;
@@ -87,6 +93,13 @@ button:hover, select:hover, input:hover {
     border-radius: 20px;
     transition: transform .4s;
 }
+
+.custom-file-upload {
+    font-size: 14px;
+    padding: 5.25px 10px;
+    border: solid 2px black;
+    border-radius: 5px;
+} 
 
 .div-test {
     padding: 10px 15px;
@@ -143,7 +156,18 @@ button:hover, select:hover, input:hover {
     outline: none;
 }
 
-.input-textbox-question:hover {
+.input-textbox-test{
+    font-size: 14px;
+    width: 400px;
+    height: 100px;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 5px;
+    border: 2px solid darkgrey;
+    outline: none;
+}
+
+.input-textbox-question:hover, .input-textbox-test:hover {
     border: 2px solid #ff3131;
 }
 
@@ -156,4 +180,8 @@ button:hover, select:hover, input:hover {
     padding: 12px 28px;
     margin: 30px 917.5px;
     text-decoration: none;
+}
+
+.button-test {
+    margin: 30px 1012.5px;
 }
