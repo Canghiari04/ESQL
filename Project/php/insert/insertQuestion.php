@@ -3,13 +3,15 @@
 ?>
 <!DOCTYPE html>
 <html>
-    <style>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link rel="stylesheet" type="text/css" href="../css/insertQuestion.css">
         <?php 
             include 'addQuestion.php';
             include '../connectionDB.php';
-            include '../css/insertQuestion.css';
         ?>
-    </style>
+    </head>
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../img/ESQL.png"></a>

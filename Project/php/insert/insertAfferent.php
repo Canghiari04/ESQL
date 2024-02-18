@@ -5,14 +5,12 @@
 <html>
     <head>  
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'> 
-        <style>
-            <?php 
-                include 'addAfferent.php';
-                include '../connectionDB.php';
-                include '../css/insertAfferent.css';                
-            ?>
-        </style>
+        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link rel="stylesheet" type="text/css" href="../css/insertAfferent.css">
+        <?php 
+            include 'addAfferent.php';
+            include '../connectionDB.php';
+        ?>
     </head>
     <body>
         <div class="navbar">
@@ -33,12 +31,12 @@
         </form>
     </body>
     <?php
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            if(isset($_POST["btnAddTable"])) {
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if(isset($_POST['btnAddTable'])) {
                 if (isset($_POST['checkbox']) && !empty($_POST['checkbox'])) {
                     $values = $_POST['checkbox'];
 
-                    insertAfferent($conn, $_SESSION["idCurrentQuestion"], $values);
+                    insertAfferent($conn, $_SESSION['idCurrentQuestion'], $values);
                     header('Location: ../question.php');
                 } else {
                     $textCheckbox = 'DEVI SELEZIONARE ALMENO UNA DELLE TABELLE PRESENTI';

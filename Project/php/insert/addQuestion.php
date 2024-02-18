@@ -44,11 +44,11 @@
 
         /* viene salvato l'id dell'ultima domanda inserita, dato che conseguentemente dovranno essere inseriti riferimenti delle risposte e delle tabelle */
         $_SESSION['idCurrentQuestion'] = $id;
-        addDomanda($conn, strtoupper($type), $id);
+        addQuestion($conn, strtoupper($type), $id);
     }
 
     /* funzione utilizzata per smistare l'inserimento della domanda a seconda della tipologia */
-    function addDomanda($conn, $type, $id) {
+    function addQuestion($conn, $type, $id) {
         if($type == 'CHIUSA') {
             $storedProcedure = 'CALL Inserimento_Domanda_Chiusa(:id);';
         } elseif($type == 'CODICE') {
