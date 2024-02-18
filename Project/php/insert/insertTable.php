@@ -64,7 +64,7 @@
                             echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";
                         }
                     } else {
-                        echo "<script>document.querySelector('.input-tips').value='Sono accettate solo query CREATE';</script>";
+                        echo "<script>document.querySelector('.input-tips').value='SONO ACCETTATE SOLO QUERY CREATE';</script>";
                     }
                 }
             }

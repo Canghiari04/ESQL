@@ -3,12 +3,10 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <style>
-            <?php
-                include 'connectionDB.php';
-                include 'css/question.css';
-            ?>
-        </style>
+        <link rel="stylesheet" type="text/css" href="css/question.css">
+        <?php
+            include 'connectionDB.php';
+        ?>
     </head>
     <body>
         <div class="navbar">
@@ -25,7 +23,7 @@
         <?php 
             $conn = openConnection();
 
-            $sql = "SELECT * FROM Quesito";
+            $sql = 'SELECT * FROM Quesito;';
                 
             try {
                 $result = $conn -> prepare($sql);
@@ -33,7 +31,7 @@
                 $result -> execute();
                 $numRows = $result -> rowCount();
             } catch (PDOException $e) {
-                echo 'Eccezione: '. $e -> getMessage();
+                echo 'Eccezione '. $e -> getMessage().'<br>';
             }
 
             if($numRows > 0) {

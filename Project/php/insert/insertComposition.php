@@ -8,7 +8,7 @@
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
         <link rel="stylesheet" type="text/css" href="../css/insertAfferent.css">
         <?php 
-            include 'addAfferent.php';
+            include 'addComposition.php';
             include '../connectionDB.php';
         ?>
     </head>
@@ -19,8 +19,8 @@
         <form action="" method="POST">
             <div class="container">
                 <div class="div-textbox">
-                    <textarea class="input-tips" placeholder="INSERISCI TUTTE LE TABELLE RIFERITE ALLA DOMANDA CREATA" disabled></textarea>
-                    <button type="submit" name="btnAddTable">Insert</button>
+                    <textarea class="input-tips" placeholder="INSERISCI TUTTI I QUESITI CHE COMPONGANO IL TEST" disabled></textarea>
+                    <button type="submit" name="btnAddComposition">Insert</button>
                 </div>
             </div>
             <?php
@@ -32,25 +32,24 @@
     </body>
     <?php
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if(isset($_POST['btnAddTable'])) {
+            if(isset($_POST['btnAddComposition'])) {
                 if (isset($_POST['checkbox']) && !empty($_POST['checkbox'])) {
                     $values = $_POST['checkbox'];
 
-                    insertAfferent($conn, $_SESSION['idCurrentQuestion'], $values);
-                    header('Location: ../question.php');
+                    insertComposition($conn, $_SESSION['titleTest'], $values);
+                    header('Location: ../test.php');
                     exit;
                 } else {
-                    echo "<script>document.querySelector('.input-tips').value=".json_encode("DEVI SELEZIONARE ALMENO UNA DELLE TABELLE PRESENTI").";</script>";
+                    echo "<script>document.querySelector('.input-tips').value=".json_encode("DEVI SELEZIONARE ALMENO UNO DEI QUESITI PRESENTI").";</script>";
                 }
             }
         }
     
         function buildForm($conn, $email) {
-            $sql = 'SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:email);';
+            $sql = 'SELECT * FROM Quesito;';
             
             try {
                 $result = $conn -> prepare($sql);
-                $result -> bindValue(':email', $email);
                 
                 $result -> execute();
             } catch(PDOException $e) {
@@ -59,9 +58,9 @@
 
             while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                 echo '
-                    <div class="div-checkbox">
+                    <div class="div-checkbox-composition">
                         <input type="checkbox" name="checkbox[]" value="'.$row -> ID.'">
-                        <label>'.$row -> NOME.'</label>
+                        <label>'.$row -> DESCRIZIONE.'</label>
                     </div>
                 ';
             }

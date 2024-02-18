@@ -25,7 +25,7 @@
                     <textarea class="input-textbox" type="text" name="txtAnswer" placeholder="TESTO DELLA RISPOSTA" required></textarea>
                 </div>
             </div>
-            <button class="button-insert" type="submit" name="btnAddRisposta">Add</button>
+            <button class="button-insert" type="submit" name="btnAddAnswer">Add</button>
         </form>
     </body>
     <?php 
@@ -35,7 +35,7 @@
         printQuestion($conn, $_SESSION['idCurrentQuestion'], $_SESSION["txtQuestion"]);
 
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if(isset($_POST['btnAddRisposta'])) {
+            if(isset($_POST['btnAddAnswer'])) {
                 $txtAnswer = $_POST['txtAnswer'];
 
                 /* inserimento della risposta fornita rispetto alla domanda in questione, fornendo tipo e id della domanda */
@@ -44,13 +44,13 @@
                 /* controllo che il numero di risposte fornito sia coerente rispetto al numero atteso dalla domanda; in caso affermativo reindirizzamento alla main page */
                 if(checkNumAnswer($conn, strtoupper(($_SESSION['typeQuestion'])), $_SESSION['idCurrentQuestion'])) {
                     header('Location: insertAfferent.php');
+                    exit;
                 }
             }
         }
 
         function printQuestion($conn, $idQuestion, $textQuestion) {
-            $textQuestion = "QUESITO: ".$textQuestion."\r\n\r\nNUMERO DI RISPOSTE ATTESE: ".getNumberAnswers($conn, $idQuestion);
-            echo "<script>document.querySelector('.input-tips').value=".json_encode($textQuestion).";</script>";
+            echo "<script>document.querySelector('.input-tips').value=".json_encode("QUESITO: ".$textQuestion."\r\n\r\nNUMERO DI RISPOSTE ATTESE: ".getNumberAnswers($conn, $idQuestion)).";</script>";
         }
 
         closeConnection($conn);

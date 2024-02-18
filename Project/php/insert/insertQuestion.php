@@ -20,15 +20,15 @@
         <form action="" method="POST">
             <div class="container">
                 <div class="div-select">
-                    <select name="sltDifficolta" required>
+                    <select name="sltDifficulty" required>
                         <option value="BASSO">BASSO</option>
                         <option value="MEDIO">MEDIO</option>
                         <option value="ALTO">ALTO</option>
                     </select>
-                    <input type="number" name="txtNumeroRisposte" min="1" placeholder="NUMERO RISPOSTE" required>  
+                    <input type="number" name="txtNumberAnswer" min="1" placeholder="NUMERO RISPOSTE" required>  
                 </div>
                 <div class="div-textbox">
-                    <textarea class="input-textbox-question" type="text" name="txtDescrizione" placeholder="TESTO DELLA DOMANDA" required></textarea>
+                    <textarea class="input-textbox-question" type="text" name="txtDescription" placeholder="TESTO DELLA DOMANDA" required></textarea>
                 </div>
             </div>
             <button type="submit" name="btnAddQuestion">Add</button>
@@ -39,26 +39,26 @@
 
         /* attraverso l'url viene estrapolata la tipologia di domanda, da cui ne scaturisce un successivo inserimento all'interno dell'apposita tabella */
         $url = $_SERVER['REQUEST_URI'];
-        $str = explode("?", $url);
+        $str = explode('?', $url);
         $type = $str[1];
 
         /* viene salvato il tipo della domanda tramite la sessione, dati i controlli successivi inerenti all'inserimento */
-        $_SESSION["typeQuestion"] = $type;
+        $_SESSION['typeQuestion'] = $type;
         
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            if(isset($_POST["btnAddQuestion"])) {
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if(isset($_POST['btnAddQuestion'])) {
                 if(checkTable($conn, $_SESSION['email'])) {
-                    $difficulty = $_POST["sltDifficolta"];
-                    $numAnswers = $_POST["txtNumeroRisposte"];
-                    $description = $_POST["txtDescrizione"];
+                    $difficulty = $_POST['sltDifficulty'];
+                    $numAnswers = $_POST['txtNumberAnswer'];
+                    $description = $_POST['txtDescription'];
                     
-                    $_SESSION["txtQuestion"] = $description;
+                    $_SESSION['txtQuestion'] = $description;
                     
                     insertQuestion($conn, $type, $difficulty, $numAnswers, $description);
-                    header("Location: insertAnswer.php");
+                    header('Location: insertAnswer.php');
+                    exit;
                 } else {
-                    $errorQuestion = 'NESSUNA TABELLA PRESENTE, INSERISCI QUALCHE COLLEZIONE PRIMA DI CREARE DEI QUESITI';
-                    echo "<script>document.querySelector('.input-textbox-question').value=".json_encode($errorQuestion).";</script>";
+                    echo "<script>document.querySelector('.input-textbox-question').value=".json_encode("NESSUNA TABELLA PRESENTE, INSERISCI QUALCHE COLLEZIONE PRIMA DI CREARE DEI QUESITI").";</script>";
                 }
             }
         }

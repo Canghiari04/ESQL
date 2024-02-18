@@ -6,12 +6,10 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <style>
-            <?php 
-                include 'connectionDB.php';
-                include 'css/table_exercise.css';
-            ?>
-        </style>
+        <link rel="stylesheet" type="text/css" href="css/table_exercise.css">
+        <?php 
+            include 'connectionDB.php';
+        ?>
     </head>
     <body>
         <form action="insert/insertTable.php" method="POST">
@@ -25,13 +23,13 @@
             <?php 
                 $conn = openConnection();
 
-                $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente)";
+                $sql = 'SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente);';
                 
-                $emailTeacher = $_SESSION["email"];
+                $email = $_SESSION['email'];
                 
                 try {
                     $result = $conn -> prepare($sql);
-                    $result -> bindValue(":emailDocente", $emailTeacher);
+                    $result -> bindValue(':emailDocente', $email);
 
                     $result -> execute();
                     $numRows = $result -> rowCount();

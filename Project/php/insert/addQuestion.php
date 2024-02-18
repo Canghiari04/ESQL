@@ -16,7 +16,7 @@
     }
 
     function insertQuestion($conn, $type, $difficulty, $numAnswers, $description) {
-        $storedProcedure = 'CALL Inserimento_Quesito(:difficolta, :numRisposte, :descrizione)';
+        $storedProcedure = 'CALL Inserimento_Quesito(:difficolta, :numRisposte, :descrizione);';
 
         try {
             $stmt = $conn -> prepare($storedProcedure);
@@ -30,7 +30,7 @@
         }
 
         /* query che permette di risalire all'ID dell'ultimo record inserito */
-        $sql = 'SELECT LAST_INSERT_ID() AS ID';
+        $sql = 'SELECT LAST_INSERT_ID() AS ID;';
 
         try {
             $result = $conn -> prepare($sql);

@@ -38,7 +38,7 @@
                         if($numRows > 0){
                             $tipo =  typeUtente($conn, $email);
 
-                            /* tramite lo start della sessione viene salvaguardata la email dell'utente che abbia effettuato il login */
+                            /* tramite lo start della sessione viene salvata la email dell'utente che abbia effettuato il login */
                             $_SESSION['email'] = $email;
 
                             if($tipo == 'Studente') {
