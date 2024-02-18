@@ -61,7 +61,7 @@
                                             <form action="delete/deleteTable.php" method="POST">
                                                 <th><button class="table-button" type="submit" name="btnDropTable" value='.$row -> ID.'>Drop Table</button></th>
                                             </form>
-                                            <form action="" method="GET">
+                                            <form action="insert/insertRow.php" method="POST">
                                                 <th><button class="table-button" type="submit" name="btnInsertRow" value='.$row -> ID.'>Insert Row</button></th>
                                             </form>
                                         </tr>
