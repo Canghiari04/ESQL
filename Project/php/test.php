@@ -1,0 +1,75 @@
+<?php
+    session_start();
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link rel="stylesheet" type="text/css" href="css/table_exercise.css">
+        <?php 
+            include 'connectionDB.php';
+        ?>
+    </head>
+    <body>
+        <form action="insert/insertTest.php" method="POST">
+            <div class="navbar">
+                <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
+                <a><button class="navbar-button" type="submit" name="btnInsertTest">Add Test</button></a>
+                <a href="handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
+            </div>
+        </form>
+        <?php
+            $conn = openConnection();   
+
+            $sql = 'SELECT * FROM Test WHERE (EMAIL_DOCENTE=:emailDocente);';
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(':emailDocente', $_SESSION['email']);
+
+                $result -> execute();
+                $numRows = $result -> rowCount();
+            
+                if($numRows > 0) {
+                    echo '
+                        <div class="div-th"> 
+                            <table class="table-head">   
+                                <tr>  
+                                    <th>Nome test</th>
+                                    <th>Data creazione</th>
+                                    <th>Numero righe</th>
+                                </tr>
+                            </table>
+                        </div>
+                    ';
+
+                    while($row = $result -> fetch(PDO::FETCH_OBJ)) {
+                        echo '
+                            <div class="div-td">
+                                <table class="table-list">
+                                    <tr>
+                                        <th>'.$row -> TITOLO.'</th>
+                                        <th>'.$row -> DATA_CREAZIONE.'</th>
+                                        <th>'.$row -> VISUALIZZA_RISPOSTE.'</th>
+                                        <form action="specifics/specificTest.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnSpecificTest" value="'.$row -> TITOLO.'">Specifics</button></th>
+                                        </form>
+                                        <form action="delete/deleteTest.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnDropTest" value="'.$row -> TITOLO.'">Drop Test</button></th>
+                                        </form>
+                                        <form action="delete/updateTest.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnUpdateTest" value="'.$row -> TITOLO.'">Update View</button></th>
+                                        </form>
+                                    </tr>
+                                </table>
+                            </div>
+                        ';
+                    }
+                }
+            } catch(PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+        ?>
+    </body>
+</html>
