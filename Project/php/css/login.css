@@ -1,13 +1,7 @@
-html, body {
-    font-family: 'Public Sans';
-    max-width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-}
-
 label {
     display: relative;
     float: left;
+    margin-top: 10px;
 }
 
 label:hover {
@@ -37,78 +31,6 @@ h3 {
 
 span {
     color: #ff3131;
-}
-
-.navbar {
-    overflow: hidden;
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.zoom-on-img {
-    transition: transform .4s;
-}
-
-.zoom-on-img:hover {
-    transform: scale(1.099);
-}
-
-.undo {
-    float: left;
-    margin-left: 25px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
-.dropdown {
-    float: right;
-    margin-top: 18px;
-    margin-right: 45px;
-}
-
-.dropdown .dropbtn {
-    border: none;
-    outline: none;
-    color: darkgray;
-    background-color: inherit;
-    margin: 0;
-    margin-bottom: 10px;
-}
-
-.dropbtn:hover {
-    transition: color .4s;
-    color: #ff3131;
-}
-
-.dropdown-content {
-    float: left;
-    position: absolute;
-    display: none;
-    background-color: white;
-    min-width: 90px;
-    z-index: 1;
-}
-
-.dropdown-content a {
-    float: left;
-    font-size: 13px;
-    color: darkgray;
-    padding: 8px 12px;
-    text-decoration: none;
-    display: block;
-    text-align: center;
-}
-
-.dropdown-content a:hover {
-    transition: color .4s;
-    background-color: rgba(195, 195, 195, 0.70);
-    color: #ff3131;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
 }
 
 .center {
@@ -149,6 +71,7 @@ span {
     text-align: center;
     padding: 14px 32px;
     text-decoration: none;
+    margin-top: 20px;
 }
 
 .button-Accedi:hover {

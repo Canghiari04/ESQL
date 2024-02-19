@@ -1,13 +1,6 @@
-html, body {
-    font-family: 'Public Sans';
-    max-width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-}
-
 p {
     color: #ff3131;
-    font-size: 58px;
+    font-size: 7.29vh;
     font-weight: bold;
     display: inline;
 }
@@ -17,103 +10,16 @@ h3 {
     font-weight: bold;
 }
 
-.navbar {
-    overflow: hidden;
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.zoom-on-img {
-    margin-top: 10px;
-    margin-left: 15px;
-    transition: transform .4s;
-}
-
-.zoom-on-img:hover {
-    transform: scale(1.099);
-}
-
-.dropdown {
-    float: right;
-    margin-left: 1000px;
-    margin-top: 20px;
-}
-
-.dropdown .dropbtn {
-    border: none;
-    outline: none;
-    color: darkgray;
-    background-color: inherit;
-    margin: 0;
-    margin-bottom: 10px;
-}
-
-.dropbtn:hover {
-    transition: color .4s;
-    color: #ff3131;
-}
-
-.dropdown-content {
-    float: right;
-    position: absolute;
-    display: none;
-    background-color: white;
-    min-width: 90px;
-    z-index: 1;
-}
-
-.dropdown-content a {
-    float: none;
-    font-size: 13px;
-    color: darkgray;
-    padding: 8px 12px;
-    text-decoration: none;
-    display: block;
-    text-align: center;
-}
-
-.dropdown-content a:hover {
-    transition: color .4s;
-    background-color: rgba(195, 195, 195, 0.70);
-    color: #ff3131;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.button-Login {
-    float: right;
-    display: block;
-    color: black;
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    text-align: center;
-    padding: 14px 32px;
-    margin-top: 10px;
-    margin-right: 15px;
-    text-decoration: none;
-}
-
-.button-Login:hover {
-    transition: color .4s;
-    color: #ff3131;
-    border-color: #ff3131;
-}
-
 .center {
     position: relative;
     background-color: rgba(255, 255, 255, 0.70);
-    top: 200px;
-    padding-top: 10px;
-    padding-bottom: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+    top: 16.67vh;
+    padding-top: 1.67vh;
+    padding-bottom: 2.5vh;
+    padding-left: 2.5vh;
+    padding-right: 2.5vh;
     margin: auto;
-    width: 45%;
+    width: 75%;
     text-align: center;
     border-radius: 20px;
     transition: transform .4s;
@@ -127,18 +33,18 @@ h3 {
     width: 60%;
     display: block;
     position: relative;
-    padding-top: 5px;
-    padding-bottom: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-top: 1vh;
+    padding-bottom: 2.5vh;
+    padding-left: 2.5vh;
+    padding-right: 2.5vh;
     margin: auto;
 }
 
 .url-utility {
-    padding-bottom: 10px;
+    padding-bottom: 1.67vh;
     color: darkgray;
-    margin-top: 5px;
-    border: 2px solid transparent;
+    margin-top: 1.33vh;
+    border: 0.33vh solid transparent;
     text-align: center;
     text-decoration: none;
 }

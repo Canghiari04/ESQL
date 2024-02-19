@@ -1,0 +1,43 @@
+html, body {
+    font-family: 'Public Sans';
+    max-width: 100%;
+    height: 100%;
+}
+
+.navbar {
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+}
+
+.zoom-on-img {
+    margin-top: 2.17vh;
+    margin-left: 3.25vh;
+    transition: transform .4s;
+}
+
+.zoom-on-img:hover {
+    transform: scale(1.099);
+}
+
+.button-navbar {
+    float: right;
+    display: block;
+    color: black;
+    background-color: white;
+    border: 0.33vh solid black;
+    border-radius: 1.39vh;
+    text-align: center;
+    padding: 2vh 4.44vh;
+    margin-top: 2.17vh;
+    margin-right: 3vh;
+    text-decoration: none;
+}
+
+.button-navbar:hover {
+    transition: color .4s;
+    color: #ff3131;
+    border-color: #ff3131;
+}
