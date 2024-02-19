@@ -10,6 +10,7 @@ DROP PROCEDURE IF EXISTS Inserimento_Opzione_Risposta;
 DROP PROCEDURE IF EXISTS Inserimento_Sketch_Codice;
 DROP PROCEDURE IF EXISTS Inserimento_Afferenza;
 DROP PROCEDURE IF EXISTS Inserimento_Test;
+DROP PROCEDURE IF EXISTS Inserimento_Composizione;
 DROP PROCEDURE IF EXISTS Inserimento_Vincolo_Integrita;
 DROP PROCEDURE IF EXISTS Aggiornamento_Chiave;
 DROP PROCEDURE IF EXISTS Eliminazione_Tabella_Esercizio;
