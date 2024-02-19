@@ -1,0 +1,64 @@
+label {
+    display: relative;
+    float: left;
+}
+    
+label:hover {
+    color: #ff3131;
+}
+
+button {
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    padding: 14px 32px;
+    text-decoration: none;
+}
+
+button:hover {
+    transition: color .4s;
+    color: #ff3131;
+    border-color: #ff3131;
+}
+
+span {
+    color: #ff3131;
+}
+
+input {
+    font-size: 12px;
+    width: 100%;
+    padding: 3px 3px;
+    margin: 1px 0;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 0px;
+    border-bottom: 1px solid darkgrey;
+    outline: none;
+}
+
+input:hover {
+    border-bottom: 2px solid #ff3131;
+}
+
+.center {
+    position: relative;
+    display: block;
+    top: 115px; 
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: auto;
+    width: 30%;
+    text-align: center;
+    border-radius: 20px;
+    background-color: rgba(255,255,255,0.70);
+    transition: transform .4s;
+}
+
+.center:hover {
+    transform: scale(1.03);
+}
