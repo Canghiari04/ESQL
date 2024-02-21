@@ -1,5 +1,5 @@
 <?php
-    function getAttributes($conn){                
+    function getAttributes($conn){    //permette di ottenere gli attributi relativi alla tabella interessata            
         $sql= 'SELECT * FROM ATTRIBUTO WHERE ID_TABELLA =:idTable ';
         $result = $conn -> prepare($sql);
         $result -> bindValue(':idTable', $_SESSION["IdTable"]);
@@ -15,13 +15,13 @@
         return $attributes;
     }
 
-    function getAttributeType($attributeName,$conn){
+    function getAttributeType($attributeName,$conn){//permette di ottenere in tipo dell'attributo interessato
 
         try{
-            $sql='SELECT * FROM ATTRIBUTO WHERE NOME = :nameTable AND ID_TABELLA = :idTable'; 
+            $sql='SELECT * FROM ATTRIBUTO WHERE NOME = :nomeTabella AND ID_TABELLA = :idTabella'; 
             $result = $conn -> prepare($sql);
-            $result -> bindValue(':nameTable', $attributeName);
-            $result -> bindValue(':idTable', $_SESSION["IdTable"]);
+            $result -> bindValue(':nomeTabella', $attributeName);
+            $result -> bindValue(':idTabella', $_SESSION["IdTable"]);
             $result -> execute();
 
             $row = $result -> fetch(PDO::FETCH_OBJ);
@@ -35,21 +35,31 @@
 
     }
 
-    function CheckAutoIncrement($conn){
+    function getTableName($conn){
         $sql= 'SELECT NOME FROM TABELLA_ESERCIZIO WHERE ID = :idTable ';
-        $result = $conn -> prepare($sql);
+        try{
+            $result = $conn -> prepare($sql);           
+            $result -> bindValue(':idTable', $_SESSION['IdTable']);
+            $result -> execute();
+
+            $row = $result -> fetch(PDO::FETCH_OBJ);
+            $nameTable= $row -> NOME;
+            return $nameTable;
+
+        }catch(PDOException $e){
+            echo 'Eccezione '.$e -> getMessage().'<br>';
+        }
         
-        $result -> bindValue(':idTable', $_SESSION["IdTable"]);
-        $result -> execute();
+       
+    }
 
-        $row = $result -> fetch(PDO::FETCH_OBJ);
-        $nometab= $row -> NOME; 
-
-        $sql = "SHOW COLUMNS FROM  ".$nometab." WHERE Extra LIKE '%auto_increment%'";
+    function CheckAutoIncrement($conn){//restituisce un array contenente i nomi degli attributi settati AUTO INCREMENT 
+        $nameTable = getTableName($conn);
+        $sql = "SHOW COLUMNS FROM  ".$nameTable." WHERE Extra LIKE '%auto_increment%'";
         $result = $conn->prepare($sql);
         $result->execute();
 
-        $rows = $result->fetchAll(PDO::FETCH_ASSOC); // Fetch all rows
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC); 
 
         $columns = array();
         foreach ($rows as $row) {
@@ -57,24 +67,23 @@
             array_push($columns,$column);
         }
 
-        return [$columns, $nometab];
+        return $columns;
 
     }
 
-    function IdentifyAttributes($conn){
-        [$check,$nomeTabella] = CheckAutoIncrement($conn);
-        $valuesQuery='INSERT INTO '.$nomeTabella.' (';
+    function IdentifyAttributes($conn){//mettodo che permette di stampare le textbox per l'inserimento di dati nella tabella interessata
+        $checkAutoInc = CheckAutoIncrement($conn);
+        $nameTable =getTableName($conn);
+        $valuesQuery='INSERT INTO '.$nameTable.' (';//scrittura intestazione query
         echo '
-        <form action="" method="POST">     
-            <div class="center"> 
-                <table class="">
+            <table class="">
         ';
 
         $attributes=getAttributes($conn);
 
         foreach($attributes as $value){
-            if(!in_array($value,$check)){
-                $valuesQuery=$valuesQuery. ''.$value.'' ;
+            if(!in_array($value,$checkAutoInc)){//vengono evitati gli attributi auto increment
+                $valuesQuery=$valuesQuery. ''.$value.'' ;//vengono inseriti gli attributi interessati all'inserimento, concatenando all'intestazione scritta prima
                 $valuesQuery=$valuesQuery. ', ' ;
                 echo '
                     <tr>
@@ -85,20 +94,17 @@
                 }
         }
         echo '
-                        </table>
-                    <button class="button-insert" type="submit" name="btnInsertData" value="">Insert Row</button>  
-                </div>
-            </form>
+            </table>
         ';
-
+        //echo $valuesQuery;
         $valuesQuery=trim($valuesQuery);
         $valuesQuery=substr($valuesQuery, 0, -1);
         $valuesQuery=$valuesQuery.')';
 
-        $_SESSION["IntestazioneInsert"] = $valuesQuery;
+        $_SESSION['HeadingInsert'] = $valuesQuery;//Settaggio variabile sessione in modo da poter salvare la intestazione della query per il momento in cui verranno inseriti i dati
     }
 
-    function setTypeInput($i){
+    function setTypeInput($i){//permette di settare l'input type in base al tipo di attributo
         switch ($i) {
             case "DATE":
                 return "date";
@@ -115,31 +121,37 @@
         }
     }
 
-    function insertData($conn){
-        $attributesTxt=array();
+    function insertData($conn){//permette l'inserimento dei dati inseriti dal professore nel database
+        $attributesText=array();
         $attributesInsert = getAttributes($conn);
-        [$attributesAutoIncrement,$nomeTabella]=CheckAutoIncrement($conn);
+        $attributesAutoIncrement=CheckAutoIncrement($conn);
 
         foreach($attributesInsert as $value){
             if(!in_array($value,$attributesAutoIncrement)){                    
-                $s= 'txt'.$value.'';
-                array_push($attributesTxt,$s);
+                $s= 'txt'.$value.'';//vengono realizzati i nomi delle texbox evitando i nomi degli attributi auto increment, usati successivamente come indice nel metodo POST
+                array_push($attributesText,$s);
             }
         }
-        $StringDatas=''.$_SESSION["IntestazioneInsert"].' VALUES (';
+        if(strstr($_SESSION['HeadingInsert'],'(')){//controllo per assicurarsi che la query abbia almeno un valore
+            $StringDatas=''.$_SESSION["HeadingInsert"].' VALUES (';//sovrascrizione della stringa di intestazione
 
-        foreach($attributesTxt as $value){
-            $StringDatas=$StringDatas. '?' ;
-            $StringDatas=$StringDatas. ', ' ;
+            foreach($attributesText as $value){//realizzazione completa con protezione da sql injection dinamica
+                $StringDatas=$StringDatas. '?' ;
+                $StringDatas=$StringDatas. ', ' ;
+            }
+               
+            $StringDatas=trim($StringDatas);
+            $StringDatas=substr($StringDatas, 0, -1);
+            $StringDatas=$StringDatas.');';
+            $index = 0;
+
+        } else {//caso in cui la query non abbia nessun valore oltre agli attributi auto_increment
+            $StringDatas= 'INSERT INTO '.getTableName($conn).' () VALUES ()';
         }
-           
-        $StringDatas=trim($StringDatas);
-        $StringDatas=substr($StringDatas, 0, -1);
-        $StringDatas=$StringDatas.');';
-        $index = 0;
+
         try{
             $result = $conn -> prepare($StringDatas);
-            foreach($attributesTxt as $value){
+            foreach($attributesText as $value){
                 $index = $index + 1;
                 $result->bindValue($index, $_POST[$value]);
             }
@@ -150,6 +162,8 @@
         }catch(PDOException $e) {
             echo "<script>document.querySelector('.input-tips').value='Rispettare la sintassi delle tabelle interessate!';</script>";
         }
+
+
 
     }
 ?>
