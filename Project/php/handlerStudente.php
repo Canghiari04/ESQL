@@ -8,6 +8,7 @@
     <body>
         <div class="navbar">
             <a href="index.php?"><img class="zoom-on-img ESQL" width="112" height="48" src="img/ESQL.png"></a>
+            <a class="a-href" href="statistic.php">Statistiche</a>
             <a class="a-href" href="#">Messaggi</a>
             <a class="a-href" href="#">Risposte</a>
             <a class="a-href" href="#">Test</a>
