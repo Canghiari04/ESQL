@@ -6,7 +6,8 @@
     <head>  
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="../css/insertAfferent.css">
+        <link rel="stylesheet" type="text/css" href="../css/navbar_button_undo.css">
+        <link rel="stylesheet" type="text/css" href="../css/insert_checkbox.css">
         <?php 
             include 'addComposition.php';
             include '../connectionDB.php';
@@ -58,7 +59,7 @@
 
             while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                 echo '
-                    <div class="div-checkbox-composition">
+                    <div class="div-checkbox">
                         <input type="checkbox" name="checkbox[]" value="'.$row -> ID.'">
                         <label>'.$row -> DESCRIZIONE.'</label>
                     </div>

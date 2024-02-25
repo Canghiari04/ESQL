@@ -3,7 +3,8 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="../css/specifics.css">
+        <link rel="stylesheet" type="text/css" href="../css/navbar_button_undo.css">
+        <link rel="stylesheet" type="text/css" href="../css/specific_linear.css">
         <?php
             include '../connectionDB.php';
         ?>

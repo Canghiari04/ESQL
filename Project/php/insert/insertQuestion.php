@@ -6,6 +6,7 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link rel="stylesheet" type="text/css" href="../css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../css/insertQuestion.css">
         <?php 
             include 'addQuestion.php';
@@ -21,6 +22,7 @@
             <div class="container">
                 <div class="div-select">
                     <select name="sltDifficulty" required>
+                        <option value="" selected disabled>DIFFICOLTÀ</option>    
                         <option value="BASSO">BASSO</option>
                         <option value="MEDIO">MEDIO</option>
                         <option value="ALTO">ALTO</option>

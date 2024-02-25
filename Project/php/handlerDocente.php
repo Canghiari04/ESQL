@@ -3,7 +3,7 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="css/handlerStudente.css">
+        <link rel="stylesheet" type="text/css" href="css/navbar_horizontal.css">
     </head>
     <body>
         <div class="navbar">
@@ -13,7 +13,7 @@
             <a class="a-href" href="table_exercise.php">Tabelle</a>
             <a class="a-href" href="test.php">Test</a>
             <a class="a-href" href="question.php">Quesiti</a>
-            <a href="login/login.php?"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
         </div>
+        <a href="login/login.php?"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
     </body>
 </html>

@@ -1,0 +1,42 @@
+.div-th {
+    margin: 12.5vh 21.5vh 2.75vh;
+}
+
+.table-head {
+    table-layout: fixed;
+    width: 50%;
+}
+
+.div-td {
+    display: flex;
+    justify-content: space-between;
+    padding: 2.5vh;
+    margin: 3.25vh 18.75vh;
+    background-color: rgb(240, 240, 240);
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 10px;
+    align-items: center;
+}
+
+.table-list {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table-button {
+    float: right;
+    display: block;
+    color: black;
+    background-color: white;
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 10px;
+    text-align: center;
+    padding: 1vh 3vh;
+    text-decoration: none;
+}
+
+.table-button:hover, th:hover {
+    transition: color .4s;
+    color: #ff3131;
+    border-color: #ff3131;
+}

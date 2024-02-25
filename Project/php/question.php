@@ -3,7 +3,8 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="css/question.css">
+        <link rel="stylesheet" type="text/css" href="css/navbar_button_dropdown_undo.css">
+        <link rel="stylesheet" type="text/css" href="css/table_view_linear.css">
         <?php
             include 'connectionDB.php';
         ?>
@@ -12,7 +13,7 @@
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
             <div class="dropdown">
-                <button class="dropbtn">Add Question</button>
+                <button class="dropbtn">Question</button>
                 <div class="dropdown-content">
                     <a href="insert/insertQuestion.php?chiusa">Chiusa</a>
                     <a href="insert/insertQuestion.php?codice">Codice</a>

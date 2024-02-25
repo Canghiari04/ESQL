@@ -6,7 +6,8 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="css/table_exercise.css">
+        <link rel="stylesheet" type="text/css" href="css/navbar_button_undo.css">
+        <link rel="stylesheet" type="text/css" href="css/table_view_linear.css">
         <?php 
             include 'connectionDB.php';
         ?>
@@ -15,7 +16,7 @@
         <form action="insert/insertTest.php" method="POST">
             <div class="navbar">
                 <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
-                <a><button class="navbar-button" type="submit" name="btnInsertTest">Add Test</button></a>
+                <a><button class="button-navbar" type="submit" name="btnInsertTest">Add Test</button></a>
                 <a href="handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
             </div>
         </form>

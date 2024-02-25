@@ -40,42 +40,6 @@ button:hover, select:hover, input:hover {
     border-color: #ff3131;
 }
 
-.navbar {
-    overflow: hidden;
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.navbar-button {
-    float: right;
-    color: black;
-    background-color: white;
-    border-radius: 10px;
-    border: 2px solid black;
-    margin-top: 5px;
-    margin-left: 1050px;
-    padding: 14px 32px;
-}
-
-.zoom-on-img {
-    margin-top: 15px;
-    margin-left: 15px;
-    transition: transform .4s;
-}
-
-.zoom-on-img:hover {
-    transform: scale(1.099);
-}
-
-.undo {
-    float: right;
-    margin-right: 25px;
-    margin-top: 20px;
-    margin-bottom: 15px;
-}
-
 .container {
     display: flex;
     justify-content: center;

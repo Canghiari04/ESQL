@@ -1,0 +1,82 @@
+textarea {
+    font-size: 13px;
+    width: 27.78vh;
+    height: 9.72vh;
+    margin-top: 6.94vh;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 5px;
+    border: 2px solid darkgrey;
+    outline: none;
+}
+
+textarea:hover {
+    transition: color .4s;
+    border-color: #ff3131;
+}
+
+button {
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    padding: 2vh 5vh;
+    margin: 10vh 0vh 10vh;
+    text-decoration: none;
+}
+
+button:hover, select:hover, input:hover {
+    transition: color .4s;
+    color: #ff3131;
+    border-color: #ff3131;
+}
+
+input {
+    display: inline-block;
+    width: 2.08vh;
+    height: 2.08vh;
+    color: black;
+    background-color: white;
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 5px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div-textbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.div-checkbox {
+    display: flex;
+    align-items: center;
+    float: left;
+    width: 35vh;
+    height: 10vh;
+    margin-left: 16.5vh;
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 10px;
+}
+
+.div-checkbox input {
+    margin-left: 2.78vh;
+    margin-right: 1.39vh; 
+}
+
+.div-checkbox-composition input {
+    margin-left: 2.78vh;
+    margin-right: 2.08vh; 
+}
+
+.div-checkbox:hover, .div-checkbox-composition:hover {
+    transition: border-color .4s; 
+    border-color: #ff3131;
+}
