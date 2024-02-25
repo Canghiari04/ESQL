@@ -17,26 +17,29 @@
             <a><img class="zoom-on-img" width="112" height="48" src="../img/ESQL.png"></a>
             <a href="../table_exercise.php"><img class="zoom-on-img undo" width="32" height="32" src="../img/undo.png"></a>
         </div>
-        <div class="container">
-            <div class="div-tips">
-                <textarea class="input-tips" placeholder="SQLSTATE: POSSIBILI ERRORI DI SINTASSI" disabled></textarea>
-            </div>
-            <div class="div-textbox">
-                <?php             
-                    $conn = openConnection();
-                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                        if (isset($_POST["btnInsertRow"])) {
-                            $att=$_POST["btnInsertRow"];
-                            $_SESSION["IdTable"]=$att;
-                            IdentifyAttributes($conn,$att);
-                        }elseif (isset($_POST["btnInsertData"])) {
-                            insertData($conn);  
-                            IdentifyAttributes($conn,$_SESSION["IdTable"]);
-                            
+        <form action="" method="POST">
+            <div class="container">
+                <div class="div-tips">
+                    <textarea class="input-tips" placeholder="PRESTARE PARTICOLARE ATTENZIONE ALLA SINTASSI DELLA TABELLA" disabled></textarea>
+                </div>
+                <div class="div-textbox">
+                    <?php             
+                        $conn = openConnection();
+                        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                            if (isset($_POST['btnInsertRow'])) {
+                                $IdTable=$_POST['btnInsertRow'];
+                                $_SESSION['IdTable']=$IdTable;
+                                IdentifyAttributes($conn,$IdTable);
+                            }elseif (isset($_POST['btnInsertData'])) {
+                                insertData($conn);  
+                                IdentifyAttributes($conn,$_SESSION['IdTable']);
+                                
+                            }
                         }
-                    }
-                ?>
+                    ?>
+                </div>
             </div>
-        </div>
+            <button type="submit" name="btnInsertData">Insert Row</button>  
+        </form>
     </body>
 </html>
