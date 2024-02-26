@@ -26,7 +26,7 @@
                         $titleTest = $_POST['btnSpecificTest']; 
                         $email = $_SESSION['email'];   
 
-                        $sql = 'SELECT Quesito.DESCRIZIONE FROM Test, Composizione, Quesito WHERE (Test.TITOLO=Composizione.TITOLO_TEST) AND (Composizione.ID_QUESITO=Quesito.ID) AND (Test.TITOLO=:titoloTest) AND (Test.EMAIL_DOCENTE=:emailDocente);';
+                        $sql = 'SELECT * FROM Test, Composizione, Quesito WHERE (Test.TITOLO=Composizione.TITOLO_TEST) AND (Composizione.ID_QUESITO=Quesito.ID) AND (Test.TITOLO=:titoloTest) AND (Test.EMAIL_DOCENTE=:emailDocente);';
                         
                         try {
                             $result = $conn -> prepare($sql);
@@ -40,6 +40,7 @@
                             
                         if(isset($result)) {
                             while($row = $result->fetch(PDO::FETCH_OBJ)) {
+                                $varComposition = $titleTest.'?'.$row -> ID;
                                 echo '
                                     <div class="div-question">
                                         <table>   
@@ -50,7 +51,9 @@
                                                 <td>'.$row -> DESCRIZIONE.'</td>
                                             </tr>
                                             <tr>
-                                                <td><button class="drop-btn">Drop Question</button></td>
+                                                <form action="../delete/deleteTest.php" method="POST">
+                                                    <td><button class="drop-btn" name="btnDropComposition" value="'.$varComposition.'">Drop Question</button></td>
+                                                </form>
                                             </tr>
                                         </table>
                                     </div>

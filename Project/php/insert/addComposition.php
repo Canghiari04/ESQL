@@ -2,9 +2,6 @@
     function insertComposition($conn, $titleTest, $arrayIdQuestion) {
         $storedProcedure = 'CALL Inserimento_Composizione(:titoloTest, :idQuesito);';
 
-        echo $titleTest.'<br>';
-        echo $arrayIdQuestion.'<br>'; 
-
         try {
             $stmt = $conn -> prepare($storedProcedure);
             $stmt -> bindValue(':titoloTest', $titleTest);
@@ -14,6 +11,8 @@
                 
                 $stmt -> execute();
             }
+
+            header('Location: ../test.php');
         } catch(PDOException $e) {
             echo 'Eccezione '.$e -> getMessage().'<br>';
         }

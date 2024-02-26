@@ -52,7 +52,6 @@
 
                     insertTest($conn, $_SESSION['email'], $viewAnswers, $fileTest, $titleTest);
                     header('Location: insertComposition.php');
-                    exit;
                 } else {
                     echo "<script>document.querySelector('.input-textbox-test').value=".json_encode("NESSUN QUESITO PRESENTE, INSERISCI QUALCHE DOMANDA PRIMA DI CREARE DEI TEST").";</script>";
                 }

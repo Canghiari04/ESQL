@@ -38,8 +38,6 @@
                     $values = $_POST['checkbox'];
 
                     insertComposition($conn, $_SESSION['titleTest'], $values);
-                    header('Location: ../test.php');
-                    exit;
                 } else {
                     echo "<script>document.querySelector('.input-tips').value=".json_encode("DEVI SELEZIONARE ALMENO UNO DEI QUESITI PRESENTI").";</script>";
                 }

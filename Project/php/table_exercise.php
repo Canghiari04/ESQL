@@ -56,14 +56,14 @@
                                             <th>'.$row -> NOME.'</th>
                                             <th>'.$row -> DATA_CREAZIONE.'</th>
                                             <th>'.$row -> NUM_RIGHE.'</th>
+                                            <form action="specifics/specificRow.php" method="POST">
+                                                <th><button class="table-button" type="submit" name="btnViewRow" value='.$row -> ID.'>View Table</button></th>
+                                            </form>
                                             <form action="specifics/specificTable.php" method="POST">
                                                 <th><button class="table-button" type="submit" name="btnSpecificTable" value='.$row -> ID.'>Specifics</button></th>
                                             </form>
                                             <form action="delete/deleteTable.php" method="POST">
                                                 <th><button class="table-button" type="submit" name="btnDropTable" value='.$row -> ID.'>Drop Table</button></th>
-                                            </form>
-                                            <form action="insert/insertRow.php" method="POST">
-                                                <th><button class="table-button" type="submit" name="btnInsertRow" value='.$row -> ID.'>Insert Row</button></th>
                                             </form>
                                         </tr>
                                     </table>

@@ -39,27 +39,29 @@
                                 <tr>  
                                     <th>Nome test</th>
                                     <th>Data creazione</th>
-                                    <th>Numero righe</th>
+                                    <th>Visualizza risposte</th>
                                 </tr>
                             </table>
                         </div>
                     ';
 
                     while($row = $result -> fetch(PDO::FETCH_OBJ)) {
+                        $var = convertToString($row -> VISUALIZZA_RISPOSTE);
+
                         echo '
                             <div class="div-td">
                                 <table class="table-list">
                                     <tr>
                                         <th>'.$row -> TITOLO.'</th>
                                         <th>'.$row -> DATA_CREAZIONE.'</th>
-                                        <th>'.$row -> VISUALIZZA_RISPOSTE.'</th>
+                                        <th>'.$var.'</th>
                                         <form action="specifics/specificTest.php" method="POST">
                                             <th><button class="table-button" type="submit" name="btnSpecificTest" value="'.$row -> TITOLO.'">Specifics</button></th>
                                         </form>
                                         <form action="delete/deleteTest.php" method="POST">
                                             <th><button class="table-button" type="submit" name="btnDropTest" value="'.$row -> TITOLO.'">Drop Test</button></th>
                                         </form>
-                                        <form action="delete/updateTest.php" method="POST">
+                                        <form action="delete/deleteTest.php" method="POST">
                                             <th><button class="table-button" type="submit" name="btnUpdateTest" value="'.$row -> TITOLO.'">Update View</button></th>
                                         </form>
                                     </tr>
@@ -70,6 +72,14 @@
                 }
             } catch(PDOException $e) {
                 echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+
+            function convertToString($var) {
+                if($var == 0) {
+                    return 'false';
+                } else {
+                    return 'true';
+                }
             }
         ?>
     </body>
