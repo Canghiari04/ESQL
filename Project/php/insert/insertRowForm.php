@@ -1,11 +1,9 @@
-<?php 
-    session_start();
-?>
 <!DOCTYPE html>
 <html>
     <head>           
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link rel="stylesheet" type="text/css" href="../css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../css/insertRow.css">
         <?php 
             include 'addRow.php';
@@ -19,27 +17,23 @@
         </div>
         <form action="" method="POST">
             <div class="container">
-                <div class="div-tips">
-                    <textarea class="input-tips" placeholder="PRESTARE PARTICOLARE ATTENZIONE ALLA SINTASSI DELLA TABELLA" disabled></textarea>
-                </div>
-                <div class="div-textbox">
+                <div class="div-textbox-generative">
                     <?php             
                         $conn = openConnection();
-                        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                            if (isset($_POST['btnInsertRow'])) {
-                                $IdTable=$_POST['btnInsertRow'];
-                                $_SESSION['IdTable']=$IdTable;
-                                IdentifyAttributes($conn,$IdTable);
-                            }elseif (isset($_POST['btnInsertData'])) {
-                                insertData($conn);  
-                                IdentifyAttributes($conn,$_SESSION['IdTable']);
-                                
-                            }
+
+                        identifyAttributes($conn);
+
+                        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+                            if(isset($_POST['btnInsertData']))
+                            insertData($conn);  
                         }
                     ?>
                 </div>
+                <div class="div-tips"> 
+                    <textarea class="input-tips" placeholder="PRESTARE  ATTENZIONE ALLA SINTASSI DELLA TABELLA" disabled></textarea>
+                </div>
             </div>
-            <button type="submit" name="btnInsertData">Insert Row</button>  
+            <button class="button-data" name="btnInsertData">Add</button>  
         </form>
     </body>
 </html>

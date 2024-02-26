@@ -61,4 +61,25 @@
 
         return $numAnswers;
     }
+
+    function getTypeQuestion($conn, $idQuestion) {
+        $sql = 'SELECT * FROM Domanda_Chiusa WHERE (ID_DOMANDA_CHIUSA = :idQuesito);';
+
+        try {
+            $stmt = $conn -> prepare($sql);
+
+            $stmt -> bindValue(':idQuesito', $idQuestion);
+
+            $stmt -> execute();
+            $numRows = $stmt -> rowCount();
+        } catch(PDOException $e) {
+            echo 'Eccezione '.$e -> getMessage().'<br>';
+        }
+
+        if($numRows > 0) {
+            return 'CHIUSA';
+        } else {
+            return 'APERTA';
+        }
+    }
 ?>

@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -62,8 +65,8 @@
                                     <form action="delete/deleteQuestion.php" method="POST">
                                         <th><button class="table-button" type="submit" name="btnDropQuestion" value='.$row -> ID.'>Drop Question</button></th>
                                     </form>
-                                    <form action="" method="GET">
-                                        <th><button class="table-button" type="submit" name="btnAddOption">Add Option</button></th>
+                                    <form action="insert/insertOption.php" method="POST">
+                                        <th><button class="table-button" type="submit" name="btnAddOption" value="'.$row -> ID.'?'.$row -> DESCRIZIONE.'">Add Option</button></th>
                                     </form>
                                 </tr>
                             </table>
