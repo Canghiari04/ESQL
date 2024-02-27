@@ -2,7 +2,7 @@
 <html>
     <head>
         <?php
-            include '../connectionDB.php'
+            include '../../connectionDB.php'
         ?>
     </head>
     <?php 

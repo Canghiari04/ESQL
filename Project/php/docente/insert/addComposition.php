@@ -2,12 +2,6 @@
     function insertComposition($conn, $titleTest, $arrayIdQuestion) {
         $storedProcedure = 'CALL Inserimento_Composizione(:titoloTest, :idQuesito);';
 
-        echo $titleTest;
-
-        foreach($arrayIdQuestion as $s) {
-            echo $s;
-        }
-
         try {
             $stmt = $conn -> prepare($storedProcedure);
             $stmt -> bindValue(':titoloTest', $titleTest);

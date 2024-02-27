@@ -43,9 +43,9 @@
 
                             if($tipo == 'Studente') {
                                 /* metodo per reindirizzare tramite uso di HTTP */
-                                header('Location: ../handlerStudente.php');                      
+                                header('Location: ../studente/handlerStudente.php');                      
                             } else {
-                                header('Location: ../handlerDocente.php');
+                                header('Location: ../docente/handlerDocente.php');
                             }
                         } else {
                             loginError();
