@@ -18,6 +18,8 @@ DROP PROCEDURE IF EXISTS Eliminazione_Tabella_Esercizio;
 DROP PROCEDURE IF EXISTS Eliminazione_Quesito;
 DROP PROCEDURE IF EXISTS Eliminazione_Test;
 DROP PROCEDURE IF EXISTS Eliminazione_Composizione;
+DROP PROCEDURE IF EXISTS Eliminazione_Opzione_Risposta;
+DROP PROCEDURE IF EXISTS Eliminazione_Sketch_Codice;
 
 DELIMITER |
 CREATE PROCEDURE Registrazione_Studente(IN EMAIL VARCHAR(255), IN PSWD VARCHAR(255), IN NOME VARCHAR(255), IN COGNOME VARCHAR(255), IN TELEFONO INT(10), IN ANNO_IMMATRICOLAZIONE INT(4), IN CODICE VARCHAR(16))
@@ -202,6 +204,30 @@ BEGIN
 	SET countComposition=(SELECT COUNT(*) FROM Composizione WHERE (Composizione.TITOLO_TEST=TITOLO_TEST) AND (Composizione.ID_QUESITO=ID_QUESITO));
 	IF (countComposition>0) THEN
 		DELETE FROM Composizione WHERE (Composizione.TITOLO_TEST=TITOLO_TEST) AND (Composizione.ID_QUESITO=ID_QUESITO);
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Opzione_Risposta(IN ID_QUESITO INT, IN TESTO VARCHAR(255))
+BEGIN
+	DECLARE countOpzioneRisposta INT DEFAULT 0;
+	SET countOpzioneRisposta=(SELECT COUNT(*) FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=ID_QUESITO) AND (Opzione_Risposta.TESTO=TESTO));
+	IF (countOpzioneRisposta>0) THEN
+		DELETE FROM Opzione_Risposta WHERE ((Opzione_Risposta.ID_DOMANDA_CHIUSA=ID_QUESITO) AND (Opzione_Risposta.TESTO=TESTO));
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Sketch_Codice(IN ID_QUESITO INT, IN TESTO VARCHAR(255))
+BEGIN
+	DECLARE countSketchCodice INT DEFAULT 0;
+	SET countSketchCodice=(SELECT COUNT(*) FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=ID_QUESITO) AND (Sketch_Codice.TESTO=TESTO));
+	IF (countSketchCodice>0) THEN
+		DELETE FROM Sketch_Codice WHERE ((Sketch_Codice.ID_DOMANDA_CODICE=ID_QUESITO) AND (Sketch_Codice.TESTO=TESTO));
 	END IF;
 END ;
 | 

@@ -17,7 +17,7 @@
                 $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$idQuestion.'', 'Timestamp' => date('Y-m-d H:i:s')];
                 writeLog($manager, $document);
             } elseif(isset($_POST['btnDropAnswer'])) {
-                deleteAnswer($conn, $varAnswer);
+                deleteAnswer($conn, $varAnswer = $_POST['btnDropAnswer']);
 
                 /* manca writelog */
             }
@@ -42,16 +42,16 @@
             $valuesComposition = explode('?', $varAnswer);
 
             if(getTypeQuestion($conn, $valuesComposition[0]) == 'CHIUSA') {
-                $storedProcedure = 'CALL Eliminazione_Opzione_Risposta(:titolo, :idQuesito);';
+                $storedProcedure = 'CALL Eliminazione_Opzione_Risposta(:idQuesito, :testo);';
             } else {
-                $storedProcedure = 'CALL Eliminazione_Sketch_Codice(:titolo, :idQuesito);';
+                $storedProcedure = 'CALL Eliminazione_Sketch_Codice(:idQuesito, :testo);';
             }
             
             try {
                 $stmt = $conn -> prepare($storedProcedure);
 
-                $stmt -> bindValue(':titolo', $valuesComposition[0]);              
-                $stmt -> bindValue(':idQuesito', $valuesComposition[1]);
+                $stmt -> bindValue(':idQuesito', $valuesComposition[0]);              
+                $stmt -> bindValue(':testo', $valuesComposition[1]);
 
                 $stmt -> execute();
             } catch (PDOException $e) {
@@ -60,7 +60,7 @@
         }
 
         function getTypeQuestion($conn, $idQuestion) {
-            $sql = 'SELECT * FROM Quesito JOIN Domanda_Chiusa ON (ID=ID_DOMANDA_CHIUSA) WHERE (Quesito.ID=:idQuesito);';
+            $sql = 'SELECT * FROM Quesito JOIN Domanda_Chiusa ON (ID = ID_DOMANDA_CHIUSA) WHERE (Quesito.ID = :idQuesito);';
 
             try {
                 $result = $conn -> prepare($sql);
