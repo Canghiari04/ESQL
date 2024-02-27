@@ -21,16 +21,17 @@
         <form action="" method="POST">
             <div class="container">
                 <div class="div-tips">
-                    <select name="sltDifficulty" required>
-                            <option value="" selected disabled>DIFFICOLTÀ</option>    
-                            <option value="BASSO">BASSO</option>
-                            <option value="MEDIO">MEDIO</option>
-                            <option value="ALTO">ALTO</option>
-                    </select>
                     <textarea class="input-tips" disabled></textarea>
                 </div>
                 <div class="div-textbox">
                     <textarea class="input-textbox" type="text" name="txtAnswer" placeholder="TESTO DELLA RISPOSTA" required></textarea>
+                </div>
+                <div class="div-select">    
+                    <select name="sltSolution" required>
+                            <option value="" selected disabled>SOLUZIONE</option>    
+                            <option value="false">NO</option>
+                            <option value="true">SI</option>
+                    </select>
                 </div>
             </div>
             <button class="button-insert" type="submit" name="btnAddAnswer">Add</button>
@@ -42,12 +43,13 @@
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['btnAddAnswer'])) {
                 $txtAnswer = $_POST['txtAnswer'];
+                $sltSolution = $_POST['sltSolution'];
 
                 /* funzione che sovrascrive il placeholder della textarea tips, per visualizzare la domanda in questione, durante la stesura delle risposte collegate */
                 printQuestion($_SESSION['txtQuestion']);
 
                 /* inserimento della risposta fornita rispetto alla domanda in questione, fornendo tipo e id della domanda */
-                addAnswer($conn, strtoupper($_SESSION['typeQuestion']), $_SESSION['idCurrentQuestion'], $txtAnswer);
+                addAnswer($conn, strtoupper($_SESSION['typeQuestion']), $_SESSION['idCurrentQuestion'], $txtAnswer, $sltSolution);
             } elseif(isset($_POST['btnAddOption'])) {
                 $values = $_POST['btnAddOption'];
 
