@@ -1,10 +1,9 @@
 USE ESQLDB;
-DROP VIEW IF EXISTS test_completati;
-DROP VIEW IF EXISTS risposte_corrette;
-DROP VIEW IF EXISTS risposte_inserite;
+DROP VIEW IF EXISTS Test_Completati;
+DROP VIEW IF EXISTS Risposte_Corrette;
+DROP VIEW IF EXISTS Risposte_Inserite;
 
-/* prima vista */
-CREATE VIEW test_completati (CODICE, NUMERO) AS
+CREATE VIEW Test_Completati (CODICE, NUMERO) AS
     SELECT CODICE, COUNT(*) AS NUMERO
     FROM Studente, Completamento
     WHERE (Studente.EMAIL_STUDENTE = Completamento.EMAIL_STUDENTE) 
@@ -12,8 +11,7 @@ CREATE VIEW test_completati (CODICE, NUMERO) AS
 	GROUP BY CODICE
     ORDER BY NUMERO DESC;
    
-/* seconda vista (va provata non so se va)*/
-CREATE VIEW risposte_corrette (CODICE, NUMEROCORR, NUMERORIS, PERC) AS
+CREATE VIEW Risposte_Corrette (CODICE, NUMEROCORR, NUMERORIS, PERC) AS
     SELECT CODICE, 
     SUM(CASE WHEN ESITO = TRUE THEN 1 ELSE 0 END) AS NUMEROCORR,
     COUNT(*) AS NUMERORIS,
@@ -23,9 +21,7 @@ CREATE VIEW risposte_corrette (CODICE, NUMEROCORR, NUMERORIS, PERC) AS
     GROUP BY CODICE
     ORDER BY PERC DESC;
 
-/* terza vista (io mostro ID quesito, ma sarebbe figo fare un hover col mouse sull'id nella
-classifica e far vedere la descrizione, ovvero il testo della domanda, del singolo quesito)*/
-CREATE VIEW risposte_inserite (ID_QUESITO, NUMERO) AS
+CREATE VIEW Risposte_Inserite (ID_QUESITO, NUMERO) AS
     SELECT ID_QUESITO, COUNT(*) AS NUMERO
     FROM Risposta
     GROUP BY ID_QUESITO

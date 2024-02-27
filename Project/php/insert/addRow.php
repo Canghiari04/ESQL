@@ -6,7 +6,7 @@
         $nameTable = getTableName($conn);
 
         $checkAutoInc = checkAutoIncrement($conn, $nameTable);
-
+ 
         /* scrittura intestazione della query */
         $valuesQuery = 'INSERT INTO '.$nameTable.' (';
         
@@ -25,7 +25,7 @@
 
                 echo '
                     <tr>
-                        <th><label for="txt'.$value.'">'.$value.':</label></th>
+                        <th><label for="txt'.$value.'">'.$value.'</label></th>
                         <th><input class="input" type="'.setTypeInput(getAttributeType($conn, $value)).'"  name="txt'.$value.'"></th>   
                     </tr>     
                 ';    
@@ -35,7 +35,7 @@
         echo '
             </table>
         ';
-        
+
         $valuesQuery = trim($valuesQuery);
 
         /* si elimina la virgola finale per concatenare la parentesi tonda chiusa, come da sintassi di mysql ')' */
@@ -193,10 +193,11 @@
                 $result -> bindValue($index, $_POST[$value]);
             }
         
-            $result -> execute();
+            $result -> execute(); 
+            
             echo "<script>document.querySelector('.input-tips').value='INSERIMENTO AVVENUTO';</script>";
         }catch(PDOException $e) {
-            echo "<script>document.querySelector('.input-tips').value='RISPETTARE LA SINTASSI DELLA TABELLA';</script>";
+            echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";
         }
     }
 ?>

@@ -16,9 +16,13 @@
                 /* scrittura log eliminazione di un record relativo alla tabella Quesito */
                 $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$idQuestion.'', 'Timestamp' => date('Y-m-d H:i:s')];
                 writeLog($manager, $document);
+            } elseif(isset($_POST['btnDropAnswer'])) {
+                deleteAnswer($conn, $varAnswer);
 
-                header('Location: ../question.php');
+                /* manca writelog */
             }
+
+            header('Location: ../question.php');
         }
         
         function deleteQuestion($conn, $id) {
@@ -31,6 +35,47 @@
                 $result -> execute();
             } catch(PDOException $e) {
                 echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+        }
+
+        function deleteAnswer($conn, $varAnswer) {
+            $valuesComposition = explode('?', $varAnswer);
+
+            if(getTypeQuestion($conn, $valuesComposition[0]) == 'CHIUSA') {
+                $storedProcedure = 'CALL Eliminazione_Opzione_Risposta(:titolo, :idQuesito);';
+            } else {
+                $storedProcedure = 'CALL Eliminazione_Sketch_Codice(:titolo, :idQuesito);';
+            }
+            
+            try {
+                $stmt = $conn -> prepare($storedProcedure);
+
+                $stmt -> bindValue(':titolo', $valuesComposition[0]);              
+                $stmt -> bindValue(':idQuesito', $valuesComposition[1]);
+
+                $stmt -> execute();
+            } catch (PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>';
+            }
+        }
+
+        function getTypeQuestion($conn, $idQuestion) {
+            $sql = 'SELECT * FROM Quesito JOIN Domanda_Chiusa ON (ID=ID_DOMANDA_CHIUSA) WHERE (Quesito.ID=:idQuesito);';
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(':idQuesito', $idQuestion);
+
+                $result -> execute();
+                $numRows = $result -> rowCount();
+            } catch(PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().' <br>';
+            }
+
+            if($numRows > 0) {
+                return 'CHIUSA';
+            } else {
+                return 'CODICE';
             }
         }
 

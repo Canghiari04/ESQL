@@ -44,8 +44,8 @@
 
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['btnAddAnswer'])) {
-                $txtAnswer = $_POST['txtAnswer'];
                 $sltSolution = $_POST['sltSolution'];
+                $txtAnswer = $_POST['txtAnswer'];
 
                 /* inserimento della risposta fornita rispetto alla domanda in questione, fornendo tipo e id della domanda */
                 addAnswer($conn, strtoupper($_SESSION['typeQuestion']), $_SESSION['idCurrentQuestion'], $txtAnswer, $sltSolution);

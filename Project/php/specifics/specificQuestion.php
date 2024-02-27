@@ -39,7 +39,9 @@
                     }
                         
                     if(isset($result)) {
-                        while($row = $result->fetch(PDO::FETCH_OBJ)) {
+                        while($row = $result -> fetch(PDO::FETCH_OBJ)) {
+                            $varAnswer = $idQuestion.'?'.$row -> TESTO;
+
                             echo '
                                 <div class="div-question">
                                     <table>   
@@ -48,6 +50,11 @@
                                         </tr>
                                         <tr>  
                                             <td>'.$row -> TESTO.'</td>
+                                        </tr>
+                                        <tr>
+                                            <form action="../delete/deleteQuestion.php" method="POST">
+                                                <td><button class="drop-btn" name="btnDropAnswer" value="'.$varAnswer.'">Drop Answer</button></td>
+                                            </form>
                                         </tr>
                                     </table>
                                 </div>
@@ -58,7 +65,7 @@
             }
 
             function getTypeQuestion($conn, $idQuestion) {
-                $sql = 'SELECT * FROM Quesito JOIN Domanda_Chiusa ON (ID=ID_DOMANDA_CHIUSA) WHERE (Quesito.ID=:idQuesito);';
+                $sql = 'SELECT * FROM Quesito JOIN Domanda_Chiusa ON (ID = ID_DOMANDA_CHIUSA) WHERE (Quesito.ID = :idQuesito);';
 
                 try {
                     $result = $conn -> prepare($sql);

@@ -35,9 +35,9 @@
 
     function convertToBoolean($viewAnswers) {
         if ($viewAnswers == 'false') {
-            return false;
+            return 0;
         } else {
-            return true;
+            return 1;
         }
     }
 ?>

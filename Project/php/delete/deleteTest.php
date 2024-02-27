@@ -49,7 +49,7 @@
         }
 
         function deleteComposition($conn, $varComposition) {
-            $valuesComposition = explode('?',$varComposition);
+            $valuesComposition = explode('?', $varComposition);
             $storedProcedure = 'CALL Eliminazione_Composizione(:titolo, :idQuesito);';
             
             try {

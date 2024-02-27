@@ -45,7 +45,7 @@
                                     <div class="div-question">
                                         <table>   
                                             <tr>  
-                                                <th>Quesito</th>
+                                              <th>Quesito</th>
                                             </tr>
                                             <tr>  
                                                 <td>'.$row -> DESCRIZIONE.'</td>

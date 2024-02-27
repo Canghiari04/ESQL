@@ -17,21 +17,23 @@
         </div>
         <form action="" method="POST">
             <div class="container">
+                <div class="div-tips"> 
+                    <textarea class="input-tips" disabled></textarea>
+                </div>
                 <div class="div-textbox-generative">
                     <?php             
                         $conn = openConnection();
-
-                        identifyAttributes($conn);
-
+ 
                         if($_SERVER['REQUEST_METHOD'] == 'POST') {
-                            if(isset($_POST['btnInsertData']))
-                            insertData($conn);  
+                            if(isset($_POST['btnInsertForm'])) {
+                                identifyAttributes($conn);
+                            } elseif(isset($_POST['btnInsertData'])) {
+                                insertData($conn);  
+                                identifyAttributes($conn);
+                            }
                         }
                     ?>
-                </div>
-                <div class="div-tips"> 
-                    <textarea class="input-tips" placeholder="PRESTARE  ATTENZIONE ALLA SINTASSI DELLA TABELLA" disabled></textarea>
-                </div>
+                </div>  
             </div>
             <button class="button-data" name="btnInsertData">Add</button>  
         </form>

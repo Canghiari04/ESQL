@@ -7,6 +7,8 @@
             $storedProcedure = 'CALL Inserimento_Sketch_Codice(:idQuesito, :testo, :soluzione);';
         }
 
+        $sltSolution = convertToBoolean($sltSolution);
+
         try {
             $stmt = $conn -> prepare($storedProcedure);
             $stmt -> bindValue(':idQuesito', $idQuestion);
@@ -16,6 +18,14 @@
             $stmt -> execute();
         } catch(PDOException $e) {
             echo 'Eccezione '.$e -> getMessage().'<br>';
+        }
+    }
+
+    function convertToBoolean($sltSolution) {
+        if ($sltSolution == "false") {
+            return 0;
+        } else {
+            return 1;
         }
     }
 
@@ -68,7 +78,6 @@
 
         try {
             $stmt = $conn -> prepare($sql);
-
             $stmt -> bindValue(':idQuesito', $idQuestion);
 
             $stmt -> execute();

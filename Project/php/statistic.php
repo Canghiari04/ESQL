@@ -3,7 +3,8 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="css/specifics.css">
+        <link rel="stylesheet" type="text/css" href="css/navbar_button_undo.css">
+        <link rel="stylesheet" type="text/css" href="css/table_view_linear.css">
         <?php
             include 'connectionDB.php';
         ?>
@@ -17,7 +18,7 @@
             <?php 
                 $conn = openConnection();
 
-                $sql = 'SELECT * FROM test_completati;';
+                $sql = 'SELECT * FROM Test_Completati;';
                         
                 try {
                     $result = $conn -> prepare($sql);
@@ -58,7 +59,6 @@
                     }
                 }
 
-                
                 closeConnection($conn);
             ?>
         </div>
@@ -66,7 +66,7 @@
             <?php 
                 $conn = openConnection();
 
-                $sql = 'SELECT * FROM risposte_corrette;';
+                $sql = 'SELECT * FROM Risposte_Corrette;';
                         
                 try {
                     $result = $conn -> prepare($sql);
@@ -111,7 +111,6 @@
                         $cont = $cont + 1;
                     }
                 }
-
                 
                 closeConnection($conn);
             ?>
@@ -120,7 +119,7 @@
             <?php 
                 $conn = openConnection();
 
-                $sql = 'SELECT * FROM risposte_inserite;';
+                $sql = 'SELECT * FROM Risposte_Inserite;';
                         
                 try {
                     $result = $conn -> prepare($sql);
@@ -161,7 +160,6 @@
                     }
                 }
 
-                
                 closeConnection($conn);
             ?>
         </div>

@@ -36,7 +36,36 @@ html, body {
     text-decoration: none;
 }
 
-.button-navbar:hover {
+.button-navbar-form {
+    float: right;
+    display: block;
+    width: 150px;
+    color: black;
+    background-color: white;
+    border: 0.33vh solid black;
+    border-radius: 1.39vh;
+    text-align: center;
+    padding: 2vh 4.44vh;
+    margin-top: 2.17vh;
+    margin-left: 100vh;
+    text-decoration: none;
+}
+
+.button-navbar-query {
+    float: right;
+    display: block;
+    width: 160px;
+    color: black;
+    background-color: white;
+    border: 0.33vh solid black;
+    border-radius: 1.39vh;
+    text-align: center;
+    padding: 2vh 2vh;
+    margin-top: 2.17vh;
+    text-decoration: none;
+}
+
+button:hover {
     transition: color .4s;
     color: #ff3131;
     border-color: #ff3131;
