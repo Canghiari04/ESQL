@@ -1,3 +1,13 @@
+select {
+    width: 15vh;
+    height: 3vh;
+    margin-left: 1vh;
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
 button {
     color: black;
     background-color: white;
@@ -5,7 +15,7 @@ button {
     border-radius: 10px;
     text-align: center;
     padding: 1.5vh 4.5vh;
-    margin: 4vh 108.5vh;
+    margin: 4vh 100vh;
     text-decoration: none;
 }
 
@@ -64,4 +74,8 @@ button:hover, select:hover, input:hover {
 
 .input-tips:hover, .input-textbox:hover {
     border: 2px solid #ff3131;
+}
+
+.div-select {
+    margin: 1vh;
 }

@@ -21,6 +21,12 @@
         <form action="" method="POST">
             <div class="container">
                 <div class="div-tips">
+                    <select name="sltDifficulty" required>
+                            <option value="" selected disabled>DIFFICOLTÀ</option>    
+                            <option value="BASSO">BASSO</option>
+                            <option value="MEDIO">MEDIO</option>
+                            <option value="ALTO">ALTO</option>
+                    </select>
                     <textarea class="input-tips" disabled></textarea>
                 </div>
                 <div class="div-textbox">

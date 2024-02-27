@@ -25,6 +25,13 @@
                 <div class="div-textbox">
                     <textarea class="input-textbox" type="text" name="txtAnswer" placeholder="TESTO DELLA RISPOSTA" required></textarea>
                 </div>
+                <div class="div-select">    
+                    <select name="sltSolution" required>
+                            <option value="" selected disabled>SOLUZIONE</option>    
+                            <option value="false">NO</option>
+                            <option value="true">SI</option>
+                    </select>
+                </div>
             </div>
             <button class="button-insert" type="submit" name="btnAddAnswer">Add</button>
         </form>
@@ -38,9 +45,10 @@
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['btnAddAnswer'])) {
                 $txtAnswer = $_POST['txtAnswer'];
+                $sltSolution = $_POST['sltSolution'];
 
                 /* inserimento della risposta fornita rispetto alla domanda in questione, fornendo tipo e id della domanda */
-                addAnswer($conn, strtoupper($_SESSION['typeQuestion']), $_SESSION['idCurrentQuestion'], $txtAnswer);
+                addAnswer($conn, strtoupper($_SESSION['typeQuestion']), $_SESSION['idCurrentQuestion'], $txtAnswer, $sltSolution);
 
                 /* controllo che il numero di risposte fornito sia coerente rispetto al numero atteso dalla domanda; in caso affermativo reindirizzamento alla main page */
                 if(checkNumAnswer($conn, strtoupper(($_SESSION['typeQuestion'])), $_SESSION['idCurrentQuestion'])) {

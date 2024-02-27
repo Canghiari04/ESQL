@@ -1,16 +1,17 @@
 <?php
     /* inserimento delle risposte alla domanda di riferimento, adeguando la procedure corretta, in base alla tipologia della stessa */
-    function addAnswer($conn, $type, $idQuestion, $textAnswer) {
+    function addAnswer($conn, $type, $idQuestion, $textAnswer, $sltSolution) {
         if($type == 'CHIUSA') {
-            $storedProcedure = 'CALL Inserimento_Opzione_Risposta(:idQuesito, :testo);';
+            $storedProcedure = 'CALL Inserimento_Opzione_Risposta(:idQuesito, :testo, :soluzione);';
         } else {   
-            $storedProcedure = 'CALL Inserimento_Sketch_Codice(:idQuesito, :testo);';
+            $storedProcedure = 'CALL Inserimento_Sketch_Codice(:idQuesito, :testo, :soluzione);';
         }
 
         try {
             $stmt = $conn -> prepare($storedProcedure);
             $stmt -> bindValue(':idQuesito', $idQuestion);
             $stmt -> bindValue(':testo', $textAnswer);
+            $stmt -> bindValue(':soluzione', $sltSolution);
             
             $stmt -> execute();
         } catch(PDOException $e) {
