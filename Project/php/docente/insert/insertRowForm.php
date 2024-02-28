@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>           
@@ -28,7 +31,18 @@
                             if(isset($_POST['btnInsertForm'])) {
                                 identifyAttributes($conn);
                             } elseif(isset($_POST['btnInsertData'])) {
-                                insertData($conn);  
+                                insertData($conn);
+                                $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
+
+                                try {
+                                    $storedProcedure = $conn -> prepare($storedProcedure);
+                                    $storedProcedure -> bindValue(":idTabella", $_SESSION['idCurrentTable']);
+                                    
+                                    $storedProcedure -> execute();
+                                } catch(PDOException $e) {
+                                    echo "Eccezione ".$e -> getMessage()."<br>";
+                                }
+
                                 identifyAttributes($conn);
                             }
                         }

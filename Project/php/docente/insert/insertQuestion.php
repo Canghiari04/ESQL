@@ -27,7 +27,6 @@
                         <option value="MEDIO">MEDIO</option>
                         <option value="ALTO">ALTO</option>
                     </select>
-                    <input type="number" name="txtNumberAnswer" min="1" placeholder="NUMERO RISPOSTE" required>  
                 </div>
                 <div class="div-textbox">
                     <textarea class="input-textbox-question" type="text" name="txtDescription" placeholder="TESTO DELLA DOMANDA" required></textarea>
@@ -51,13 +50,13 @@
             if(isset($_POST['btnAddQuestion'])) {
                 if(checkTable($conn, $_SESSION['email'])) {
                     $difficulty = $_POST['sltDifficulty'];
-                    $numAnswers = $_POST['txtNumberAnswer'];
                     $description = $_POST['txtDescription'];
+                    $numAnswers = 0;
                     
                     $_SESSION['txtQuestion'] = $description;
                     
                     insertQuestion($conn, $type, $difficulty, $numAnswers, $description);
-                    header('Location: insertAnswer.php');
+                    header('Location: insertAfferent.php');
                     exit;
                 } else {
                     echo "<script>document.querySelector('.input-textbox-question').value=".json_encode("NESSUNA TABELLA PRESENTE, INSERISCI QUALCHE COLLEZIONE PRIMA DI CREARE DEI QUESITI").";</script>";

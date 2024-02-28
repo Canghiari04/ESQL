@@ -2,6 +2,7 @@ USE ESQLDB;
 DROP PROCEDURE IF EXISTS Registrazione_Studente;
 DROP PROCEDURE IF EXISTS Registrazione_Docente;
 DROP PROCEDURE IF EXISTS Inserimento_Tabella_Esercizio;
+DROP PROCEDURE IF EXISTS Inserimento_Manipolazione_Riga;
 DROP PROCEDURE IF EXISTS Inserimento_Attributo;
 DROP PROCEDURE IF EXISTS Inserimento_Quesito;
 DROP PROCEDURE IF EXISTS Inserimento_Domanda_Chiusa;
@@ -15,6 +16,7 @@ DROP PROCEDURE IF EXISTS Inserimento_Vincolo_Integrita;
 DROP PROCEDURE IF EXISTS Aggiornamento_Chiave;
 DROP PROCEDURE IF EXISTS Aggiornamento_Test;
 DROP PROCEDURE IF EXISTS Eliminazione_Tabella_Esercizio;
+DROP PROCEDURE IF EXISTS Eliminazione_Manipolazione_Riga;
 DROP PROCEDURE IF EXISTS Eliminazione_Quesito;
 DROP PROCEDURE IF EXISTS Eliminazione_Test;
 DROP PROCEDURE IF EXISTS Eliminazione_Composizione;
@@ -54,6 +56,18 @@ BEGIN
 	SET countTabella=(SELECT COUNT(*) FROM Tabella_Esercizio WHERE (Tabella_Esercizio.NOME=NOME));
 	IF (countTabella=0) THEN 
 		INSERT INTO Tabella_Esercizio(NOME, DATA_CREAZIONE, NUM_RIGHE, EMAIL_DOCENTE) VALUES (NOME, DATA_CREAZIONE, NUM_RIGHE, EMAIL_DOCENTE);
+	END IF;   
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Manipolazione_Riga(IN ID_TABELLA INT)
+BEGIN
+	DECLARE countTabella INT DEFAULT 0;
+	SET countTabella=(SELECT COUNT(*) FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA));
+	IF (countTabella>0) THEN 
+		INSERT INTO Manipolazione_Riga(ID_TABELLA) VALUES (ID_TABELLA);
 	END IF;   
 END ;
 | 
@@ -168,6 +182,19 @@ BEGIN
 	SET countTabella=(SELECT COUNT(*) FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA));
 	IF (countTabella>0) THEN
 		DELETE FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA);
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Manipolazione_Riga(IN ID_TABELLA INT)
+BEGIN
+	DECLARE countTabella INT DEFAULT 0;
+	SET countTabella=(SELECT COUNT(*) FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA));
+	IF (countTabella>0) THEN
+		DELETE FROM Manipolazione_Riga WHERE (Manipolazione_Riga.ID_TABELLA=ID_TABELLA) LIMIT 1;
 	END IF;
 END ;
 | 

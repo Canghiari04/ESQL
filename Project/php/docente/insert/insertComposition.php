@@ -42,6 +42,9 @@
                     echo "<script>document.querySelector('.input-tips').value=".json_encode("DEVI SELEZIONARE ALMENO UNO DEI QUESITI PRESENTI").";</script>";
                 }
             } 
+
+            header('Location: ../test.php');
+            exit;
         }
     
         function buildForm($conn, $email) {

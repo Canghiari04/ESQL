@@ -11,8 +11,6 @@
                 
                 $stmt -> execute();
             }
-
-            header('Location: ../test.php');
         } catch(PDOException $e) {
             echo 'Eccezione '.$e -> getMessage().'<br>';
         }
