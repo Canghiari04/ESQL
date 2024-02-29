@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if($_SESSION['emailDocente']==null) {
+        header('Location: ../login/login.php');
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,7 +30,7 @@
 
             try {
                 $result = $conn -> prepare($sql);
-                $result -> bindValue(':emailDocente', $_SESSION['email']);
+                $result -> bindValue(':emailDocente', $_SESSION['emailDocente']);
 
                 $result -> execute();
                 $numRows = $result -> rowCount();

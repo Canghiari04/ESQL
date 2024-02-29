@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if($_SESSION['emailDocente']==null) {
+        header('Location: ../../login/login.php');
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,7 +30,7 @@
             <?php
                 $conn = openConnection();
 
-                buildForm($conn, $_SESSION['email']);
+                buildForm($conn, $_SESSION['emailDocente']);
             ?>
         </form>
     </body>

@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if($_SESSION['emailDocente']==null) {
+        header('Location: ../../login/login.php');
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,7 +27,7 @@
                 if ($_SERVER['REQUEST_METHOD'] == 'POST') {   
                     if(isset($_POST['btnSpecificTest'])) {
                         $titleTest = $_POST['btnSpecificTest']; 
-                        $email = $_SESSION['email'];   
+                        $email = $_SESSION['emailDocente'];   
 
                         $sql = 'SELECT * FROM Test, Composizione, Quesito WHERE (Test.TITOLO=Composizione.TITOLO_TEST) AND (Composizione.ID_QUESITO=Quesito.ID) AND (Test.TITOLO=:titoloTest) AND (Test.EMAIL_DOCENTE=:emailDocente);';
                         

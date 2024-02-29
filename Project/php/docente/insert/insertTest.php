@@ -1,5 +1,8 @@
-<?php 
+<?php
     session_start();
+    if($_SESSION['emailDocente']==null) {
+        header('Location: ../../login/login.php');
+    }
 ?>
 <!DOCTYPE html>
 <hmtl>
@@ -50,7 +53,7 @@
 
                     $_SESSION['titleTest'] = $titleTest;
 
-                    insertTest($conn, $_SESSION['email'], $viewAnswers, $fileTest, $titleTest);
+                    insertTest($conn, $_SESSION['emailDocente'], $viewAnswers, $fileTest, $titleTest);
                     header('Location: insertComposition.php');
                 } else {
                     echo "<script>document.querySelector('.input-textbox-test').value=".json_encode("NESSUN QUESITO PRESENTE, INSERISCI QUALCHE DOMANDA PRIMA DI CREARE DEI TEST").";</script>";

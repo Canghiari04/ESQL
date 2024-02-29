@@ -1,5 +1,8 @@
-<?php 
+<?php
     session_start();
+    if($_SESSION['emailDocente']==null) {
+        header('Location: ../../login/login.php');
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,6 +53,24 @@
 
                                 /* inserimento effettivo dei dati all'interno della tabella */
                                 $result -> execute();
+
+                                $rowInserted = $result ->rowCount();
+                                echo $rowInserted.'-----<br>';
+                                echo   $_SESSION['idCurrentTable'].'++++<br>';
+
+                                for($i = 0; $i < $rowInserted; $i++){ 
+                                    $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
+                                    try {
+                                        $stmt = $conn -> prepare($storedProcedure);
+                                        $stmt -> bindValue(':idTabella', $_SESSION['idCurrentTable']);
+                                        
+                                        $stmt -> execute();
+                                    } catch(PDOException $e) {
+                                        echo 'Eccezione '.$e -> getMessage().'<br>';
+                                    }
+                                }
+
+
                             } catch(PDOException $e) {
 
                                 echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";    

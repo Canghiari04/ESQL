@@ -1,6 +1,4 @@
 <?php
-    session_start();
-    
     /* metodo che permette di creare i tag input necessari per l'inserimento di dati all'interno della collezione */
     function identifyAttributes($conn){
         $nameTable = getTableName($conn);

@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if($_SESSION['email']==null) {
+        header('Location: ../../login/login.php');
+    }
 ?>
 <!DOCTYPE html>
 <html>

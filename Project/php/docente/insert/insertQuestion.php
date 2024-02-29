@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if($_SESSION['emailDocente']==null) {
+        header('Location: ../../login/login.php');
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,7 +51,7 @@
         
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['btnAddQuestion'])) {
-                if(checkTable($conn, $_SESSION['email'])) {
+                if(checkTable($conn, $_SESSION['emailDocente'])) {
                     $difficulty = $_POST['sltDifficulty'];
                     $description = $_POST['txtDescription'];
                     $numAnswers = 0;
