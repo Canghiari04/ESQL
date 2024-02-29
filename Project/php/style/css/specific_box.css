@@ -1,4 +1,5 @@
 .div-question {
+    position: relative;
     float: left;
     padding: 3vh 3vh;
     width: 30vh;
@@ -18,8 +19,9 @@
 }
 
 .drop-btn {
-    float: right;
-    margin-top: 5.75vh;
+    position: absolute;
+    top: 17.5vh;
+    right: 2vh;
     background-color: white;
     border: 2px solid rgb(224, 224, 224);
     border-radius: 10px;
