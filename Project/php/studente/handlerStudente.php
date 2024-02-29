@@ -11,7 +11,8 @@
             <a class="a-href" href="statistic.php">Statistiche</a>
             <a class="a-href" href="#">Messaggi</a>
             <a class="a-href" href="viewRisposte.php">Risposte</a>
-            <a class="a-href" href="viewTest.php">Test</a>
+            <a class="a-href" href="viewTest.php">Test</a>          
+            <a class="a-href" href="../index.php?">Logout</a>
         </div>
         <a href="../login/login.php"><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a>
     </body>

@@ -42,6 +42,7 @@
                             
 
                             if($tipo == 'Studente') {
+                                $_SESSION['emailStudente'] = $email;
                                 /* metodo per reindirizzare tramite uso di HTTP */
                                 header('Location: ../studente/handlerStudente.php');                      
                             } else {

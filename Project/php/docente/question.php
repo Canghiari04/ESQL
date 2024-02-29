@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if($_SESSION['emailDocente']==null) {
+    if(!isset($_SESSION['emailDocente'])) {
         header('Location: ../login/login.php');
     }
 ?>

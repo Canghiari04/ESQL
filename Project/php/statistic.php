@@ -1,3 +1,21 @@
+<?php
+    session_start();
+
+    if ( (!isset($_SESSION['emailStudente'])) AND (!isset($_SESSION['emailStudente']))) {
+        header('Location: login/login.php');
+    } 
+
+    function getUndo() {
+        if  ($_SESSION['emailStudente'] != null) {
+            echo '"studente/handlerStudente.php"';
+        } else if ($_SESSION['emailDocente'] != null) {
+            echo '"docente/handlerDocente.php"';
+        } else{
+            
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,7 +30,7 @@
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img ESQL" width="112" height="48" src="style/img/ESQL.png"></a>
-            <a href="login/login.php"><img class="zoom-on-img undo" width="32" height="32" src="style/img/undo.png"></a>
+            <a href=<?php getUndo()?>><img class="zoom-on-img undo" width="32" height="32" src="style/img/undo.png"></a>
         </div>
         <div>
             <?php 

@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $_SESSION['emailDocente']= null;
+    unset($_SESSION['emailDocente']);
 ?>
 
 <!DOCTYPE html>
