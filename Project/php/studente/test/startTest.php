@@ -6,63 +6,145 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="../style/css/navbar_button_undo.css">
-        <link rel="stylesheet" type="text/css" href="../style/css/table_exercise.css">
+        <link rel="stylesheet" type="text/css" href="">
         <?php 
-            include 'connectionDB.php';
+            include '../connectionDB.php';
         ?>
     </head>
     <body>
         <div class="navbar">
-            <a><img class="zoom-on-img" width="112" height="48" src="../style/img/ESQL.png"></a>
-            <a href="handlerStudente.php"><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a>
+            <a><img class="zoom-on-img" width="112" height="48" src="img/ESQL.png"></a>
+            <a href="handlerStudente.php"><img class="zoom-on-img undo" width="32" height="32" src="img/undo.png"></a>
         </div>
-        <?php
-            $conn = openConnection();  
+        <div class="navbar">
+            <?php
+                $conn = openConnection();  
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {   
+                    if(isset($_POST['btnStartTest'])) {
+                        $titleTestStarted = $_POST['btnStartTest'];
+                        $result=getTestQuestion($conn, $titleTestStarted);
 
-            if(isset($_SERVER["REQUEST_METHOD"])) {
-                if(isset($_POST["btnViewRisposte"])) {
-                    $sql = "SELECT * FROM Test;";
-                    
-                    try {
-                        $result = $conn -> prepare($sql);
-                        
-                        $result -> execute();
-                        $numRows = $result -> rowCount();
-                        
-                        if($numRows > 0) {
-                            echo '
-                                <div class="div-th"> 
-                                    <table class="table-head">   
-                                        <tr>  
-                                            <th>Nome test</th>          
-                                            <th>Data creazione</th>
-                                        </tr>
-                                    </table>
-                                </div>
-                            ';
-
-                            while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                                echo '
-                                    <div class="div-td">
-                                        <table class="table-list">
-                                            <tr>
-                                                <th>'.$row -> TITOLO.'</th>
-                                                <th>'.$row -> DATA_CREAZIONE.'</th>
-                                                    <form action="" method="POST">
-                                                        <th><button class="table-button" type="submit" name="" value="'.$row -> TITOLO.'">Start Test</button></th>
-                                                    </form>
-                                                </tr>
-                                        </table>
-                                    </div>
-                                ';
+                        if(isset($result)){
+                            while($row = $result->fetch(PDO::FETCH_OBJ)) {
+                                echo getQuestionDescription($conn, $row -> ID);
+                                if(getTypeQuestion($conn, $row -> ID) == 'CHIUSA'){
+                                    buildFormCheck($conn, $row -> ID);
+                                }
+                                else{
+                                    
+                                }
+                                
                             }
                         }
-                    } catch(PDOException $e) {
-                        echo 'Eccezione '.$e -> getMessage().'<br>';
+
                     }
                 }
-            }
-        ?>
+            ?>
+        </div>
     </body>
+    <?php
+        function getTestQuestion($conn, $titleTestStarted){
+            $sql = 'SELECT Quesito.ID FROM Test, Composizione, Quesito WHERE (Test.TITOLO=Composizione.TITOLO_TEST) AND (Composizione.ID_QUESITO=Quesito.ID) AND (Test.TITOLO=:titoloTest);';           
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(':titoloTest', $titleTestStarted);
+
+                $result -> execute();
+            } catch (PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>'; 
+            }
+
+            return $result;
+
+        }
+
+        function getQuestionDescription($conn, $idQuestion){
+            $sql = 'SELECT DESCRIZIONE FROM Quesito WHERE ID=:IdQuesito';
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(':IdQuesito', $idQuestion);
+
+                $result -> execute();
+            } catch (PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>'; 
+            }
+
+            $row = $result -> fetch(PDO::FETCH_OBJ);
+
+            return $row -> DESCRIZIONE;
+        }
+
+
+        function buildFormCheck($conn, $idQuestion) {
+            $sql = 'SELECT * FROM Opzione_Risposta WHERE ID_DOMANDA_CHIUSA=:IdQuesito;';
+            
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(':IdQuesito', $idQuestion);
+
+                $result -> execute();
+            } catch (PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>'; 
+            }
+
+            while($row = $result -> fetch(PDO::FETCH_OBJ)) {
+                echo '
+                    <div class="div-checkbox">
+                        <input type="checkbox" name="checkbox[]" value="'.$row -> ID.'?'.$idQuestion.'">
+                        <label>'.$row -> TESTO.'</label>
+                    </div>
+                ';
+                
+            }
+            echo '
+                <form action="" method="POST">
+                    <th><button class="" type="submit" name="btnStartTest" value="gay">INVIA</button></th>
+                </form>
+            ';
+        }
+
+        function buildFormQuery(){
+
+        }
+
+        function getTypeQuestion($conn, $idQuestion) {
+            $sql = 'SELECT * FROM Quesito JOIN Domanda_Chiusa ON (ID = ID_DOMANDA_CHIUSA) WHERE (Quesito.ID = :idQuesito);';
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(':idQuesito', $idQuestion);
+
+                $result -> execute();
+                $numRows = $result -> rowCount();
+            } catch(PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().' <br>';
+            }
+
+            if($numRows > 0) {
+                return 'CHIUSA';
+            } else {
+                return 'CODICE';
+            }
+        }
+
+        function getSketchCode($conn, $idQuestion){
+            $sql = 'SELECT * FROM SketchCodice  WHERE ID_DOMANDA_CHIUSA=:IdQuesito';
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(':IdQuesito', $idQuestion);
+
+                $result -> execute();
+            } catch (PDOException $e) {
+                echo 'Eccezione '.$e -> getMessage().'<br>'; 
+            }
+
+            $row = $result -> fetch(PDO::FETCH_OBJ);
+
+            return $row -> DESCRIZIONE;
+        }
+
+    ?>
 </html>
