@@ -3,12 +3,12 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button.css">
-        <link rel="stylesheet" type="text/css" href="../../style/css/signUp.css">
+        <link rel="stylesheet" type="text/css" href="../style/css/navbar_button.css">
+        <link rel="stylesheet" type="text/css" href="../style/css/signUp.css">
     </head>
     <body>
         <div class="navbar">
-            <a href="../index.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
+            <a href="../index.php"><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a>
             <form action="login.php">
                 <button class="button-navbar" type="submit">Login</button>
             </form>
