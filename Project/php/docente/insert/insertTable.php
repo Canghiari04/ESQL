@@ -1,5 +1,8 @@
-<?php 
+<?php
     session_start();
+    if(!isset($_SESSION['emailDocente'])) {
+        header('Location: ../../login/login.php');
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,7 +53,7 @@
                             $result -> execute();
                             
                             /* creazione della Tabella_Esercizio, contenente tutti i meta-dati */
-                            $emailTeacher = $_SESSION['email'];
+                            $emailTeacher = $_SESSION['emailDocente'];
                             insertTableExercise($conn, $tokenName[0], $emailTeacher);
                             
                             /* inserimento dei record che compogono la tabella effettiva nelle corrispettive tabelle meta-dati, Attributo e Vincolo_Integrita*/

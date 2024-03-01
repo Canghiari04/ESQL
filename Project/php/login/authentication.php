@@ -39,12 +39,14 @@
                             $tipo =  typeUtente($conn, $email);
 
                             /* tramite lo start della sessione viene salvata la email dell'utente che abbia effettuato il login */
-                            $_SESSION['email'] = $email;
+                            
 
                             if($tipo == 'Studente') {
+                                $_SESSION['emailStudente'] = $email;
                                 /* metodo per reindirizzare tramite uso di HTTP */
                                 header('Location: ../studente/handlerStudente.php');                      
                             } else {
+                                $_SESSION['emailDocente'] = $email;
                                 header('Location: ../docente/handlerDocente.php');
                             }
                         } else {

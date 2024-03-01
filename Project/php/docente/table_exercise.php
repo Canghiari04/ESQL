@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if(!isset($_SESSION['emailDocente'])) {
+        header('Location: ../login/login.php');
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +29,7 @@
 
                 $sql = 'SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente);';
                 
-                $email = $_SESSION['email'];
+                $email = $_SESSION['emailDocente'];
                 
                 try {
                     $result = $conn -> prepare($sql);

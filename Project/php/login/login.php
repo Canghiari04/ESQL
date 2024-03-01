@@ -1,14 +1,19 @@
+<?php
+    session_start();
+    unset($_SESSION['emailDocente']);
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="../../style/css/navbar_dropdown.css">
-        <link rel="stylesheet" type="text/css" href="../../style/css/login.css">
+        <link rel="stylesheet" type="text/css" href="../style/css/navbar_dropdown.css">
+        <link rel="stylesheet" type="text/css" href="../style/css/login.css">
     </head>
     <body>
         <div class="navbar">
-            <a href="../index.php?"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
+            <a href="../index.php?"><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a>
             <div class="dropdown">
                 <button class="dropbtn">Sign Up</button>
                 <div class="dropdown-content">
