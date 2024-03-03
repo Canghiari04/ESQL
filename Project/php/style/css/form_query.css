@@ -1,0 +1,95 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.div-query {
+    float: right;
+    padding: 3vh 3vh;
+    width: 65%;
+    height: 70%;
+    margin-top: 50px;
+    margin-left: 50px;
+    margin-bottom: 25px;
+    background-color: rgb(240, 240, 240);
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 10px;
+}
+
+.label-query {
+    display: block;
+    font-size: 16px;
+}
+
+label:hover {
+    transition: color .4s;
+    color: #ff3131;
+}
+
+.div-table {
+    float: left;
+}
+
+table {
+    border-collapse: collapse;
+    margin-top: 2vh;
+    margin-right: 2vh;
+    width: 25%;
+    font-size: 11px;
+}
+
+table, th, td {  
+    border: 1.25px solid black;
+    text-align: left;
+}
+  
+th, td {
+    padding: 5px;
+}
+
+.div-send-answer {
+    position: relative;
+    float: left;
+    margin-bottom: 2vh;
+}
+
+.input-solution {
+    margin-top: 4vh;
+    margin-bottom: 2vh;
+    font-size: 11px;
+    width: 350px;
+    height: 150px;
+    background-color: white;
+    border-color: transparent;
+    border-radius: 5px;
+    border: 2px solid darkgrey;
+    outline: none;
+}
+
+.input-solution:hover {
+    transition: color .4s;
+    border-color: #ff3131;
+}
+
+.input-tips {
+    font-size: 12px;
+    width: 700px;
+    height: 50px;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 5px;
+    outline: none;
+}
+
+.button-query {
+    display: block;
+    margin-top: 0.5vh;
+    margin-left: 102.5vh;
+    color: black;
+    background-color: white;
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 10px;
+    text-align: center;
+    padding: 1vh 3vh;
+    text-decoration: none;
+}

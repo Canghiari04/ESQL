@@ -36,7 +36,7 @@ html, body {
     text-decoration: none;
 }
 
-.button-navbar-form {
+.button-navbar-first {
     float: right;
     display: block;
     width: 150px;
@@ -48,10 +48,11 @@ html, body {
     padding: 2vh 4.44vh;
     margin-top: 2.17vh;
     margin-left: 100vh;
+    margin-right: 1vh;    
     text-decoration: none;
 }
 
-.button-navbar-query {
+.button-navbar-second {
     float: right;
     display: block;
     width: 160px;
@@ -75,4 +76,18 @@ button:hover {
     float: right;
     margin-top: 2.17vh;
     margin-right: 3.25vh;
+}
+
+.button-undo {
+    float: right;
+    margin: auto;
+    padding: 0%;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.button-undo:hover {
+    transition: color .4s;
+    color: transparent;
+    border-color: transparent;
 }

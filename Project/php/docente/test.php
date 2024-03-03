@@ -58,14 +58,14 @@
                                         <th>'.$row -> TITOLO.'</th>
                                         <th>'.$row -> DATA_CREAZIONE.'</th>
                                         <th>'.$var.'</th>
-                                        <form action="specifics/specificTest.php" method="POST">
-                                            <th><button class="table-button" type="submit" name="btnSpecificTest" value="'.$row -> TITOLO.'">Specifics</button></th>
-                                        </form>
-                                        <form action="delete/deleteTest.php" method="POST">
-                                            <th><button class="table-button" type="submit" name="btnDropTest" value="'.$row -> TITOLO.'">Drop Test</button></th>
+                                        <form action="question.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnQuestionTest" value="'.$row -> TITOLO.'">Questions</button></th>
                                         </form>
                                         <form action="delete/deleteTest.php" method="POST">
                                             <th><button class="table-button" type="submit" name="btnUpdateTest" value="'.$row -> TITOLO.'">Update View</button></th>
+                                        </form>
+                                        <form action="delete/deleteTest.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnDropTest" value="'.$row -> TITOLO.'">Drop Test</button></th>
                                         </form>
                                     </tr>
                                 </table>

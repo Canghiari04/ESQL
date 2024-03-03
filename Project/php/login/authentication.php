@@ -43,6 +43,7 @@
 
                             if($tipo == 'Studente') {
                                 $_SESSION['emailStudente'] = $email;
+                                
                                 /* metodo per reindirizzare tramite uso di HTTP */
                                 header('Location: ../studente/handlerStudente.php');                      
                             } else {
@@ -55,9 +56,6 @@
                     } catch(PDOException $e) {
                         echo 'Eccezione '.$e -> getMessage().'<br>';
                     }   
-
-                    /* chiusura necessaria, poichè se si indirizza in una nuova pagina php-html potrebbe riportare errori a livello di definition-manipulation del db */
-                    closeConnection($conn);
                 } elseif (isset($_POST['txtEmailSignupStudente'])) {
                     $email = $_POST['txtEmailSignupStudente'];
                     $password = $_POST['txtPasswordSignupStudente'];
@@ -92,8 +90,6 @@
                     } catch(PDOException $e) {
                         echo 'Eccezione '.$e -> getMessage().'<br>';
                     }  
-
-                    closeConnection($conn);
                 } elseif (isset($_POST['txtEmailSignupDocente'])) {
                     $email = $_POST['txtEmailSignupDocente'];
                     $password = $_POST['txtPasswordSignupDocente'];
@@ -127,8 +123,6 @@
                     } catch(PDOException $e) {
                         echo 'Eccezione '.$e -> getMessage().'<br>';
                     }  
-
-                    closeConnection($conn);
                 } 
             }
 
@@ -221,6 +215,9 @@
 
                 $stmt -> execute();
             }
+
+            /* chiusura necessaria, poichè se si indirizza in una nuova pagina php-html potrebbe riportare errori a livello di definition-manipulation del db */
+            closeConnection($conn);
         ?>
     </body>
 </html>

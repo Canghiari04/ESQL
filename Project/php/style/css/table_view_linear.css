@@ -7,6 +7,16 @@
     width: 50%;
 }
 
+.table-head-question {
+    table-layout: fixed;
+    width: 60%;
+}
+
+.table-head-exercise {
+    table-layout: fixed;
+    width: 50%;
+}
+
 .div-td {
     display: flex;
     justify-content: space-between;

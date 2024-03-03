@@ -19,7 +19,6 @@
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
-            <a href="../question.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
         </div>
         <form action="" method="POST">
             <div class="container">
@@ -41,7 +40,7 @@
                 if (isset($_POST['checkbox']) && !empty($_POST['checkbox'])) {
                     $values = $_POST['checkbox'];
 
-                    insertAfferent($conn, $_SESSION['idCurrentQuestion'], $values);
+                    insertAfferent($conn, $_SESSION['idCurrentQuestion'], $_SESSION['titleCurrentTest'], $values);
                 } else {
                     echo "<script>document.querySelector('.input-tips').value=".json_encode("DEVI SELEZIONARE ALMENO UNA DELLE TABELLE PRESENTI").";</script>";
                 }

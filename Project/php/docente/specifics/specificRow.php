@@ -19,10 +19,10 @@
         <div class="navbar">
             <a><img class="zoom-on-img ESQL" width="112" height="48" src="../../style/img/ESQL.png"></a>
         <form action="../insert/insertRowForm.php" method="POST">
-            <button class="button-navbar-form" type="submit" name="btnInsertForm">Insert Form</button>
+            <button class="button-navbar-first" type="submit" name="btnInsertForm">Insert Form</button>
         </form>
         <form action="../insert/insertRowQuery.php" method="POST">
-            <button class="button-navbar-query" type="submit" name="btnInsertQuery">Insert Query</button>
+            <button class="button-navbar-second" type="submit" name="btnInsertQuery">Insert Query</button>
         </form>
             <a href="../table_exercise.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
         </div>

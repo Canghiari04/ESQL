@@ -1,19 +1,4 @@
 <?php
-    function checkQuestion($conn) {
-        $sql = 'SELECT * FROM Quesito;';
-
-        try {
-            $result = $conn -> prepare($sql);
-            
-            $result -> execute();
-            $numRows = $result -> rowCount();
-        } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
-        }
-
-        return ($numRows > 0);
-    }
-
     function insertTest($conn, $email, $viewAnswers, $fileTest, $titleTest) {
         $storedProcedure = 'CALL Inserimento_Test(:titolo, :email, :foto, :dataCreazione, :visualizzaRisposte);';
 

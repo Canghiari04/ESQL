@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.div-question {
+    float: right;
+    padding: 3vh 3vh;
+    width: 65%;
+    height: 30%;
+    margin-top: 50px;
+    margin-left: 50px;
+    margin-bottom: 25px;
+    background-color: rgb(240, 240, 240);
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 10px;
+}
+
+label {
+    font-size: 16px;
+}
+
+label:hover {
+    transition: color .4s;
+    color: #ff3131;
+}
+
+.div-checkbox {
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+.button-option {
+    display: block;
+    margin-top: 3vh;
+    margin-left: 102.5vh;
+    color: black;
+    background-color: white;
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 10px;
+    text-align: center;
+    padding: 1vh 3vh;
+    text-decoration: none;
+}

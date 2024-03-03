@@ -1,5 +1,6 @@
 <?php
     session_start();
+
     if(!isset($_SESSION['emailDocente'])) {
         header('Location: ../../login/login.php');
     }
@@ -19,7 +20,9 @@
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
-            <a href="../question.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
+            <form action="../question.php" method="POST">
+                <button class="button-undo" type="submit" name="btnUndo"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
+            </form>
         </div>
         <form action="" method="POST">
             <div class="container">
@@ -41,29 +44,25 @@
     <?php 
         $conn = openConnection();
 
-        /* attraverso l'url viene estrapolata la tipologia di domanda, da cui ne scaturisce un successivo inserimento all'interno dell'apposita tabella */
-        $url = $_SERVER['REQUEST_URI'];
-        $str = explode('?', $url);
-        $type = $str[1];
-
-        /* viene salvato il tipo della domanda tramite la sessione, dati i controlli successivi inerenti all'inserimento */
-        $_SESSION['typeQuestion'] = $type;
-        
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['btnAddQuestion'])) {
                 if(checkTable($conn, $_SESSION['emailDocente'])) {
                     $difficulty = $_POST['sltDifficulty'];
                     $description = $_POST['txtDescription'];
                     $numAnswers = 0;
+                        
+                    $idQuestion = getLastId($conn, $_SESSION['titleCurrentTest']);
+                    echo $idQuestion;
+                    insertQuestion($conn, $_SESSION['typeQuestion'], $idQuestion, $_SESSION['titleCurrentTest'], $difficulty, $numAnswers, $description);
                     
-                    $_SESSION['txtQuestion'] = $description;
-                    
-                    insertQuestion($conn, $type, $difficulty, $numAnswers, $description);
                     header('Location: insertAfferent.php');
                     exit;
                 } else {
                     echo "<script>document.querySelector('.input-textbox-question').value=".json_encode("NESSUNA TABELLA PRESENTE, INSERISCI QUALCHE COLLEZIONE PRIMA DI CREARE DEI QUESITI").";</script>";
                 }
+            } elseif($_POST['btnInsertQuestion']) {
+                $type = $_POST['btnInsertQuestion'];
+                $_SESSION['typeQuestion'] = $type;
             }
         }
         

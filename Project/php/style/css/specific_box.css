@@ -1,14 +1,18 @@
+.center {
+    margin-top: 5vh;
+}
+
 .div-question {
-    position: relative;
-    float: left;
+    display: inline-block;
+    margin: 5vh 5.5%; 
     padding: 3vh 3vh;
-    width: 30vh;
-    height: 17.5vh;
-    margin: 10vh;
+    width: 35%;
+    height: 22.5%;
     background-color: rgb(240, 240, 240);
     border: 2px solid rgb(224, 224, 224);
     border-radius: 10px;
 }
+
 
 .div-question table {
     width: 100%;
@@ -19,9 +23,10 @@
 }
 
 .drop-btn {
-    position: absolute;
-    top: 17.5vh;
-    right: 2vh;
+    display: block;
+    float: right;
+    margin-top: 5vh;
+    margin-right: 0vh;
     background-color: white;
     border: 2px solid rgb(224, 224, 224);
     border-radius: 10px;
@@ -30,7 +35,7 @@
     text-decoration: none;
 }
 
-th:hover, td:hover, .drop-btn:hover {
+th:hover, .drop-btn:hover {
     transition: color .4s;
     color: #ff3131;
     border-color: #ff3131;

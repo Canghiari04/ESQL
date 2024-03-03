@@ -1,10 +1,11 @@
 <?php
-    function insertAfferent($conn, $idQuestion, $arrayIdTable) {
-        $storedProcedure = 'CALL Inserimento_Afferenza(:idDomanda, :idTabella);';
+    function insertAfferent($conn, $idQuestion, $titleTest, $arrayIdTable) {
+        $storedProcedure = 'CALL Inserimento_Afferenza(:idDomanda, :titoloTest, :idTabella);';
 
         try {
             $stmt = $conn -> prepare($storedProcedure);
             $stmt -> bindValue(':idDomanda', $idQuestion);
+            $stmt -> bindValue(':titoloTest', $titleTest);
             
             foreach($arrayIdTable as $value) {
                 $stmt -> bindValue(':idTabella', $value);

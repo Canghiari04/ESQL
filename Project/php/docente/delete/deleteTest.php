@@ -14,8 +14,8 @@
                 deleteTest($conn, $testTitle = $_POST['btnDropTest']);
             } elseif(isset($_POST['btnUpdateTest'])) {
                 updateTest($conn, $testTitle = $_POST['btnUpdateTest']);
-            } elseif(isset($_POST['btnDropComposition'])){
-                deleteComposition($conn, $varComposition = $_POST['btnDropComposition']);
+            } elseif(isset($_POST['btnDropQuestion'])){
+                deleteQuestion($conn, $varComposition = $_POST['btnDropQuestion']);
             }
 
             header('Location: ../test.php');
@@ -48,15 +48,15 @@
             }
         }
 
-        function deleteComposition($conn, $varComposition) {
-            $valuesComposition = explode('?', $varComposition);
+        function deleteQuestion($conn, $varQuestion) {
+            $valuesQuestion = explode('?', $varQuestion);
             $storedProcedure = 'CALL Eliminazione_Composizione(:titolo, :idQuesito);';
             
             try {
                 $stmt = $conn -> prepare($storedProcedure);
 
-                $stmt -> bindValue(':titolo', $valuesComposition[0]);              
-                $stmt -> bindValue(':idQuesito', $valuesComposition[1]);
+                $stmt -> bindValue(':titolo', $valuesQuestion[0]);              
+                $stmt -> bindValue(':idQuesito', $valuesQuestion[1]);
 
                 $stmt -> execute();
             } catch (PDOException $e) {

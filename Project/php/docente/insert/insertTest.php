@@ -46,18 +46,13 @@
 
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['btnAddTest'])) {
-                if(checkQuestion($conn)){
-                    $viewAnswers = $_POST['sltViewAnswers'];
-                    $fileTest = $_POST['nptPhotoTest'];
-                    $titleTest = $_POST['txtTitle'];
+                $viewAnswers = $_POST['sltViewAnswers'];
+                $fileTest = $_POST['nptPhotoTest'];
+                $titleTest = $_POST['txtTitle'];
 
-                    $_SESSION['titleTest'] = $titleTest;
+                $_SESSION['titleTest'] = $titleTest;
 
-                    insertTest($conn, $_SESSION['emailDocente'], $viewAnswers, $fileTest, $titleTest);
-                    header('Location: insertComposition.php');
-                } else {
-                    echo "<script>document.querySelector('.input-textbox-test').value=".json_encode("NESSUN QUESITO PRESENTE, INSERISCI QUALCHE DOMANDA PRIMA DI CREARE DEI TEST").";</script>";
-                }
+                insertTest($conn, $_SESSION['emailDocente'], $viewAnswers, $fileTest, $titleTest);
             }
         }
     ?>

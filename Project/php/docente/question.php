@@ -9,7 +9,7 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="../style/css/navbar_button_dropdown_undo.css">
+        <link rel="stylesheet" type="text/css" href="../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../style/css/table_view_linear.css">
         <?php
             include '../connectionDB.php';
@@ -18,63 +18,71 @@
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../style/img/ESQL.png"></a>
-            <div class="dropdown">
-                <button class="dropbtn">Question</button>
-                <div class="dropdown-content">
-                    <a href="insert/insertQuestion.php?chiusa">Chiusa</a>
-                    <a href="insert/insertQuestion.php?codice">Codice</a>
-                </div>
-            </div>
-            <a href="handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a>
+            <form action="insert/insertQuestion.php" method="POST">
+                <button class="button-navbar-second" type="submit" name="btnInsertQuestion" value="CHIUSA">Add Chiusa</button>
+                <button class="button-navbar-first" type="submit" name="btnInsertQuestion" value="CODICE">Add Codice</button>
+            </form>
+            <a href="test.php"><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a>
         </div>
         <?php 
             $conn = openConnection();
 
-            $sql = 'SELECT * FROM Quesito;';
-                
-            try {
-                $result = $conn -> prepare($sql);
-
-                $result -> execute();
-                $numRows = $result -> rowCount();
-            } catch (PDOException $e) {
-                echo 'Eccezione '. $e -> getMessage().'<br>';
+            if($_SERVER['REQUEST_METHOD'] == 'POST') {
+                if(isset($_POST['btnQuestionTest'])) {
+                    $_SESSION['titleCurrentTest'] = $_POST['btnQuestionTest'];
+                    buildQuestionTest($conn, $_SESSION['titleCurrentTest']);
+                } elseif(isset($_POST['btnUndo'])) {
+                    buildQuestionTest($conn, $_SESSION['titleCurrentTest']);
+                }
+            } else {
+                buildQuestionTest($conn, $_SESSION['titleCurrentTest']);
             }
 
-            if($numRows > 0) {
-                echo '
-                    <div class="div-th"> 
-                        <table class="table-head">   
-                            <tr>  
-                                <th>Descrizione</th>
-                                <th>Difficoltà</th>
-                                <th>Numero risposte</th>
-                            </tr>
-                        </table>
-                    </div>
-                ';
+            function buildQuestionTest($conn, $titleTest) {
+                $sql = "SELECT * FROM Quesito WHERE (Quesito.TITOLO_TEST=:titoloTest);";
 
-                while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                    echo '  
-                        <div class="div-td">
-                            <table class="table-list">
-                                <tr>
-                                    <th>'.$row -> DESCRIZIONE.'</th>
-                                    <th>'.$row -> DIFFICOLTA.'</th>
-                                    <th>'.$row -> NUM_RISPOSTE.'</th>
-                                    <form action="specifics/specificQuestion.php" method="POST">
-                                        <th><button class="table-button" type="submit" name="btnSpecificQuestion" value='.$row -> ID.'>Options</button></th>
-                                    </form>
-                                    <form action="delete/deleteQuestion.php" method="POST">
-                                        <th><button class="table-button" type="submit" name="btnDropQuestion" value='.$row -> ID.'>Drop Question</button></th>
-                                    </form>
-                                    <form action="insert/insertOption.php" method="POST">
-                                        <th><button class="table-button" type="submit" name="btnAddOption" value="'.$row -> ID.'?'.$row -> DESCRIZIONE.'">Add Option</button></th>
-                                    </form>
+                try {
+                    $result = $conn -> prepare($sql);
+                    $result -> bindValue(":titoloTest", $titleTest);
+
+                    $result -> execute();
+                    $numRows = $result -> rowCount();
+                } catch (PDOException $e) {
+                    echo 'Eccezione '. $e -> getMessage().'<br>';
+                }
+
+                if($numRows > 0) {
+                    echo '
+                        <div class="div-th"> 
+                            <table class="table-head-question">   
+                                <tr>  
+                                    <th>Descrizione</th>
+                                    <th>Difficoltà</th>
+                                    <th>Numero risposte</th>
                                 </tr>
                             </table>
                         </div>
                     ';
+
+                    while($row = $result -> fetch(PDO::FETCH_OBJ)) {
+                        echo '  
+                            <div class="div-td">
+                                <table class="table-list">
+                                    <tr>
+                                        <th>'.$row -> DESCRIZIONE.'</th>
+                                        <th>'.$row -> DIFFICOLTA.'</th>
+                                        <th>'.$row -> NUM_RISPOSTE.'</th>
+                                        <form action="specifics/specificQuestion.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnSpecificQuestion" value="'.$row -> ID.'?'.$row -> TITOLO_TEST.'?'.$row -> DESCRIZIONE.'">Options</button></th>
+                                        </form>
+                                        <form action="delete/deleteQuestion.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnDropQuestion" value="'.$row -> ID.'?'.$row -> TITOLO_TEST.'">Drop Question</button></th>
+                                        </form>
+                                    </tr>
+                                </table>
+                            </div>
+                        ';
+                    }
                 }
             }
 

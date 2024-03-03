@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    if ( (!isset($_SESSION['emailStudente'])) AND (!isset($_SESSION['emailStudente']))) {
+    if ((!isset($_SESSION['emailDocente'])) AND (!isset($_SESSION['emailStudente']))) {
         header('Location: login/login.php');
     } 
 
@@ -10,8 +10,6 @@
             echo '"studente/handlerStudente.php"';
         } else if ($_SESSION['emailDocente'] != null) {
             echo '"docente/handlerDocente.php"';
-        } else{
-            
         }
     }
 ?>
