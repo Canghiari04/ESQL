@@ -6,7 +6,7 @@
         $checkAutoInc = checkAutoIncrement($conn, $nameTable);
  
         /* scrittura intestazione della query */
-        $valuesQuery = 'INSERT INTO '.$nameTable.' (';
+        $valuesQuery = "INSERT INTO ".$nameTable." (";
         
         $attributes = getAttributes($conn);
         
@@ -41,22 +41,22 @@
         $valuesQuery = $valuesQuery.')';
 
         /* salvataggio tramite la sessione dell'intestazione della query, da cui verranno inseriti i dati */
-        $_SESSION['headingInsert'] = $valuesQuery;
+        $_SESSION["headingInsert"] = $valuesQuery;
     }
 
     /* funzione che restituisce il nome della tabella in base al suo id contenuto nella collezione Tabella_Esercizio */
     function getTableName($conn) {
-        $sql= 'SELECT NOME FROM Tabella_Esercizio WHERE ID = :idTabella;';
+        $sql= "SELECT NOME FROM Tabella_Esercizio WHERE ID = :idTabella;";
 
         try{
             $result = $conn -> prepare($sql);        
 
-            $result -> bindValue(':idTabella', $_SESSION['idCurrentTable']);
+            $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
 
             $result -> execute();
             $row = $result -> fetch(PDO::FETCH_OBJ);
         }catch(PDOException $e){
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }  
 
         $nameTable= $row -> NOME;
@@ -76,11 +76,11 @@
             $result -> execute();
             $rows = $result -> fetchAll(PDO::FETCH_ASSOC); 
         } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
         foreach($rows as $row) {
-            $column = $row['Field'];
+            $column = $row["Field"];
             array_push($columns, $column);
         }
 
@@ -89,23 +89,23 @@
     
     /* metodo che garantisce l'acquisizione degli attributi della tabella interessata */
     function getAttributes($conn){ 
-        $sql= 'SELECT * FROM Attributo WHERE ID_TABELLA = :idTabella;';
+        $sql= "SELECT * FROM Attributo WHERE ID_TABELLA = :idTabella;";
         
         $attributes = array();
         
         try {
             $result = $conn -> prepare($sql);
 
-            $result -> bindValue(':idTabella', $_SESSION['idCurrentTable']);
+            $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
             
             $result -> execute();
             $rows = $result->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
         foreach ($rows as $row) {
-            $attribute = $row['NOME'];
+            $attribute = $row["NOME"];
             array_push($attributes,$attribute);
         }
 
@@ -115,31 +115,31 @@
     /* permette di settare l'input type in base al tipo di attributo */
     function setTypeInput($type){
         switch ($type) {
-            case 'DATE':
-                return 'date';
-            case 'DATETIME':
-                return 'datetime-local';
-            case 'INT':
-                return 'number';
+            case "DATE":
+                return "date";
+            case "DATETIME":
+                return "datetime-local";
+            case "INT":
+                return "number";
             default:
-                return 'text';
+                return "text";
         }
     }
 
     function getAttributeType($conn, $attributeName){
-        $sql = 'SELECT * FROM Attributo WHERE NOME = :nomeTabella AND ID_TABELLA = :idTabella;'; 
+        $sql = "SELECT * FROM Attributo WHERE NOME = :nomeTabella AND ID_TABELLA = :idTabella;"; 
 
         try{
             $result = $conn -> prepare($sql);
             
-            $result -> bindValue(':nomeTabella', $attributeName);
-            $result -> bindValue(':idTabella', $_SESSION['idCurrentTable']);
+            $result -> bindValue(":nomeTabella", $attributeName);
+            $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
             
             $result -> execute();
 
             $row = $result -> fetch(PDO::FETCH_OBJ);
         } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
         return $row -> TIPO;
@@ -156,31 +156,31 @@
         foreach($attributesInsert as $value){
             /* tramite la condizione non sono stampati tutti i domini della collezione che risultino auto increment */
             if(!in_array($value, $attributesAutoIncrement)){                    
-                $str = 'txt'.$value.'';
+                $str = "txt".$value."";
                 array_push($attributesText, $str);
             }
         }
 
         /* controllo per assicurarsi che la query abbia almeno un valore,  */
-        if(strstr($_SESSION['headingInsert'],'(')){
+        if(strstr($_SESSION["headingInsert"],'(')){
             /* sovrascrizione della stringa di intestazione  */
-            $stringDatas=''.$_SESSION['headingInsert'].' VALUES (';
+            $stringDatas=''.$_SESSION["headingInsert"]." VALUES (";
 
             /* realizzazione completa con protezione da sql injection dinamica */
             foreach($attributesText as $value){
                 $stringDatas = $stringDatas. '?' ;
-                $stringDatas = $stringDatas. ', ' ;
+                $stringDatas = $stringDatas. ", " ;
             }
                
             $stringDatas = trim($stringDatas);
             $stringDatas = substr($stringDatas, 0, -1);
 
-            $stringDatas = $stringDatas.');';
+            $stringDatas = $stringDatas.");";
             $index = 0;
         } 
         /* caso in cui la query non abbia nessun valore oltre agli attributi auto_increment */
         else {
-            $stringDatas= 'INSERT INTO '.getTableName($conn).' () VALUES ()';
+            $stringDatas= "INSERT INTO ".getTableName($conn)." () VALUES ()";
         }
 
         try{

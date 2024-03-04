@@ -1,20 +1,17 @@
 <?php
     session_start();
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../login/login.php');
+
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../login/login.php");
     }
 ?>
 <!DOCTYPE html>
 <html>
     <head>           
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/insertRow.css">
-        <?php 
-            include 'addRow.php';
-            include '../../connectionDB.php';
-        ?>
     </head>
     <body>
         <div class="navbar">
@@ -28,18 +25,21 @@
                 </div>
                 <div class="div-textbox-generative">
                     <?php             
+                        include "addRow.php";
+                        include "../../connectionDB.php";
+
                         $conn = openConnection();
  
-                        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-                            if(isset($_POST['btnInsertForm'])) {
+                        if($_SERVER["REQUEST_METHOD"] == "POST") {
+                            if(isset($_POST["btnInsertForm"])) {
                                 identifyAttributes($conn);
-                            } elseif(isset($_POST['btnInsertData'])) {
+                            } elseif(isset($_POST["btnInsertData"])) {
                                 insertData($conn);
                                 $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
 
                                 try {
                                     $storedProcedure = $conn -> prepare($storedProcedure);
-                                    $storedProcedure -> bindValue(":idTabella", $_SESSION['idCurrentTable']);
+                                    $storedProcedure -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
                                     
                                     $storedProcedure -> execute();
                                 } catch(PDOException $e) {

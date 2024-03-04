@@ -1,20 +1,17 @@
 <?php
     session_start();
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../login/login.php');
+
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../login/login.php");
     }
 ?>
 <!DOCTYPE html>
 <html>
     <head>           
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/insertAnswer.css">
-        <?php 
-            include 'addOption.php';
-            include '../../connectionDB.php';
-        ?>
     </head>
     <body>
         <div class="navbar">
@@ -43,21 +40,24 @@
         </form>
     </body>
     <?php 
+        include "addOption.php";
+        include "../../connectionDB.php";
+
         $conn = openConnection();
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if(isset($_POST['btnAddAnswer'])) {
-                $txtAnswer = $_POST['txtAnswer'];
-                $sltSolution = $_POST['sltSolution'];
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if(isset($_POST["btnAddAnswer"])) {
+                $txtAnswer = $_POST["txtAnswer"];
+                $sltSolution = $_POST["sltSolution"];
 
                 /* funzione che sovrascrive il placeholder della textarea tips, per visualizzare la domanda in questione, durante la stesura delle risposte collegate */
-                printQuestion($_SESSION['descriptionCurrentQuestion']);
-                $id = getLastId($conn, strtoupper($_SESSION['typeQuestion']), $_SESSION['idCurrentQuestion'], $_SESSION['titleCurrentTest']);
+                printQuestion($_SESSION["descriptionCurrentQuestion"]);
+                $id = getLastId($conn, strtoupper($_SESSION["typeQuestion"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);
 
                 /* inserimento della risposta fornita rispetto alla domanda in questione, fornendo tipo e id della domanda */
-                addOption($conn, strtoupper($_SESSION['typeQuestion']), $id, $_SESSION['idCurrentQuestion'], $_SESSION['titleCurrentTest'], $txtAnswer, $sltSolution);
-            } elseif(isset($_POST['btnAddOption'])) {
-                printQuestion($_SESSION['descriptionCurrentQuestion']);
+                addOption($conn, strtoupper($_SESSION["typeQuestion"]), $id, $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], $txtAnswer, $sltSolution);
+            } elseif(isset($_POST["btnAddOption"])) {
+                printQuestion($_SESSION["descriptionCurrentQuestion"]);
             }
         }
 

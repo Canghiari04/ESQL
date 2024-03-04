@@ -1,20 +1,17 @@
 <?php
     session_start();
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../login/login.php');
+    
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../login/login.php");
     }
 ?>
 <!DOCTYPE html>
 <hmtl>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/insertTest.css">
-        <?php 
-            include 'addTest.php';
-            include '../../connectionDB.php';
-        ?>
     </head>
     <body>
         <div class="navbar">
@@ -42,17 +39,20 @@
         </form>
     </body>
     <?php
+        include "addTest.php";
+        include "../../connectionDB.php";
+
         $conn = openConnection();
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if(isset($_POST['btnAddTest'])) {
-                $viewAnswers = $_POST['sltViewAnswers'];
-                $fileTest = $_POST['nptPhotoTest'];
-                $titleTest = $_POST['txtTitle'];
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if(isset($_POST["btnAddTest"])) {
+                $viewAnswers = $_POST["sltViewAnswers"];
+                $fileTest = $_POST["nptPhotoTest"];
+                $titleTest = $_POST["txtTitle"];
 
-                $_SESSION['titleTest'] = $titleTest;
+                $_SESSION["titleTest"] = $titleTest;
 
-                insertTest($conn, $_SESSION['emailDocente'], $viewAnswers, $fileTest, $titleTest);
+                insertTest($conn, $_SESSION["emailDocente"], $viewAnswers, $fileTest, $titleTest);
             }
         }
     ?>

@@ -1,20 +1,17 @@
 <?php
     session_start();
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../login/login.php');
+
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../login/login.php");
     }
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'> 
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet"> 
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/insertRow.css">
-        <?php 
-            include 'addRow.php';
-            include '../../connectionDB.php';
-        ?>
     </head>
     <body>
         <div class="navbar">
@@ -33,18 +30,21 @@
             <button class="button-insert" type="submit" name="btnAddData">Add</button>
         </form>
         <?php 
+            include "addRow.php";
+            include "../../connectionDB.php";
+            
             $conn = openConnection();
             $manager = openConnectionMongoDB();
 
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                if(isset($_POST['btnAddData'])) {
-                    $sql = $_POST['txtAddRow'];
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                if(isset($_POST["btnAddData"])) {
+                    $sql = $_POST["txtAddRow"];
 
                     $tokens = explode('(', trim($sql));
                     $tokensHeader = explode(' ', $tokens[0]);
 
                     /* controllo riferito a query di inserimento */
-                    if($tokensHeader[0] == 'INSERT') {
+                    if($tokensHeader[0] == "INSERT") {
 
                         /* controllo di uguaglianza tra la tabella riferita da query rispetto alla collezione selezionata */
                         if($tokensHeader[2] == getTableName($conn)) {
@@ -55,18 +55,16 @@
                                 $result -> execute();
 
                                 $rowInserted = $result ->rowCount();
-                                echo $rowInserted.'-----<br>';
-                                echo   $_SESSION['idCurrentTable'].'++++<br>';
 
                                 for($i = 0; $i < $rowInserted; $i++){ 
                                     $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
                                     try {
                                         $stmt = $conn -> prepare($storedProcedure);
-                                        $stmt -> bindValue(':idTabella', $_SESSION['idCurrentTable']);
+                                        $stmt -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
                                         
                                         $stmt -> execute();
                                     } catch(PDOException $e) {
-                                        echo 'Eccezione '.$e -> getMessage().'<br>';
+                                        echo "Eccezione ".$e -> getMessage()."<br>";
                                     }
                                 }
 

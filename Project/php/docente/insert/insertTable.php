@@ -1,20 +1,17 @@
 <?php
     session_start();
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../login/login.php');
+
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../login/login.php");
     }
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'> 
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet"> 
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/insertTable.css">
-        <?php 
-            include 'addRecord.php';
-            include '../../connectionDB.php';
-        ?>
     </head>
     <body>
         <div class="navbar">
@@ -33,17 +30,20 @@
             <button class="button-insert" type="submit" name="btnAddTable">Add</button>
         </form>
         <?php 
+            include "addRecord.php";
+            include "../../connectionDB.php";
+            
             $conn = openConnection();
             $manager = openConnectionMongoDB();
 
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                if(isset($_POST['btnAddTable'])) {
-                    $sql = strtoupper($_POST['txtAddTable']);
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                if(isset($_POST["btnAddTable"])) {
+                    $sql = strtoupper($_POST["txtAddTable"]);
 
                     /* suddivisione della query nei token principali, per ottenere il nome della tabella di riferimento */
                     $tokens = explode(' ', $sql);
 
-                    if($tokens[0] == 'CREATE') {
+                    if($tokens[0] == "CREATE") {
                         $tokenName = explode('(', $tokens[2]);
                         
                         try {
@@ -53,7 +53,7 @@
                             $result -> execute();
                             
                             /* creazione della Tabella_Esercizio, contenente tutti i meta-dati */
-                            $emailTeacher = $_SESSION['emailDocente'];
+                            $emailTeacher = $_SESSION["emailDocente"];
                             insertTableExercise($conn, $tokenName[0], $emailTeacher);
                             
                             /* inserimento dei record che compogono la tabella effettiva nelle corrispettive tabelle meta-dati, Attributo e Vincolo_Integrita*/

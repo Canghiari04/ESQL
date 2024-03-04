@@ -1,18 +1,18 @@
 <?php 
     /* inserimento della tabella di esercizio, riferita alla collezione di meta-dati */
     function insertTableExercise($conn, $nameTable, $emailTeacher) {
-        $storedProcedure = 'CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe, :emailDocente);';
+        $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe, :emailDocente);";
 
         try {
             $result = $conn -> prepare($storedProcedure);
-            $result -> bindValue(':nome', $nameTable);
-            $result -> bindValue(':dataCreazione', date('Y-m-d H:i:s'));
-            $result -> bindValue(':numRighe', 0);
-            $result -> bindValue(':emailDocente', $emailTeacher);
+            $result -> bindValue(":nome", $nameTable);
+            $result -> bindValue(":dataCreazione", date("Y-m-d H:i:s"));
+            $result -> bindValue(":numRighe", 0);
+            $result -> bindValue(":emailDocente", $emailTeacher);
             
             $result -> execute();
         } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
     }
 
@@ -32,10 +32,10 @@
             /* split per ottenere i token che costituiscono la singola riga */
             $token = explode(' ', trim($value));
 
-            if($token[0] == 'PRIMARY') {
+            if($token[0] == "PRIMARY") {
                 $flagPrimaryKey = true;
                 updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql));
-            } elseif ($token[0] == 'FOREIGN') {
+            } elseif ($token[0] == "FOREIGN") {
                 insertForeignKey($conn, $sql, $numRows, $idTableReferential);
 
                 /* break necessario per interrompere il ciclo foreach, dato l'inserimento delle foreign key da metodo soprastante */
@@ -45,25 +45,25 @@
             }
         }
 
-        header('Location: insertTable.php');
+        header("Location: insertTable.php");
     }
 
     /* funzione restituente l'id della tabella e il numero di righe della query, per successive condizioni */
     function getIdTableExercise($conn, $nameTable) {
-        $sql = 'SELECT ID FROM Tabella_Esercizio WHERE (NOME=:nome);';
+        $sql = "SELECT ID FROM Tabella_Esercizio WHERE (NOME=:nome);";
 
         try {
             $result = $conn -> prepare($sql);
-            $result -> bindValue(':nome', $nameTable);
+            $result -> bindValue(":nome", $nameTable);
             
             $result -> execute();
             $numRows = $result -> rowCount();
         } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
         $row = $result -> fetch(PDO::FETCH_ASSOC);
-        $idTableReferential = $row['ID'];
+        $idTableReferential = $row["ID"];
 
         return array($numRows, $idTableReferential);
     }
@@ -81,16 +81,16 @@
                     $attribute = substr($attribute, 0, -1);
                 }
                 
-                $storedProcedure = 'CALL Aggiornamento_Chiave(:id, :attributo);';
+                $storedProcedure = "CALL Aggiornamento_Chiave(:id, :attributo);";
                 
                 try {
                     $stmt = $conn -> prepare($storedProcedure);
-                    $stmt -> bindValue(':id', $idTableReferential);
-                    $stmt -> bindValue(':attributo', $attribute);
+                    $stmt -> bindValue(":id", $idTableReferential);
+                    $stmt -> bindValue(":attributo", $attribute);
                     
                     $stmt -> execute();
                 } catch(PDOException $e) {
-                    echo 'Eccezione '.$e -> getMessage().'<br>';
+                    echo "Eccezione ".$e -> getMessage()."<br>";
                 }
             }
         }
@@ -101,17 +101,17 @@
         $split = explode('(', $sql, 2);
         $splitting = substr($split[1], 0, -2);
 
-        $tokensAttributesKey = explode('PRIMARY KEY', $splitting);
+        $tokensAttributesKey = explode("PRIMARY KEY", $splitting);
 
         /* explode mediante la foreign key qualora sia presente, altrimenti restituisce la stessa stringa definita dall'explode per primary key  */
-        $tokensPrimaryForeignKey = explode('FOREIGN KEY', $tokensAttributesKey[1]);
+        $tokensPrimaryForeignKey = explode("FOREIGN KEY", $tokensAttributesKey[1]);
         $tokensPrimaryKey = explode(',', $tokensPrimaryForeignKey[0]);
 
         return $tokensPrimaryKey;
     }
 
     function insertForeignKey($conn, $sql, $numRows, $idTableReferential) {
-        $tokensQuery = explode('FOREIGN KEY', substr($sql, 0, -2));
+        $tokensQuery = explode("FOREIGN KEY", substr($sql, 0, -2));
 
         for($i = 1; $i < sizeof($tokensQuery); $i++) {
             [$arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced] = splitForeignKey(trim($tokensQuery[$i]));
@@ -121,7 +121,7 @@
 
     /* split che restituisce in ordine: colonne della tabella referenziante, nome della tabella referenziata e colonne della tabella referenziata */
     function splitForeignKey($tokensQuery) {
-        $tokensForeignReferences = explode('REFERENCES', trim($tokensQuery));
+        $tokensForeignReferences = explode("REFERENCES", trim($tokensQuery));
         $tokensForeignKey = explode(',', trim($tokensForeignReferences[0]));
 
         $tokensReferences = explode('(', trim($tokensForeignReferences[1]));
@@ -165,42 +165,42 @@
 
                 /* individuazione dell'id della tabella referenziata, per la costruzione del vincolo di integrità */
                 [$numRows, $idTableReferenced] = getIdTableExercise($conn, $nameTableReferenced);
-                $sqlReferential = 'SELECT Attributo.ID FROM Attributo JOIN Tabella_Esercizio ON (Attributo.ID_TABELLA=Tabella_Esercizio.ID) WHERE (Attributo.ID_TABELLA=:idTabellaReferenziante) AND (Attributo.NOME=:nomeAttributoReferenziante)';
-                $sqlReferenced = 'SELECT Attributo.ID FROM Attributo JOIN Tabella_Esercizio ON (Attributo.ID_TABELLA=Tabella_Esercizio.ID) WHERE (Attributo.ID_TABELLA=:idTabellaReferenziata) AND (Attributo.NOME=:nomeAttributoReferenziato)';
+                $sqlReferential = "SELECT Attributo.ID FROM Attributo JOIN Tabella_Esercizio ON (Attributo.ID_TABELLA=Tabella_Esercizio.ID) WHERE (Attributo.ID_TABELLA=:idTabellaReferenziante) AND (Attributo.NOME=:nomeAttributoReferenziante)";
+                $sqlReferenced = "SELECT Attributo.ID FROM Attributo JOIN Tabella_Esercizio ON (Attributo.ID_TABELLA=Tabella_Esercizio.ID) WHERE (Attributo.ID_TABELLA=:idTabellaReferenziata) AND (Attributo.NOME=:nomeAttributoReferenziato)";
                 
                 try {
                     $resultReferential = $conn -> prepare($sqlReferential);
                     $resultReferenced = $conn -> prepare($sqlReferenced);
                     
-                    $resultReferential -> bindValue(':idTabellaReferenziante', $idTableReferential);
-                    $resultReferential -> bindValue(':nomeAttributoReferenziante', $nameAttributeReferential);
+                    $resultReferential -> bindValue(":idTabellaReferenziante", $idTableReferential);
+                    $resultReferential -> bindValue(":nomeAttributoReferenziante", $nameAttributeReferential);
                     
-                    $resultReferenced -> bindValue(':idTabellaReferenziata', $idTableReferenced);
-                    $resultReferenced -> bindValue(':nomeAttributoReferenziato', $nameAttributeReferenced);
+                    $resultReferenced -> bindValue(":idTabellaReferenziata", $idTableReferenced);
+                    $resultReferenced -> bindValue(":nomeAttributoReferenziato", $nameAttributeReferenced);
                     
                     $resultReferential -> execute();
                     $resultReferenced -> execute();
                 } catch(PDOException $e) {
-                    echo 'Eccezione '.$e -> getMessage().'<br>';
+                    echo "Eccezione ".$e -> getMessage()."<br>";
                 }
 
                 /* acquisizione dei valori necessari per inserimento di record nella tabella Vincolo_Integrita, prima della collezione referenziante e poi della collezione referenziata */
                 $rowReferential = $resultReferential -> fetch(PDO::FETCH_ASSOC);
                 $rowReferenced = $resultReferenced -> fetch(PDO::FETCH_ASSOC);
                 
-                $idAttributeReferential = $rowReferential['ID'];
-                $idAttributeReferenced = $rowReferenced['ID'];
+                $idAttributeReferential = $rowReferential["ID"];
+                $idAttributeReferenced = $rowReferenced["ID"];
                 
-                $storedProcedure = 'CALL Inserimento_Vincolo_Integrita(:idAttributoReferenziante, :idAttributoReferenziato)';
+                $storedProcedure = "CALL Inserimento_Vincolo_Integrita(:idAttributoReferenziante, :idAttributoReferenziato)";
 
                 try {
                     $stmt = $conn -> prepare($storedProcedure);
-                    $stmt -> bindValue('idAttributoReferenziante', $idAttributeReferential);
-                    $stmt -> bindValue('idAttributoReferenziato', $idAttributeReferenced);
+                    $stmt -> bindValue("idAttributoReferenziante", $idAttributeReferential);
+                    $stmt -> bindValue("idAttributoReferenziato", $idAttributeReferenced);
 
                     $stmt -> execute();
                 } catch(PDOException $e) {
-                    echo 'Eccezione '.$e -> getMessage().'<br>';
+                    echo "Eccezione ".$e -> getMessage()."<br>";
                 }
             }
         }
@@ -210,7 +210,7 @@
         $primaryKey = 0;
 
         /* controllo per inserimento della singola chiave primaria */
-        if(in_array('PRIMARY', $tokensAttribute)) {
+        if(in_array("PRIMARY", $tokensAttribute)) {
             $primaryKey = 1;
         }
         
@@ -222,19 +222,19 @@
             $type = $tokensTypeDimension[0];
             $dimension = substr($tokensTypeDimension[1], 0, -1);
             
-            $storedProcedure = 'CALL Inserimento_Attributo(:id, :tipo, :nome, :chiavePrimaria);';
+            $storedProcedure = "CALL Inserimento_Attributo(:id, :tipo, :nome, :chiavePrimaria);";
             
             try {
                 $stmt = $conn -> prepare($storedProcedure);
 
-                $stmt -> bindValue(':id', $idTableReferential);
-                $stmt -> bindValue(':tipo', $type);
-                $stmt -> bindValue(':nome', $name);
-                $stmt -> bindValue(':chiavePrimaria', $primaryKey);
+                $stmt -> bindValue(":id", $idTableReferential);
+                $stmt -> bindValue(":tipo", $type);
+                $stmt -> bindValue(":nome", $name);
+                $stmt -> bindValue(":chiavePrimaria", $primaryKey);
 
                 $stmt -> execute();
             } catch (PDOException $e) {
-                echo 'Eccezione '.$e -> getMessage().'<br>';
+                echo "Eccezione ".$e -> getMessage()."<br>";
             }
         }
     }

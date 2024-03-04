@@ -1,15 +1,15 @@
 <?php
     function checkTable($conn, $email) {
-        $sql = 'SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:email);';
+        $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:email);";
 
         try {
             $result = $conn -> prepare($sql);
-            $result -> bindValue(':email', $email);
+            $result -> bindValue(":email", $email);
             
             $result -> execute();
             $numRows = $result -> rowCount();
         } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
         return ($numRows > 0);
@@ -20,12 +20,12 @@
 
         try {
             $result = $conn -> prepare($sql);
-            $result -> bindValue(':titoloTest', $titleTest);
+            $result -> bindValue(":titoloTest", $titleTest);
             
             $result -> execute();
             $numRows = $result -> rowCount();
         } catch (PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
         $row = $result -> fetch(PDO::FETCH_OBJ);
@@ -33,42 +33,42 @@
     }
 
     function insertQuestion($conn, $type, $idQuestion, $titleTest, $difficulty, $numAnswers, $description) {
-        $storedProcedure = 'CALL Inserimento_Quesito(:idQuesito, :titoloTest, :difficolta, :numRisposte, :descrizione);';
+        $storedProcedure = "CALL Inserimento_Quesito(:idQuesito, :titoloTest, :difficolta, :numRisposte, :descrizione);";
 
         try {
             $stmt = $conn -> prepare($storedProcedure);
-            $stmt -> bindValue(':idQuesito', $idQuestion);
-            $stmt -> bindValue(':titoloTest', $titleTest);
-            $stmt -> bindValue(':difficolta', $difficulty);
-            $stmt -> bindValue(':numRisposte', $numAnswers);
-            $stmt -> bindValue(':descrizione', $description);
+            $stmt -> bindValue(":idQuesito", $idQuestion);
+            $stmt -> bindValue(":titoloTest", $titleTest);
+            $stmt -> bindValue(":difficolta", $difficulty);
+            $stmt -> bindValue(":numRisposte", $numAnswers);
+            $stmt -> bindValue(":descrizione", $description);
             
             $stmt -> execute();
         } catch (PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
         /* viene salvato l'id dell'ultima domanda inserita, dato che conseguentemente dovranno essere inseriti riferimenti delle risposte e delle tabelle */
-        $_SESSION['idCurrentQuestion'] = $idQuestion;
+        $_SESSION["idCurrentQuestion"] = $idQuestion;
         addQuestion($conn, strtoupper($type), $idQuestion, $titleTest);
     }
 
     /* funzione utilizzata per smistare l'inserimento della domanda a seconda della tipologia */
     function addQuestion($conn, $type, $id, $titleTest) {
-        if($type == 'CHIUSA') {
-            $storedProcedure = 'CALL Inserimento_Domanda_Chiusa(:id, :titoloTesto);';
-        } elseif($type == 'CODICE') {
-            $storedProcedure = 'CALL Inserimento_Domanda_Codice(:id, :titoloTesto);';
+        if($type == "CHIUSA") {
+            $storedProcedure = "CALL Inserimento_Domanda_Chiusa(:id, :titoloTesto);";
+        } elseif($type == "CODICE") {
+            $storedProcedure = "CALL Inserimento_Domanda_Codice(:id, :titoloTesto);";
         }
 
         try {
             $stmt = $conn -> prepare($storedProcedure);
-            $stmt -> bindValue(':id', $id);
-            $stmt -> bindValue(':titoloTesto', $titleTest);
+            $stmt -> bindValue(":id", $id);
+            $stmt -> bindValue(":titoloTesto", $titleTest);
 
             $stmt -> execute();
         } catch(PDOException $e) {
-            echo 'Eccezione '.$e -> getMessage().'<br>';
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
     }
 ?>

@@ -1,21 +1,17 @@
 <?php
     session_start();
 
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../login/login.php');
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../login/login.php");
     }
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/insertQuestion.css">
-        <?php 
-            include 'addQuestion.php';
-            include '../../connectionDB.php';
-        ?>
     </head>
     <body>
         <div class="navbar">
@@ -42,27 +38,30 @@
         </form>
     </body>
     <?php 
+        include "addQuestion.php";
+        include "../../connectionDB.php";
+        
         $conn = openConnection();
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if(isset($_POST['btnAddQuestion'])) {
-                if(checkTable($conn, $_SESSION['emailDocente'])) {
-                    $difficulty = $_POST['sltDifficulty'];
-                    $description = $_POST['txtDescription'];
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if(isset($_POST["btnAddQuestion"])) {
+                if(checkTable($conn, $_SESSION["emailDocente"])) {
+                    $difficulty = $_POST["sltDifficulty"];
+                    $description = $_POST["txtDescription"];
                     $numAnswers = 0;
                         
-                    $idQuestion = getLastId($conn, $_SESSION['titleCurrentTest']);
+                    $idQuestion = getLastId($conn, $_SESSION["titleCurrentTest"]);
                     echo $idQuestion;
-                    insertQuestion($conn, $_SESSION['typeQuestion'], $idQuestion, $_SESSION['titleCurrentTest'], $difficulty, $numAnswers, $description);
+                    insertQuestion($conn, $_SESSION["typeQuestion"], $idQuestion, $_SESSION["titleCurrentTest"], $difficulty, $numAnswers, $description);
                     
-                    header('Location: insertAfferent.php');
+                    header("Location: insertAfferent.php");
                     exit;
                 } else {
                     echo "<script>document.querySelector('.input-textbox-question').value=".json_encode("NESSUNA TABELLA PRESENTE, INSERISCI QUALCHE COLLEZIONE PRIMA DI CREARE DEI QUESITI").";</script>";
                 }
-            } elseif($_POST['btnInsertQuestion']) {
-                $type = $_POST['btnInsertQuestion'];
-                $_SESSION['typeQuestion'] = $type;
+            } elseif($_POST["btnInsertQuestion"]) {
+                $type = $_POST["btnInsertQuestion"];
+                $_SESSION["typeQuestion"] = $type;
             }
         }
         
