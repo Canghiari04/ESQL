@@ -59,7 +59,7 @@
                         ';
         
                         if(isset($result)) {
-                            while($row = $result->fetch(PDO::FETCH_OBJ)) {
+                            while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                                 echo '
                                     <div class="div-td">
                                         <table class="table-list">   
