@@ -1,4 +1,5 @@
 <?php 
+
     /* inserimento della tabella di esercizio, riferita alla collezione di meta-dati */
     function insertTableExercise($conn, $nameTable, $emailTeacher) {
         $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe, :emailDocente);";
@@ -43,9 +44,7 @@
             } elseif($flagPrimaryKey == false) {
                 insertAttribute($conn, $numRows, $idTableReferential, $token);
             }
-        }
-
-        header("Location: insertTable.php");
+        }   
     }
 
     /* funzione restituente l'id della tabella e il numero di righe della query, per successive condizioni */
@@ -226,7 +225,6 @@
             
             try {
                 $stmt = $conn -> prepare($storedProcedure);
-
                 $stmt -> bindValue(":id", $idTableReferential);
                 $stmt -> bindValue(":tipo", $type);
                 $stmt -> bindValue(":nome", $name);
@@ -234,6 +232,66 @@
 
                 $stmt -> execute();
             } catch (PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+        }
+
+        /* controllo foreign key in linea, visualizzata durante la dichiarazione dell'attributo */
+        if(in_array("REFERENCES", $tokensAttribute)) {
+            $sql = "SELECT ID FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabellaReferenziante) AND (Attributo.NOME=:nomeAttributoReferenziante);";
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":idTabellaReferenziante", $idTableReferential);
+                $result -> bindValue(":nomeAttributoReferenziante", $name);
+
+                $result -> execute();
+            } catch (PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+
+            $row = $result -> fetch(PDO::FETCH_ASSOC);
+            $idAttributeReferential = $row["ID"];
+        
+            insertReference($conn, $idAttributeReferential, $idTableReferential, $tokensAttribute[3]);
+        }
+    }
+
+    function insertReference($conn, $idAttributeReferential, $idTableReferential, $tokensAttributeReferenced) {
+        $tokensTableReferenced = explode("(", $tokensAttributeReferenced);
+
+        [$num, $idTableReferenced] = getIdTableExercise($conn, $tokensTableReferenced[0]);
+
+        $attributeReferenced = rtrim($tokensTableReferenced[1], ')');
+
+        $sql = "SELECT ID FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabellaReferenziata) AND (Attributo.NOME=:nomeAttributoReferenziato);";
+
+        try {
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":idTabellaReferenziata", $idTableReferenced);
+            $result -> bindValue(":nomeAttributoReferenziato", $attributeReferenced);
+
+            $result -> execute();
+            $numRows = $result ->  rowCoucountRowsnt();
+        } catch (PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        if($numRows > 0) {
+            $row = $result -> fetch(PDO::FETCH_ASSOC);
+            $idAttributeReferenced = $row["ID"];
+            
+            $storedProcedure = "CALL Inserimento_Vincolo_Integrita(:idAttributoReferenziante, :idAttributoReferenziato)";
+            
+            try {
+                $stmt = $conn -> prepare($storedProcedure);
+                $stmt -> bindValue("idAttributoReferenziante", $idAttributeReferential);
+                $stmt -> bindValue("idAttributoReferenziato", $idAttributeReferenced);
+                    
+                $stmt -> execute();
+            } catch(PDOException $e) {
+                deleteTable($conn, $idTableReferential);
+                deleteTableExercise($conn, $idTableReferential);
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
         }

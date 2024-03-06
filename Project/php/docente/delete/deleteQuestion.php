@@ -9,8 +9,8 @@
             deleteQuestion($conn, $varQuestion = $_POST["btnDropQuestion"]);
 
             /* scrittura log eliminazione di un record relativo alla tabella Quesito */
-            $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$idQuestion.'', 'Timestamp' => date('Y-m-d H:i:s')];
-            writeLog($manager, $document);
+            //$document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$idQuestion.'', 'Timestamp' => date('Y-m-d H:i:s')];
+            //writeLog($manager, $document);
 
             header("Location: ../question.php");
             exit;
