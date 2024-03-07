@@ -51,7 +51,6 @@
                     $numAnswers = 0;
                         
                     $idQuestion = getLastId($conn, $_SESSION["titleCurrentTest"]);
-                    echo $idQuestion;
                     insertQuestion($conn, $_SESSION["typeQuestion"], $idQuestion, $_SESSION["titleCurrentTest"], $difficulty, $numAnswers, $description);
                     
                     header("Location: insertAfferent.php");

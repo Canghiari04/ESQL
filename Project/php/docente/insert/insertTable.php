@@ -39,6 +39,8 @@
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddTable"])) {
                     $sql = strtoupper($_POST["txtAddTable"]);
+
+                    /* controllo della presenza della key PRIMARY all'interno della query di creazione della tabella */
                     if(str_contains($sql, "PRIMARY")) {
                             /* suddivisione della query nei token principali, per ottenere il nome della tabella di riferimento */
                             $tokens = explode(' ', $sql);
