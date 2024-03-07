@@ -16,6 +16,7 @@
                 <div class="container">
                     <?php
                         include "dataTest.php";      
+                        include "manageTest.php";      
                         include "../../connectionDB.php";
                         
                         session_start();
