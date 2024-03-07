@@ -17,6 +17,11 @@
     width: 50%;
 }
 
+.table-head-test {
+    table-layout: fixed;
+    width: 60%;
+}
+
 .div-td {
     display: flex;
     justify-content: space-between;
@@ -38,6 +43,7 @@
     display: block;
     color: black;
     background-color: white;
+    width: 75%;
     border: 2px solid rgb(224, 224, 224);
     border-radius: 10px;
     text-align: center;

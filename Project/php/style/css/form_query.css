@@ -93,3 +93,27 @@ th, td {
     padding: 1vh 3vh;
     text-decoration: none;
 }
+
+.div-button {
+    align-items: center;
+    width: auto;
+    height: 100px;
+    margin-top: 25px;
+    margin-left: 50px;
+    margin-bottom: 50px;    
+}
+
+.button-final {
+    float: right;
+    display: block;
+    width: 100px;
+    color: black;
+    background-color: white;
+    border: 0.33vh solid black;
+    border-radius: 1.39vh;
+    text-align: center;
+    padding: 2vh 2vh;
+    margin-top: 2.17vh;
+    margin-right: 7.5vh;
+    text-decoration: none;
+} 
