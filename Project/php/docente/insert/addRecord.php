@@ -272,7 +272,7 @@
             $result -> bindValue(":nomeAttributoReferenziato", $attributeReferenced);
 
             $result -> execute();
-            $numRows = $result ->  rowCoucountRowsnt();
+            $numRows = $result ->  rowCount();
         } catch (PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
@@ -290,8 +290,6 @@
                     
                 $stmt -> execute();
             } catch(PDOException $e) {
-                deleteTable($conn, $idTableReferential);
-                deleteTableExercise($conn, $idTableReferential);
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
         }
