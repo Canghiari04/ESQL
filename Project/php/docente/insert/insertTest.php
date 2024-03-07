@@ -55,5 +55,7 @@
                 insertTest($conn, $_SESSION["emailDocente"], $viewAnswers, $fileTest, $titleTest);
             }
         }
+
+        closeConnection($conn);
     ?>
 </hmtl>

@@ -49,6 +49,8 @@
                                 identifyAttributes($conn);
                             }
                         }
+
+                        closeConnection($conn);
                     ?>
                 </div>  
             </div>

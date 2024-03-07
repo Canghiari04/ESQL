@@ -30,7 +30,7 @@
             <button class="button-insert" type="submit" name="btnAddTable">Add</button>
         </form>
         <?php 
-            include "addRecord.php";
+            include "addTable.php";
             include "../../connectionDB.php";
             
             $conn = openConnection();

@@ -1,5 +1,4 @@
 <?php 
-
     /* inserimento della tabella di esercizio, riferita alla collezione di meta-dati */
     function insertTableExercise($conn, $nameTable, $emailTeacher) {
         $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe, :emailDocente);";
