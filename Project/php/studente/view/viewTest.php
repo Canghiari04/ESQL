@@ -40,8 +40,6 @@
                         </div>
                     ';
 
-                    checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO);
-
                     while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                         echo '
                             <div class="div-td">
@@ -50,7 +48,7 @@
                                         <th>'.$row -> TITOLO.'</th>
                                         <th>'.$row -> DATA_CREAZIONE.'</th>
                                         <th>'.$row -> TITOLO.'</th>
-                                        '.checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'
+                                        '.checkTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'
                                     </tr>
                                 </table>
                             </div>
@@ -62,6 +60,78 @@
             }
 
             /* metodo utilizzato per rendere dinamica la stampa dei bottoni, a seconda dello stato del test, da cui successivamente sarà possibile conseguire in differenti funzionalità */
+            function checkTest($conn, $email, $titleTest) {
+                $rowState = checkStateTest($conn, $email, $titleTest);
+
+                /* rispetto allo stato del test, circoscritto al tentativo sostenuto dallo studente in questione, si differenziano le funzionalità che possono susseguirsi, abilitando o meno il bottone di riferimento */
+                switch($rowState -> STATO) {
+                    case "APERTO":
+                        return '
+                            <form action="viewRisposte.php" method="POST">
+                                <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>View Answers</button></th>
+                            </form>
+                            <form action="../test/buildTest.php" method="POST">
+                                <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$rowState -> TITOLO_TEST.'">Restart Test</button></th>
+                            </form>
+                        ';
+                    break;
+                    case "INCOMPLETAMENTO":
+                        return '
+                            <form action="viewRisposte.php" method="POST">
+                                <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowState -> TITOLO_TEST.'">View Answers</button></th>
+                            </form>
+                            <form action="../test/buildTest.php" method="POST">
+                                <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$rowState -> TITOLO_TEST.'">Restart Test</button></th>
+                            </form>
+                        ';
+                    break;
+                    case "CONCLUSO":
+                        return '
+                            <form action="viewRisposte.php" method="POST">
+                                <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowState -> TITOLO_TEST.'">View Answers</button></th>
+                            </form>
+                            <form action="../test/buildTest.php" method="POST">
+                                <th><button class="table-button" type="submit" name="btnRestartTest" disabled>Closed Test</button></th>
+                            </form>
+                        ';
+                    break;
+                    default:
+                        $rowViewAnswer = checkViewAnswer($conn, $titleTest);
+                        
+                        if(($rowViewAnswer -> VISUALIZZA_RISPOSTE) == 0) {
+                            if(checkNumQuestion($conn, $titleTest)) {
+                                return '
+                                    <form action="viewRisposte.php" method="POST">
+                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>View Answers</button></th>
+                                    </form>
+                                    <form action="../test/buildTest.php" method="POST">
+                                        <th><button class="table-button" type="submit" name="btnStartTest" value="'.$rowViewAnswer -> TITOLO.'">Start Test</button></th>
+                                    </form>
+                                ';
+                            } else {
+                                return '
+                                    <form action="viewRisposte.php" method="POST">
+                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>View Answers</button></th>
+                                    </form>
+                                    <form action="../test/buildTest.php" method="POST">
+                                        <th><button class="table-button" type="submit" name="btnStartTest" disabled>Start Test</button></th>
+                                    </form>
+                                ';
+                            }
+                        } else {
+                            return '
+                                <form action="viewRisposte.php" method="POST">
+                                    <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowViewAnswer -> TITOLO.'">View Answers</button></th>
+                                </form>
+                                <form action="../test/buildTest.php" method="POST">
+                                    <th><button class="table-button" type="submit" name="btnStartTest" value="'.$rowViewAnswer -> TITOLO.'" disabled>Start Test</button></th>
+                                </form>
+                            ';
+                        }
+                    break;      
+                } 
+            }
+
             function checkStateTest($conn, $email, $titleTest) {
                 $sql = "SELECT TITOLO_TEST, STATO FROM Completamento WHERE (Completamento.EMAIL_STUDENTE=:emailStudente) AND (Completamento.TITOLO_TEST=:titoloTest);";
 
@@ -71,48 +141,43 @@
                     $result -> bindValue(":titoloTest", $titleTest);
                     
                     $result -> execute();
-                    $row = $result -> fetch(PDO::FETCH_OBJ);
+                    $numRows = $result -> rowCount();
                 } catch(PDOException $e) {
                     echo "Eccezione ".$e -> getMessage()."<br>";  
                 }
 
-                $stateTest = $row -> STATO;
+                return $result -> fetch(PDO::FETCH_OBJ);
+            }
 
-                /* rispetto allo stato del test circoscritto al tentativo sostenuto dallo studente in questione, si differenziano le funzionalità che possono susseguirsi, abilitando o meno il bottone di riferimento */
-                switch($stateTest) {
-                    case "APERTO":
-                        return '<form action="viewRisposte.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$row -> TITOLO_TEST.'" disabled>View Answers</button></th>
-                                </form>
-                                <form action="../test/buildTest.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$row -> TITOLO_TEST.'">Restart Test</button></th>
-                                </form>';
-                        break;
-                    case "INCOMPLETAMENTO":
-                        return '<form action="viewRisposte.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$row -> TITOLO_TEST.'">View Answers</button></th>
-                                </form>
-                                <form action="../test/buildTest.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$row -> TITOLO_TEST.'">Restart Test</button></th>
-                                </form>';
-                        break;
-                    case "CONCLUSO":
-                        return '<form action="viewRisposte.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$row -> TITOLO_TEST.'">View Answers</button></th>
-                                </form>
-                                <form action="../test/buildTest.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$row -> TITOLO_TEST.'" disabled>Closed Test</button></th>
-                                </form>';
-                        break;
-                    default:
-                        return '<form action="viewRisposte.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$row -> TITOLO_TEST.'" disabled>View Answers</button></th>
-                                </form>
-                                <form action="../test/buildTest.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnStartTest" value="'.$row -> TITOLO_TEST.'" disabled>Start Test</button></th>
-                                </form>';
-                        break;      
-                } 
+            function checkViewAnswer($conn, $titleTest) {           
+                $sql = "SELECT TITOLO, VISUALIZZA_RISPOSTE FROM Test WHERE (Test.TITOLO=:titoloTest);";
+
+                try {
+                    $result = $conn -> prepare($sql);
+                    $result -> bindValue(":titoloTest", $titleTest);
+
+                    $result -> execute();
+                } catch(PDOException $e) {
+                    echo "Eccezione ".$e -> getMessage()."<br>";
+                }
+
+                return $result -> fetch(PDO::FETCH_OBJ);
+            }
+
+            function checkNumQuestion($conn, $titleTest) {
+                $sql = "SELECT Quesito.ID FROM Quesito WHERE (Quesito.TITOLO_TEST=:titoloTest);";           
+
+                try {
+                    $result = $conn -> prepare($sql);
+                    $result -> bindValue(":titoloTest", $titleTest);
+
+                    $result -> execute();
+                    $numRows = $result -> rowCount();
+                } catch (PDOException $e) {
+                    echo "Eccezione ".$e -> getMessage()."<br>"; 
+                }
+
+                return ($numRows > 0);
             }
         ?>
     </body>
