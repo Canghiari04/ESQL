@@ -10,7 +10,6 @@
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
-            <a href="../view/viewTest.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
         </div>
             <form action="../evaluate/evaluateTest.php" method="POST">
                 <div class="container">
@@ -206,7 +205,7 @@
                     ?>
                 </div>
                 <div class="div-button">
-                    <button class="button-final" type="submit" name="btnSaveExit">Exit</button>
+                    <button class="button-final" type="submit" name="btnSendTest">Exit</button>
                     <button class="button-final" type="submit" name="btnSendTest">Send</button>
                 </div>
         </form>

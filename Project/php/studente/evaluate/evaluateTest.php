@@ -5,109 +5,19 @@
     $conn = openConnection();
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {   
-        if(isset($_POST["btnSaveExit"])) {
-            //DOVREI CREARE DUE METODI CHE MI RESTITUISCANO GLI ID DEI QUESITI
-
-            $arrayIdQuestion = getIdTestQuestions($conn, $_SESSION["titleTestTested"]);
-            /*
-             * ACQUISISCO GLI ID DEI QUESITI DIFFERENZIANDOLI IN BASE ALLA TIPOLOGIA ALL'INTERNO DI DUE LISTE DIFFERENTI 
-             * ADOTTO DUE CICLI FOREACH DA CUI VADO A SALVARMI IL TESTO DELLE RISPOSTE ALL'INTERNO DI APPOSITE STRUTTURE
-             * INFINE VADO AD INSERIRE ALL'INTERNO DELLA COLLEZIONE RISPOSTA MEDIANTE LA SINCRONIZZAZIONE DEI DUE ARRAY
-             * 
-             * OCCORRE IL CONTROLLO PER OSSERVARE SE TUTTE LE DOMANDE ABBIANO UNA RISPOSTA, E POI CHE SIANO TUTTE CORRETTE PER AFFERMARE IL CAMBIAMENTO DELLO STATO DEL COMPLETAMENTO 
-             * PER AFFERMARE SE TUTTE LE DOMANDE HANNO RISPOSTA FACCIO LA SOMMA DEI DUE ARRAY CHE CONTENGONO LE RISPOSTE E BASTA UNA SINGOLA VARIABILE BOOLEANA PER TENERE TRACCIA DELLA POSSIBILITÀ CHE SIANO TUTTE CORRETTE O MENO
-             */
-        } elseif(isset($_POST["btnSendTest"])) {
+        if(isset($_POST["btnSendTest"])) {
             /* acquisisco l'insieme di tutti gli id dei quesiti che compongano il test in questione */
             $arrayIdQuestion = getIdTestQuestions($conn, $_SESSION["titleTestTested"]);
 
             /* da cui formulo i name di tutti i tag input del test, acquisendo i valori posti al loro interno */
             $mapArrayAnswer = setValuesSentMap($arrayIdQuestion);
-            $mapArraySolution = setValueSolutionMap($conn, $arrayIdQuestion, $_SESSION["titleTestTested"]);  
+            $mapArraySolution = setValueSolutionMap($conn, $arrayIdQuestion, $_SESSION["titleTestTested"]); 
 
-            print_r($mapArraySolution);
-            //var_dump(checkOption($conn, $arrayIdCloseQuestion, $_SESSION["titleTestTested"], $arrayValuesOption));
-            
+            checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution);
 
-            /* acquisisco le soluzioni dei quesiti del test */
-            //[$arraySolutionOption, $arraySolutionSketch] = getSolutionQuestions($arrayIdCloseQuestion, $arrayIdOpenQuestion);
+            header("Location: ../view/viewTest.php");
+            exit;
         }
-    }
-
-    function checkOption($conn, $arrayIdCloseQuestion, $titleTest, $arrayIdOption) {
-        $arrayCorrectIdOption = array();
-        
-        $sql = "SELECT ID FROM Opzione_Risposta WHERE (ID_DOMANDA_CHIUSA=:idQuesito) AND (TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
-
-        try {
-            $result = $conn -> prepare($sql);
-            $result -> bindValue(":idQuesito", $idQuestion);
-            $result -> bindValue(":titoloTest", $titleTest);
-
-            $result -> execute();
-
-            while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                $idCorrectOption = $row -> ID;
-                array_push($arrayCorrectIdOption, $idCorrectOption);
-            }
-        } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
-        }
-
-
-        /* primo controllo sulla dimensione dei due array, per verificare se il numero di risposte date coincida con il vettore contenente l'insieme delle risposte risolutive della domanda di riferiemento */
-        if(sizeof($arrayIdOption) == sizeof($arrayCorrectIdOption)) {
-            /* controllo che l'array contenente tutti gli id delle risposte corrette al quesito siano presenti anche rispetto alla risposta data */
-            foreach($arrayIdOption as $a) {
-                if(!in_array($a, $arrayCorrectIdOption)) {
-                    return 0; 
-                }       
-            }
-
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    function checkQuery($conn, $idQuestion, $titleTest, $queryAnswer) {
-        $sql = "SELECT TESTO FROM Sketch_Codice WHERE (ID_DOMANDA_CODICE=:idQuesito) AND (TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
-
-        /* tramite l'esecuzione sottostante si acquisisce la query risolutrice del quesito posto */
-        try {
-            $result = $conn -> prepare($sql);
-            $result -> bindValue(":idQuesito", $idQuestion);
-            $result -> bindValue(":titoloTest", $titleTest);
-
-            $result -> execute();
-            $row = $result -> fetch(PDO::FETCH_OBJ);
-        } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
-        }
-
-        $querySolution = $row -> TESTO;
-
-        /* run della query risolutrice per ottenerne il risultato, in righe e colonne, che possa essere confrontato rispetto alla risposta data */
-        try {
-            $stmtSolution = $conn -> prepare($querySolution);
-
-            $stmtSolution -> execute();
-            $resultSolution = $stmtSolution -> fetchAll(PDO::FETCH_OBJ);
-        } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
-        }
-
-        /* run della query posta dallo studente, successivamente oggetto di confronto rispetto alla query risolutrice */
-        try {
-            $stmtAnswer = $conn -> prepare($queryAnswer);
-
-            $stmtAnswer -> execute();
-            $resultAnswer = $stmtAnswer -> fetchAll(PDO::FETCH_OBJ);
-        } catch(PDOException $e) {
-            echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";
-        }
-
-        return ($resultAnswer == $resultSolution);
     }
 
     function getIdTestQuestions($conn, $titleTest) {
@@ -159,8 +69,9 @@
 
         for($i = 0; $i <= sizeof($arrayIdQuestion) - 1; $i++) {
             $arrayText = array();
+            $type = getTypeQuestion($conn, $arrayIdQuestion[$i], $_SESSION["titleTestTested"]); 
 
-            if(getTypeQuestion($conn, $arrayIdQuestion[$i]) == "CHIUSA") {
+            if($type == "CHIUSA") {
                 $sql = "SELECT ID FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito) AND (Opzione_Risposta.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
             } else {
                 $sql = "SELECT TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
@@ -176,7 +87,7 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            if(getTypeQuestion($conn, $arrayIdQuestion[$i]) == "CHIUSA") {
+            if($type == "CHIUSA") {
                 while($row = $result -> fetch(PDO::FETCH_ASSOC)){
                     foreach($row as $item) {
                         array_push($arrayText, $item);
@@ -186,20 +97,20 @@
                 }
             } else {
                 $row = $result -> fetch(PDO::FETCH_OBJ);
-                
-                $mapArraySolution[$arrayIdQuestion[$i]] = $row;
+                $mapArraySolution[$arrayIdQuestion[$i]] = $row -> TESTO;
             }
         }
 
         return $mapArraySolution;
     }
 
-    function getTypeQuestion($conn, $idQuestion) {
-        $sql = "SELECT * FROM Domanda_Chiusa WHERE (Domanda_Chiusa.ID_DOMANDA_CHIUSA=:idQuesito);";
+    function getTypeQuestion($conn, $idQuestion, $titleTest) {
+        $sql = "SELECT * FROM Domanda_Chiusa WHERE (Domanda_Chiusa.ID_DOMANDA_CHIUSA=:idQuesito) AND (Domanda_Chiusa.TITOLO_TEST=:titoloTest);";
 
         try {
             $result = $conn -> prepare($sql);
             $result -> bindValue(":idQuesito", $idQuestion);
+            $result -> bindValue(":titoloTest", $titleTest);
 
             $result -> execute();
             $numRows = $result -> rowCount();
@@ -207,6 +118,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
+        /* controllo della tipologia del quesito, basata sulla query eseguita precedentemente */
         if($numRows > 0) {
             return "CHIUSA";
         } else {
@@ -214,44 +126,99 @@
         }
     }
 
-    function getSolutionQuestions($conn, $arrayIdCloseQuestion, $arrayIdOpenQuestion, $titleTest) {
-        $arraySolutionOption -> array();
-        $arraySolutionSketch -> array();
+    // STAMPA CORRETTA, OSSIA SINCRONIZZATA TRA LE RISPOSTE DEI QUESITI DATE E DELLE SOLUZIONI ALL'INTERNO DEL DATABASE
+    function checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution) {
+        foreach($arrayIdQuestion as $i) {  
+            if(!$mapArrayAnswer[$i] == NULL) {
+                /* acquisisce la tipologia della domanda, in base all'id del quesito e al test di appartenenza */
+                $type = getTypeQuestion($conn, $i, $_SESSION["titleTestTested"]);
 
-        for($i = 0; $i <= sizeof($arrayIdCloseQuestion) - 1; $i++) {
-            $sqlSolutionOption = "SELECT ID, TESTO FROM Quesito, Opzione_Risposta WHERE (Quesito.ID=Opzione_Risposta.ID_DOMANDA_CHIUSA) AND (Opzione_Risposta.ESITO=true) AND (Quesito.ID=:idQuesito) AND (Quesito.TITOLO_TEST=:titoloTest);";
-            
-            try {
-                $resultSolutionOption = $conn -> prepare($sqlSolutionOption);
-                $resultSolutionOption -> bindValue(":idQuesito", $arrayIdCloseQuestion[$i]);
-                $resultSolutionOption -> bindValue(":titoloTest", $titleTest);
+                if($type == "CHIUSA") {
+                    $outcome = checkOption($conn, $mapArrayAnswer[$i], $mapArraySolution[$i]);
+                    $textAnswer = convertToString($mapArrayAnswer[$i]);
+                } else {
+                    $outcome = checkQuery($conn, $mapArrayAnswer[$i], $mapArraySolution[$i]);
+                    $textAnswer = $mapArrayAnswer[$i];
+                }
                 
-                $resultSolutionOption -> execute();
-            } catch(PDOException $e) {
-                echo "Eccezione ".$e -> getMessage()."<br>";
-            }
-            
-            while($rowSolutionOption = $resultSolutionOption -> fetch(PDO::FETCH_OBJ)) {
-                array_push($arraySolutionOption, $rowSolutionOption -> ID."|?|".$rowSolutionOption -> TESTO);
+                insertAnswer($conn, $_SESSION["emailStudente"], $i, $_SESSION["titleTestTested"], $textAnswer, $outcome);
             }
         }
+    }
 
-        for($i = 0; $i <= sizeof($arrayIdOpenQuestion) - 1; $i++) {
-            $sqlSolutionSketch = "SELECT ID,TESTO FROM Quesito, Sketch_Codice WHERE (Quesito.ID=Sketch_Codice.ID_DOMANDA_CODICE) AND (Sketch_Codice.ESITO=true) AND (Quesito.ID=:idQuesito) AND (Quesito.TITOLO_TEST=:titoloTest);";
-            
-            try {
-                $resultSolutionSketch = $conn -> prepare($sqlSolutionSketch);
-                $resultSolutionSketch -> bindValue(":idQuesito", $arrayIdOpenQuestion[$i]);
-                $resultSolutionSketch -> bindValue(":titoloTest", $titleTest);
-                
-                $resultSolutionSketch -> execute();
-            } catch(PDOException $e) {
-                echo "Eccezione ".$e -> getMessage()."<br>";
+    // POTREBBE DARE ERRORE QUALORA I VETTORI NON DOVESSERO CONTENERE VALORI 
+    function checkOption($conn, $arrayIdOptionAnswer, $arrayIdOptionSolution) {
+        /* primo controllo sulla dimensione dei due array, per verificare se il numero di risposte date coincida con il vettore contenente l'insieme delle risposte risolutive della domanda di riferiemento */
+        if(sizeof($arrayIdOptionAnswer) == sizeof($arrayIdOptionAnswer)) {
+            /* controllo che l'array contenente tutti gli id delle risposte corrette al quesito siano presenti anche rispetto alla risposta data */
+            foreach($arrayIdOptionAnswer as $a) {
+                if(!in_array($a, $arrayIdOptionSolution)) {
+                    $_SESSION["correctionTest"] = false;
+                    return 0; 
+                }       
             }
+    
+            return 1;
+        } else {
+            $_SESSION["correctionTest"] = false;
+            return 0;
+        }
+    }
+
+    function convertToString($array) {
+        $str = "";
+
+        foreach($array as $option) {
+            /* utilizzo di un carattere speciale in maniera tale da poter concatenare le risposte e poi recuperarle per successive visualizzazioni */
+            $str = $str."".$option."|?|";
+        }
+
+        return $str;
+    }
+
+    function checkQuery($conn, $queryAnswer, $querySolution) {
+        /* run della query risolutrice per ottenerne il risultato, in righe e colonne, che possa essere confrontato rispetto alla risposta data */
+        try {
+            $resultSolution = $conn -> prepare($querySolution);
+
+            $resultSolution -> execute();
+            $rowSolution = $resultSolution -> fetchAll(PDO::FETCH_OBJ);
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        /* run della query posta dallo studente, successivamente oggetto di confronto rispetto alla query risolutrice */
+        try {
+            $resultAnswer = $conn -> prepare($queryAnswer);
+
+            $resultAnswer -> execute();
+            $rowAnswer = $resultAnswer -> fetchAll(PDO::FETCH_OBJ);
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        if ($rowAnswer == $rowSolution) {
+            return 1;
+        } else {
+            $_SESSION["correctionTest"] = false;
+            return 0;
+        }
+    }
+    
+    function insertAnswer($conn, $email, $idQuestion, $titleTest, $textAnswer, $outcome) {
+        $storedProcedure = "CALL Inserimento_Risposta(:emailStudente, :idQuesito, :titoloTest, :testoRisposta, :esito)";
+
+        try {
+            $stmt = $conn -> prepare($storedProcedure);
+            $stmt -> bindValue(":emailStudente", $email);
+            $stmt -> bindValue(":idQuesito", $idQuestion);
+            $stmt -> bindValue(":titoloTest", $titleTest);
+            $stmt -> bindValue(":testoRisposta", (string)$textAnswer);
+            $stmt -> bindValue(":esito", $outcome);
             
-            while($rowSolutionSketch = $resultSolutionSketch -> fetch(PDO::FETCH_OBJ)) {
-                array_push($arraySolutionOption, $rowSolutionSketch -> ID."|?|".$rowSolutionSketch -> TESTO);
-            }
+            $stmt -> execute();
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
         }
     }
 
