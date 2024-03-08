@@ -68,7 +68,7 @@
                     case "APERTO":
                         return '
                             <form action="viewRisposte.php" method="POST">
-                                <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Enable Answers</button></th>
+                                <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Enabled Answers</button></th>
                             </form>
                             <form action="../test/buildTest.php" method="POST">
                                 <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$rowState -> TITOLO_TEST.'">Restart Test</button></th>
@@ -102,7 +102,7 @@
                             if(checkNumQuestion($conn, $titleTest)) {
                                 return '
                                     <form action="viewRisposte.php" method="POST">
-                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Enable Answers</button></th>
+                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Enabled Answers</button></th>
                                     </form>
                                     <form action="../test/buildTest.php" method="POST">
                                         <th><button class="table-button" type="submit" name="btnStartTest" value="'.$rowViewAnswer -> TITOLO.'">Start Test</button></th>
@@ -111,10 +111,10 @@
                             } else {
                                 return '
                                     <form action="viewRisposte.php" method="POST">
-                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Enable Answers</button></th>
+                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Enabled Answers</button></th>
                                     </form>
                                     <form action="../test/buildTest.php" method="POST">
-                                        <th><button class="table-button" type="submit" name="btnStartTest" disabled>Enable Test</button></th>
+                                        <th><button class="table-button" type="submit" name="btnStartTest" disabled>Enabled Test</button></th>
                                     </form>
                                 ';
                             }
@@ -124,7 +124,7 @@
                                     <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowViewAnswer -> TITOLO.'">View Answers</button></th>
                                 </form>
                                 <form action="../test/buildTest.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnStartTest" disabled>Enable Test</button></th>
+                                    <th><button class="table-button" type="submit" name="btnStartTest" disabled>Enabled Test</button></th>
                                 </form>
                             ';
                         }
