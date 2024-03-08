@@ -3,6 +3,8 @@ DROP TRIGGER IF EXISTS Inserimento_Record;
 DROP TRIGGER IF EXISTS Inserimento_Opzione_Risposta;
 DROP TRIGGER IF EXISTS Inserimento_Sketch_Codice;
 DROP TRIGGER IF EXISTS Aggiornamento_Aperto_InCompletamento_Test;
+DROP TRIGGER IF EXISTS Aggiornamento_Test_InCompletamento;
+DROP TRIGGER IF EXISTS Aggiornamento_Test_Concluso;
 DROP TRIGGER IF EXISTS Cancellazione_Record;
 DROP TRIGGER IF EXISTS Cancellazione_Opzione_Risposta;
 DROP TRIGGER IF EXISTS Cancellazione_Sketch_Codice;
@@ -32,10 +34,32 @@ FOR EACH ROW
 DELIMITER ;
 
 DELIMITER |
-CREATE TRIGGER Aggiornamento_Aperto_InCompletamento_Test
+CREATE TRIGGER Aggiornamento_Test_InCompletamento
 AFTER INSERT ON Risposta
 FOR EACH ROW
-    UPDATE Completamento SET STATO='INCOMPLETAMENTO' WHERE ((TITOLO_TEST=NEW.TITOLO_TEST) AND (EMAIL_STUDENTE=NEW.EMAIL_STUDENTE));
+BEGIN
+    UPDATE Completamento SET Completamento.STATO='INCOMPLETAMENTO' WHERE (Completamento.TITOLO_TEST=NEW.TITOLO_TEST) AND (Completamento.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE);
+END
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Aggiornamento_Test_Concluso
+AFTER INSERT ON Risposta
+FOR EACH ROW
+BEGIN
+    DECLARE countQuesiti INT DEFAULT 0;
+    DECLARE countRisposte INT DEFAULT 0;
+    DECLARE countRisposteCorrette INT DEFAULT 0;
+    SET countQuesiti = (SELECT COUNT(*) FROM Quesito WHERE (Quesito.TITOLO_TEST=NEW.TITOLO_TEST));
+    SET countRisposte = (SELECT COUNT(*) FROM Risposta WHERE (Risposta.TITOLO_TEST=NEW.TITOLO_TEST) AND (Risposta.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE));
+    IF (countQuesiti=countRisposte) THEN 
+        SET countRisposteCorrette = (SELECT COUNT(*) FROM Risposta WHERE (Risposta.TITOLO_TEST=NEW.TITOLO_TEST) AND (Risposta.EMAIL_STUDENTE=EMAIL_STUDENTE) AND (Risposta.ESITO=1));
+        IF (countRisposte=countRisposteCorrette) THEN 
+            UPDATE Completamento SET Completamento.STATO='CONCLUSO' WHERE (Completamento.TITOLO_TEST=NEW.TITOLO_TEST) AND (Completamento.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE);
+        END IF;
+    END IF; 
+END
 |
 DELIMITER ;
 
