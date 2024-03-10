@@ -2,7 +2,6 @@ USE ESQLDB;
 DROP TRIGGER IF EXISTS Inserimento_Record;
 DROP TRIGGER IF EXISTS Inserimento_Opzione_Risposta;
 DROP TRIGGER IF EXISTS Inserimento_Sketch_Codice;
-DROP TRIGGER IF EXISTS Aggiornamento_Aperto_InCompletamento_Test;
 DROP TRIGGER IF EXISTS Aggiornamento_Test_InCompletamento;
 DROP TRIGGER IF EXISTS Aggiornamento_Test_Concluso;
 DROP TRIGGER IF EXISTS Cancellazione_Record;
