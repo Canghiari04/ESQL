@@ -20,7 +20,7 @@
             <a class="a-href" href="#">Studenti</a>
             <a class="a-href" href="table_exercise.php">Tabelle</a>
             <a class="a-href" href="test.php">Test</a>
-            <a class="a-href" href="../index.php?">Logout</a>
+            <a class="a-href" href="../index.php">Logout</a>
         </div>
         
     </body>

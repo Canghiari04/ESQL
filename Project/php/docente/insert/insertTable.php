@@ -55,14 +55,14 @@
                                     $result -> execute();
                                     
                                     /* creazione della Tabella_Esercizio, contenente tutti i meta-dati */
-                                    $emailTeacher = $_SESSION["emailDocente"];
-                                    insertTableExercise($conn, $tokenName[0], $emailTeacher);
+                                    $email = $_SESSION["emailDocente"];
+                                    insertTableExercise($conn, $tokenName[0], $email);
                                     
                                     /* inserimento dei record che compogono la tabella effettiva nelle corrispettive tabelle meta-dati, Attributo e Vincolo_Integrita*/
                                     insertRecord($conn, $sql, $tokenName[0]);
 
                                     /* scrittura log inserimento di una tabella all'interno della Tabella_Esercizio */
-                                    $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento tabella: '.$tokenName[0].' dal docente: '.$emailTeacher.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                                    $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento tabella: '.$tokenName[0].' dal docente: '.$email.'', 'Timestamp' => date('Y-m-d H:i:s')];
                                     writeLog($manager, $document);
                                 } catch(PDOException $e) {
                                     /* funzioni che rendono compatibili caratteri speciali rispetto agli script delle textarea, dovuto principalmente ad un uso spropositato di spaziature */

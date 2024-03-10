@@ -1,6 +1,6 @@
 <?php 
     /* inserimento della tabella di esercizio, riferita alla collezione di meta-dati */
-    function insertTableExercise($conn, $nameTable, $emailTeacher) {
+    function insertTableExercise($conn, $nameTable, $email) {
         $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe, :emailDocente);";
 
         try {
@@ -8,7 +8,7 @@
             $result -> bindValue(":nome", $nameTable);
             $result -> bindValue(":dataCreazione", date("Y-m-d H:i:s"));
             $result -> bindValue(":numRighe", 0);
-            $result -> bindValue(":emailDocente", $emailTeacher);
+            $result -> bindValue(":emailDocente", $email);
             
             $result -> execute();
         } catch(PDOException $e) {
