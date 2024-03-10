@@ -117,3 +117,18 @@ th, td {
     margin-right: 7.5vh;
     text-decoration: none;
 } 
+
+.button-solution {
+    float: right;
+    display: block;
+    width: 150px;
+    color: black;
+    background-color: white;
+    border: 0.33vh solid black;
+    border-radius: 1.39vh;
+    text-align: center;
+    padding: 2vh 2vh;
+    margin-top: 2.17vh;
+    margin-right: 7.5vh;
+    text-decoration: none;
+} 
