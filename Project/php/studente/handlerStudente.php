@@ -17,7 +17,7 @@
             <a class="a-href" href="../statistic.php">Statistiche</a>
             <a class="a-href" href="">Messaggi</a>
             <a class="a-href" href="view/viewTest.php">Test</a>          
-            <a class="a-href" href="../index.php?">Logout</a>
+            <a class="a-href" href="../index.php">Logout</a>
         </div>
     </body>
 </html>

@@ -1,52 +1,11 @@
 <?php 
-    include "../../connectionDB.php";
-
-    session_start();
-    $conn = openConnection();
-
-    if($_SERVER["REQUEST_METHOD"] == "POST") {   
-        if(isset($_POST["btnSendTest"])) {
-            /* acquisisco l'insieme di tutti gli id dei quesiti che compongano il test in questione */
-            $arrayIdQuestion = getIdTestQuestions($conn, $_SESSION["titleTestTested"]);
-
-            /* da cui formulo i name di tutti i tag input del test, acquisendo i valori posti al loro interno */
-            $mapArrayAnswer = setValuesSentMap($arrayIdQuestion);
-            $mapArraySolution = setValueSolutionMap($conn, $arrayIdQuestion, $_SESSION["titleTestTested"]); 
-
-            checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution);
-
-            header("Location: ../view/viewTest.php");
-            exit;
-        }
-    }
-
-    function getIdTestQuestions($conn, $titleTest) {
-        $arrayIdQuestion = array();
-
-        // DIVERSIFICO PER JOIN TRA DOMANDA CHIUSA E DOMANDA CODICE
-        $sql = "SELECT ID FROM Quesito WHERE (Quesito.TITOLO_TEST=:titoloTest);";
-
-        try {
-            $result = $conn -> prepare($sql);
-            $result -> bindValue(":titoloTest", $titleTest);
-
-            $result -> execute();
-        } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
-        }
-
-        while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-            array_push($arrayIdQuestion, $row -> ID);
-        }
-
-        return $arrayIdQuestion;
-    }
-
-    function setValuesSentMap($arrayIdQuestion) {
+    /* funzione restituente la mappa contenitrice di tutte le risposte date dallo studente, ordinate secondo il numero progressivo dei quesiti */
+    function setValueSentMap($arrayIdQuestion) {
         $mapArrayAnswer = array();
         $arrayNameCheckbox = array();
 
         for($i = 0; $i <= sizeof($arrayIdQuestion) - 1; $i++) {
+            /* costruzione del tag name di ogni input definito a livello di HTML */
             $varCheckbox = "checkbox";
             $varCheckbox = $varCheckbox."".$arrayIdQuestion[$i];
 
@@ -63,12 +22,14 @@
         return $mapArrayAnswer;
     }
 
-    /* funzione che restituisce l'insieme delle soluzioni dei quesiti che compongono il test in questione, ordinate secondo coppia chiave -> valore */
+    /* funzione che restituisce l'insieme delle soluzioni dei quesiti che compongono il test in questione, ordinate secondo la numerazione progressiva dei quesiti */
     function setValueSolutionMap($conn, $arrayIdQuestion, $titleTest) {
         $mapArraySolution = array();
 
         for($i = 0; $i <= sizeof($arrayIdQuestion) - 1; $i++) {
             $arrayText = array();
+
+            /* è definita la tipologia del quesito, in maniera tale da diversificare la query che interrogherà le collezione di riferimento */
             $type = getTypeQuestion($conn, $arrayIdQuestion[$i], $_SESSION["titleTestTested"]); 
 
             if($type == "CHIUSA") {
@@ -88,6 +49,7 @@
             }
 
             if($type == "CHIUSA") {
+                /* distinzione, nei due rami del costrutto, dell'argomento dato al metodo fetch poichè le domande chiuse sono caratterizzate da array di possibili soluzioni */
                 while($row = $result -> fetch(PDO::FETCH_ASSOC)){
                     foreach($row as $item) {
                         array_push($arrayText, $item);
@@ -104,53 +66,33 @@
         return $mapArraySolution;
     }
 
-    function getTypeQuestion($conn, $idQuestion, $titleTest) {
-        $sql = "SELECT * FROM Domanda_Chiusa WHERE (Domanda_Chiusa.ID_DOMANDA_CHIUSA=:idQuesito) AND (Domanda_Chiusa.TITOLO_TEST=:titoloTest);";
-
-        try {
-            $result = $conn -> prepare($sql);
-            $result -> bindValue(":idQuesito", $idQuestion);
-            $result -> bindValue(":titoloTest", $titleTest);
-
-            $result -> execute();
-            $numRows = $result -> rowCount();
-        } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
-        }
-
-        /* controllo della tipologia del quesito, basata sulla query eseguita precedentemente */
-        if($numRows > 0) {
-            return "CHIUSA";
-        } else {
-            return "CODICE";
-        }
-    }
-
-    // STAMPA CORRETTA, OSSIA SINCRONIZZATA TRA LE RISPOSTE DEI QUESITI DATE E DELLE SOLUZIONI ALL'INTERNO DEL DATABASE
     function checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution) {
         foreach($arrayIdQuestion as $i) {  
             if(!$mapArrayAnswer[$i] == NULL) {
                 /* acquisisce la tipologia della domanda, in base all'id del quesito e al test di appartenenza */
                 $type = getTypeQuestion($conn, $i, $_SESSION["titleTestTested"]);
 
+                /* in base alla tipologia è attuato un controllo differente */
                 if($type == "CHIUSA") {
                     $outcome = checkOption($conn, $mapArrayAnswer[$i], $mapArraySolution[$i]);
+
+                    /* conversione in una stringa dell'array di risposte, dato che contiene gli id di tipo numerico */
                     $textAnswer = convertToString($mapArrayAnswer[$i]);
                 } else {
                     $outcome = checkQuery($conn, $mapArrayAnswer[$i], $mapArraySolution[$i]);
                     $textAnswer = $mapArrayAnswer[$i];
                 }
                 
+                /* inserimento all'interno della tabella Risposta */
                 insertAnswer($conn, $_SESSION["emailStudente"], $i, $_SESSION["titleTestTested"], $textAnswer, $outcome);
             }
         }
     }
 
-    // POTREBBE DARE ERRORE QUALORA I VETTORI NON DOVESSERO CONTENERE VALORI 
     function checkOption($conn, $arrayIdOptionAnswer, $arrayIdOptionSolution) {
-        /* primo controllo sulla dimensione dei due array, per verificare se il numero di risposte date coincida con il vettore contenente l'insieme delle risposte risolutive della domanda di riferiemento */
+        /* primo controllo sulla dimensione dei due array, per verificare se il numero di risposte date coincida con il vettore contenente l'insieme delle risposte risolutive della domanda di riferimento */
         if(sizeof($arrayIdOptionAnswer) == sizeof($arrayIdOptionAnswer)) {
-            /* controllo che l'array contenente tutti gli id delle risposte corrette al quesito siano presenti anche rispetto alla risposta data */
+            /* controllo definito per accertarsi se la risposta data contenga gli id di tutte le opzioni risolutrici del quesito*/
             foreach($arrayIdOptionAnswer as $a) {
                 if(!in_array($a, $arrayIdOptionSolution)) {
                     $_SESSION["correctionTest"] = false;
@@ -222,5 +164,8 @@
         }
     }
 
-    closeConnection($conn);
+    function checkSketch() {
+        // ACQUISISCE LA QUERY RISOLUTRICE
+        // FA IL RUN
+    }
 ?> 

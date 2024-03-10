@@ -1,6 +1,3 @@
-<?php
-    session_start();
-?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,6 +14,7 @@
         <?php
             include "../../connectionDB.php";
 
+            session_start();
             $conn = openConnection();   
 
             $sql = "SELECT * FROM Test;";
@@ -67,8 +65,8 @@
                 switch($rowState -> STATO) {
                     case "APERTO":
                         return '
-                            <form action="viewRisposte.php" method="POST">
-                                <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Enabled Answers</button></th>
+                            <form action="viewAnswer.php" method="POST">
+                                <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowState -> TITOLO_TEST.'" disabled>Disabled Answers</button></th>
                             </form>
                             <form action="../test/buildTest.php" method="POST">
                                 <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$rowState -> TITOLO_TEST.'">Restart Test</button></th>
@@ -77,7 +75,7 @@
                     break;
                     case "INCOMPLETAMENTO":
                         return '
-                            <form action="viewRisposte.php" method="POST">
+                            <form action="viewAnswer.php" method="POST">
                                 <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowState -> TITOLO_TEST.'">View Answers</button></th>
                             </form>
                             <form action="../test/buildTest.php" method="POST">
@@ -87,7 +85,7 @@
                     break;
                     case "CONCLUSO":
                         return '
-                            <form action="viewRisposte.php" method="POST">
+                            <form action="viewAnswer.php" method="POST">
                                 <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowState -> TITOLO_TEST.'">View Answers</button></th>
                             </form>
                             <form action="../test/buildTest.php" method="POST">
@@ -101,8 +99,8 @@
                         if(($rowViewAnswer -> VISUALIZZA_RISPOSTE) == 0) {
                             if(checkNumQuestion($conn, $titleTest)) {
                                 return '
-                                    <form action="viewRisposte.php" method="POST">
-                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Enabled Answers</button></th>
+                                    <form action="viewAnswer.php" method="POST">
+                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Disabled Answers</button></th>
                                     </form>
                                     <form action="../test/buildTest.php" method="POST">
                                         <th><button class="table-button" type="submit" name="btnStartTest" value="'.$rowViewAnswer -> TITOLO.'">Start Test</button></th>
@@ -110,21 +108,21 @@
                                 ';
                             } else {
                                 return '
-                                    <form action="viewRisposte.php" method="POST">
-                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Enabled Answers</button></th>
+                                    <form action="viewAnswer.php" method="POST">
+                                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Disabled Answers</button></th>
                                     </form>
                                     <form action="../test/buildTest.php" method="POST">
-                                        <th><button class="table-button" type="submit" name="btnStartTest" disabled>Enabled Test</button></th>
+                                        <th><button class="table-button" type="submit" name="btnStartTest" disabled>Disabled Test</button></th>
                                     </form>
                                 ';
                             }
                         } else {
                             return '
-                                <form action="viewRisposte.php" method="POST">
+                                <form action="viewAnswer.php" method="POST">
                                     <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowViewAnswer -> TITOLO.'">View Answers</button></th>
                                 </form>
                                 <form action="../test/buildTest.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnStartTest" disabled>Enabled Test</button></th>
+                                    <th><button class="table-button" type="submit" name="btnStartTest" disabled>Disabled Test</button></th>
                                 </form>
                             ';
                         }
@@ -132,6 +130,7 @@
                 } 
             }
 
+            /* controllo relativo allo stato del test, interrogando la collezione Completamento */
             function checkStateTest($conn, $email, $titleTest) {
                 $sql = "SELECT TITOLO_TEST, STATO FROM Completamento WHERE (Completamento.EMAIL_STUDENTE=:emailStudente) AND (Completamento.TITOLO_TEST=:titoloTest);";
 
@@ -149,6 +148,7 @@
                 return $result -> fetch(PDO::FETCH_OBJ);
             }
 
+            /* metodo utilizzato per stabilire se sia possibile visualizzare le soluzioni del test */
             function checkViewAnswer($conn, $titleTest) {           
                 $sql = "SELECT TITOLO, VISUALIZZA_RISPOSTE FROM Test WHERE (Test.TITOLO=:titoloTest);";
 
@@ -164,6 +164,7 @@
                 return $result -> fetch(PDO::FETCH_OBJ);
             }
 
+            /* valorizzazione del numero di quesiti che compongono il test */
             function checkNumQuestion($conn, $titleTest) {
                 $sql = "SELECT Quesito.ID FROM Quesito WHERE (Quesito.TITOLO_TEST=:titoloTest);";           
 

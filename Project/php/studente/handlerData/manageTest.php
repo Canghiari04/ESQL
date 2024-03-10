@@ -12,8 +12,4 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
     }
-
-    function closeTest($conn, $emailStudent, $titleTest) {
-
-    }
 ?>
