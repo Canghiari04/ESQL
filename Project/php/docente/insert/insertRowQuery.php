@@ -2,7 +2,7 @@
     session_start();
 
     if(!isset($_SESSION["emailDocente"])) {
-        header("Location: ../../login/login.php");
+        header("Location: ../../shared/login/login.php");
     }
 ?>
 <!DOCTYPE html>
@@ -58,6 +58,7 @@
 
                                 for($i = 0; $i < $rowInserted; $i++){ 
                                     $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
+                                    
                                     try {
                                         $stmt = $conn -> prepare($storedProcedure);
                                         $stmt -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);

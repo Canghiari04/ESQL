@@ -1,18 +1,19 @@
 <?php
     session_start();
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../login/login.php');
+    
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../shared/login/login.php");
     }
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/specific_linear.css">
         <?php
-            include '../../connectionDB.php';
+            include "../../connectionDB.php";
         ?>
     </head>
     <body>
@@ -24,19 +25,19 @@
             <?php 
                 $conn = openConnection();
 
-                if ($_SERVER['REQUEST_METHOD'] == 'POST') {   
-                    if(isset($_POST['btnSpecificTable'])) {
-                        $idTable = $_POST['btnSpecificTable'];    
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {   
+                    if(isset($_POST["btnSpecificTable"])) {
+                        $idTable = $_POST["btnSpecificTable"];    
 
-                        $sql = 'SELECT Attributo.TIPO, Attributo.NOME, Attributo.CHIAVE_PRIMARIA FROM Tabella_Esercizio JOIN Attributo ON (Tabella_Esercizio.ID=Attributo.ID_TABELLA) WHERE (Tabella_Esercizio.ID=:idTable);';
+                        $sql = "SELECT Attributo.TIPO, Attributo.NOME, Attributo.CHIAVE_PRIMARIA FROM Tabella_Esercizio JOIN Attributo ON (Tabella_Esercizio.ID=Attributo.ID_TABELLA) WHERE (Tabella_Esercizio.ID=:idTable);";
                         
                         try {
                             $result = $conn -> prepare($sql);
-                            $result -> bindValue(':idTable', $idTable);
+                            $result -> bindValue(":idTable", $idTable);
 
                             $result -> execute();
                         } catch (PDOException $e) {
-                            echo 'Eccezione: '.$e -> getMessage().'<br>'; 
+                            echo "Eccezione: ".$e -> getMessage()."<br>"; 
                         }
                             
                         echo '
@@ -73,9 +74,9 @@
 
                 function convertPrimaryKey($value) {
                     if($value == 0) {
-                        return 'No';
+                        return "No";
                     } else {
-                        return 'Si';
+                        return "Si";
                     }
                 }
                 

@@ -2,7 +2,6 @@
     /* metodo che permette di creare i tag input necessari per l'inserimento di dati all'interno della collezione */
     function identifyAttributes($conn){
         $nameTable = getTableName($conn);
-
         $checkAutoInc = checkAutoIncrement($conn, $nameTable);
  
         /* scrittura intestazione della query */
@@ -50,14 +49,14 @@
 
         try{
             $result = $conn -> prepare($sql);        
-
             $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
 
             $result -> execute();
-            $row = $result -> fetch(PDO::FETCH_OBJ);
         }catch(PDOException $e){
             echo "Eccezione ".$e -> getMessage()."<br>";
         }  
+        
+        $row = $result -> fetch(PDO::FETCH_OBJ);
 
         $nameTable= $row -> NOME;
         return $nameTable;
@@ -74,11 +73,12 @@
             $result = $conn -> prepare($sql);
             
             $result -> execute();
-            $rows = $result -> fetchAll(PDO::FETCH_ASSOC); 
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
-
+        
+        $rows = $result -> fetchAll(PDO::FETCH_ASSOC); 
+        
         foreach($rows as $row) {
             $column = $row["Field"];
             array_push($columns, $column);
@@ -95,14 +95,14 @@
         
         try {
             $result = $conn -> prepare($sql);
-
             $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
             
             $result -> execute();
-            $rows = $result->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+        
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($rows as $row) {
             $attribute = $row["NOME"];
@@ -131,17 +131,15 @@
 
         try{
             $result = $conn -> prepare($sql);
-            
             $result -> bindValue(":nomeTabella", $attributeName);
             $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
             
             $result -> execute();
-
-            $row = $result -> fetch(PDO::FETCH_OBJ);
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
-
+        
+        $row = $result -> fetch(PDO::FETCH_OBJ);
         return $row -> TIPO;
     }
 

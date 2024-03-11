@@ -2,7 +2,7 @@
     session_start();
 
     if(!isset($_SESSION["emailDocente"])) {
-        header("Location: ../login/login.php");
+        header("Location: ../shared/login/login.php");
     }
 ?>
 <!DOCTYPE html>
@@ -27,59 +27,60 @@
         <div>
             <?php 
                 $conn = openConnection();
-
-                $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente);";
                 
                 $email = $_SESSION["emailDocente"];
+
+                $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente);";
                 
                 try {
                     $result = $conn -> prepare($sql);
                     $result -> bindValue(":emailDocente", $email);
 
                     $result -> execute();
-                    $numRows = $result -> rowCount();
+                } catch (PDOException $e) {
+                    echo "Eccezione ".$e -> getMessage()."<br>";
+                }
+                
+                $numRows = $result -> rowCount();
 
-                    if($numRows > 0) {
+                if($numRows > 0) {
+                    echo '
+                        <div class="div-th"> 
+                            <table class="table-head-exercise">   
+                                <tr>  
+                                    <th>Nome tabella</th>
+                                    <th>Data creazione</th>
+                                    <th>Numero righe</th>
+                                </tr>
+                            </table>
+                        </div>
+                    ';
+
+                    while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                         echo '
-                            <div class="div-th"> 
-                                <table class="table-head-exercise">   
-                                    <tr>  
-                                        <th>Nome tabella</th>
-                                        <th>Data creazione</th>
-                                        <th>Numero righe</th>
+                            <div class="div-td">
+                                <table class="table-list">
+                                    <tr>
+                                        <th>'.$row -> NOME.'</th>
+                                        <th>'.$row -> DATA_CREAZIONE.'</th>
+                                        <th>'.$row -> NUM_RIGHE.'</th>
+                                        <form action="specifics/specificTable.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnSpecificTable" value='.$row -> ID.'>Specifics</button></th>
+                                        </form>
+                                        <form action="specifics/specificRow.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnViewRow" value='.$row -> ID.'>View Table</button></th>
+                                        </form>
+                                        <form action="delete/deleteTable.php" method="POST">
+                                            <th><button class="table-button" type="submit" name="btnDropTable" value='.$row -> ID.'>Drop Table</button></th>
+                                        </form>
                                     </tr>
                                 </table>
                             </div>
                         ';
-
-                        while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                            echo '
-                                <div class="div-td">
-                                    <table class="table-list">
-                                        <tr>
-                                            <th>'.$row -> NOME.'</th>
-                                            <th>'.$row -> DATA_CREAZIONE.'</th>
-                                            <th>'.$row -> NUM_RIGHE.'</th>
-                                            <form action="specifics/specificTable.php" method="POST">
-                                                <th><button class="table-button" type="submit" name="btnSpecificTable" value='.$row -> ID.'>Specifics</button></th>
-                                            </form>
-                                            <form action="specifics/specificRow.php" method="POST">
-                                                <th><button class="table-button" type="submit" name="btnViewRow" value='.$row -> ID.'>View Table</button></th>
-                                            </form>
-                                            <form action="delete/deleteTable.php" method="POST">
-                                                <th><button class="table-button" type="submit" name="btnDropTable" value='.$row -> ID.'>Drop Table</button></th>
-                                            </form>
-                                        </tr>
-                                    </table>
-                                </div>
-                            ';
-                        }
                     }
-
-                    closeConnection($conn);
-                } catch (PDOException $e) {
-                    echo "Eccezione ".$e -> getMessage()."<br>";
                 }
+
+                closeConnection($conn);
             ?>
         </div>
     </body>

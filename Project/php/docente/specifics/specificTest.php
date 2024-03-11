@@ -1,18 +1,19 @@
 <?php
     session_start();
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../login/login.php');
+    
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../shared/login/login.php");
     }
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/specific_box.css">
         <?php
-            include '../../connectionDB.php';
+            include "../../connectionDB.php";
         ?>
     </head>
     <body>
@@ -24,21 +25,21 @@
             <?php 
                 $conn = openConnection();
 
-                if ($_SERVER['REQUEST_METHOD'] == 'POST') {   
-                    if(isset($_POST['btnSpecificTest'])) {
-                        $titleTest = $_POST['btnSpecificTest']; 
-                        $email = $_SESSION['emailDocente'];   
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {   
+                    if(isset($_POST["btnSpecificTest"])) {
+                        $titleTest = $_POST["btnSpecificTest"]; 
+                        $email = $_SESSION["emailDocente"];   
 
                         $sql = "SELECT * FROM Test, Quesito WHERE (Test.TITOLO=Quesito.TITOLO) AND (Test.TITOLO=:titoloTest) AND (Test.EMAIL_DOCENTE=:emailDocente);";
 
                         try {
                             $result = $conn -> prepare($sql);
-                            $result -> bindValue(':titoloTest', $titleTest);
-                            $result -> bindValue(':emailDocente', $email);
+                            $result -> bindValue(":titoloTest", $titleTest);
+                            $result -> bindValue(":emailDocente", $email);
 
                             $result -> execute();
                         } catch (PDOException $e) {
-                            echo 'Eccezione '.$e -> getMessage().'<br>'; 
+                            echo "Eccezione ".$e -> getMessage()."<br>"; 
                         }
                             
                         if(isset($result)) {

@@ -1,18 +1,19 @@
 <?php
     session_start();
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../login/login.php');
+    
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../shared/login/login.php");
     }
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../style/css/table_view_linear.css">
         <?php
-            include '../connectionDB.php';
+            include "../connectionDB.php";
         ?>
     </head>
     <body>
@@ -27,15 +28,15 @@
         <?php 
             $conn = openConnection();
 
-            if($_SERVER['REQUEST_METHOD'] == 'POST') {
-                if(isset($_POST['btnQuestionTest'])) {
-                    $_SESSION['titleCurrentTest'] = $_POST['btnQuestionTest'];
-                    buildQuestionTest($conn, $_SESSION['titleCurrentTest']);
-                } elseif(isset($_POST['btnUndo'])) {
-                    buildQuestionTest($conn, $_SESSION['titleCurrentTest']);
+            if($_SERVER["REQUEST_METHOD"] == "POST") {
+                if(isset($_POST["btnQuestionTest"])) {
+                    $_SESSION["titleCurrentTest"] = $_POST["btnQuestionTest"];
+                    buildQuestionTest($conn, $_SESSION["titleCurrentTest"]);
+                } elseif(isset($_POST["btnUndo"])) {
+                    buildQuestionTest($conn, $_SESSION["titleCurrentTest"]);
                 }
             } else {
-                buildQuestionTest($conn, $_SESSION['titleCurrentTest']);
+                buildQuestionTest($conn, $_SESSION["titleCurrentTest"]);
             }
 
             function buildQuestionTest($conn, $titleTest) {
@@ -46,11 +47,12 @@
                     $result -> bindValue(":titoloTest", $titleTest);
 
                     $result -> execute();
-                    $numRows = $result -> rowCount();
                 } catch (PDOException $e) {
-                    echo 'Eccezione '. $e -> getMessage().'<br>';
+                    echo "Eccezione ". $e -> getMessage()."<br>";
                 }
-
+                
+                $numRows = $result -> rowCount();
+                
                 if($numRows > 0) {
                     echo '
                         <div class="div-th"> 

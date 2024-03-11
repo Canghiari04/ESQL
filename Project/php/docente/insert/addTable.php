@@ -55,10 +55,11 @@
             $result -> bindValue(":nome", $nameTable);
             
             $result -> execute();
-            $numRows = $result -> rowCount();
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+
+        $numRows = $result -> rowCount();
 
         $row = $result -> fetch(PDO::FETCH_ASSOC);
         $idTableReferential = $row["ID"];
@@ -271,11 +272,12 @@
             $result -> bindValue(":nomeAttributoReferenziato", $attributeReferenced);
 
             $result -> execute();
-            $numRows = $result ->  rowCount();
         } catch (PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
-
+        
+        $numRows = $result ->  rowCount();
+        
         if($numRows > 0) {
             $row = $result -> fetch(PDO::FETCH_ASSOC);
             $idAttributeReferenced = $row["ID"];

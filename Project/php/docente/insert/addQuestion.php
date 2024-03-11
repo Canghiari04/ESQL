@@ -7,10 +7,11 @@
             $result -> bindValue(":email", $email);
             
             $result -> execute();
-            $numRows = $result -> rowCount();
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+
+        $numRows = $result -> rowCount();
 
         return ($numRows > 0);
     } 
@@ -23,11 +24,11 @@
             $result -> bindValue(":titoloTest", $titleTest);
             
             $result -> execute();
-            $numRows = $result -> rowCount();
         } catch (PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
-
+        
+        $numRows = $result -> rowCount();
         $row = $result -> fetch(PDO::FETCH_OBJ);
         return ($row -> MAX_ID_QUESTION + 1);
     }

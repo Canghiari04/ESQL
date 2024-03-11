@@ -2,7 +2,7 @@
     session_start();
 
     if(!isset($_SESSION["emailDocente"])) {
-        header("Location: ../../login/login.php");
+        header("Location: ../../shared/login/login.php");
     }
 ?>
 
@@ -100,10 +100,11 @@
                         $result -> bindValue(":titoloTest", $titleTest);
 
                         $result -> execute();
-                        $numRows = $result -> rowCount();
                     } catch(PDOException $e) {
                         echo "Eccezione ".$e -> getMessage()."<br>";
                     }
+                    
+                    $numRows = $result -> rowCount();
 
                     if($numRows > 0) {
                         $_SESSION["typeQuestion"] = "CHIUSA";

@@ -8,11 +8,11 @@
             $stmt -> bindValue(":titoloTest", $titleTest);
 
             $stmt -> execute();
-            $numRows = $stmt -> rowCount();
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
-
+        
+        $numRows = $stmt -> rowCount();
         if($numRows > 0) {
             return "CHIUSA";
         } else {
@@ -55,11 +55,11 @@
             $result -> bindValue(":titoloTest", $titleTest);
             
             $result -> execute();
-            $numRows = $result -> rowCount();
         } catch (PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
-
+        
+        $numRows = $result -> rowCount();
         $row = $result -> fetch(PDO::FETCH_OBJ);
         return ($row -> MAX_ID_ANSWER + 1);
     }
