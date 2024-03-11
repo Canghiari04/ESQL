@@ -1,4 +1,5 @@
 USE ESQLDB;
+
 DROP VIEW IF EXISTS Test_Completati;
 DROP VIEW IF EXISTS Risposte_Corrette;
 DROP VIEW IF EXISTS Risposte_Inserite;
