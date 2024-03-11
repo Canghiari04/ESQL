@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="style/css/navbar_linear.css" />
         <link rel="stylesheet" type="text/css" href="style/css/index.css" />
     </head>
@@ -12,11 +12,11 @@
             <div class="dropdown">
                 <button class="dropbtn">Sign Up</button>
                 <div class="dropdown-content">
-                    <a href="login/signUpStudente.php">Studente</a>
-                    <a href="login/signUpDocente.php">Docente</a>
+                    <a href="shared/login/signUpStudente.php">Studente</a>
+                    <a href="shared/login/signUpDocente.php">Docente</a>
                 </div>
             </div>
-            <form action="login/login.php">
+            <form action="shared/login/login.php">
                 <button class="button-navbar" type="submit">Login</button>
             </form>
         </div>
