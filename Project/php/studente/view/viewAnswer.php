@@ -1,3 +1,10 @@
+<?php
+    session_start();
+
+    if(!isset($_SESSION["emailStudente"])) {
+        header("Location: ../../login/login.php");
+    }
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,7 +23,6 @@
                 include "../handlerData/dataTest.php";
                 include "../../connectionDB.php";
                 
-                session_start();
                 $conn = openConnection();  
                 
                 if(isset($_SERVER["REQUEST_METHOD"])) {
@@ -32,8 +38,8 @@
                 
                 function buildFormAnswer($conn, $email, $titleTest) {
                     /* acquisizione di tutte le risposte date dallo studente rispetto ai quesiti appartenenti al test */
-                    $result = getAnswerTest($conn, $email, $titleTest);
-                    
+                    $result = getAnswerTest($conn, $email, $titleTest); 
+
                     if(isset($result)) {
                         while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                             if(getTypeQuestion($conn, $row -> ID_QUESITO, $titleTest) == "CHIUSA") { 

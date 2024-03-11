@@ -1,8 +1,7 @@
-<?php    
+<?php   
     /* metodo che restituisce tutti gli id dei quesiti che compongono il test selezionato */
     function getQuestionTest($conn, $titleTest) {
         $arrayIdQuestion = array();
-
         $sql = "SELECT Quesito.ID FROM Quesito WHERE (Quesito.TITOLO_TEST=:titoloTest);";       
 
         try {
@@ -92,12 +91,12 @@
     }
 
     /* individuazione delle opzioni di risposta date in tentavi precedenti, da cui verrà visualizzata o meno la checkbox demarcata */
-    function checkChecked($conn, $emailStudent, $idQuestion, $titleTest){
+    function checkChecked($conn, $email, $idQuestion, $titleTest){
         $sql = "SELECT TESTO FROM Risposta WHERE (EMAIL_STUDENTE=:emailStudente) AND (ID_QUESITO=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
 
         try {
             $result = $conn -> prepare($sql);
-            $result -> bindValue(":emailStudente", $emailStudent);
+            $result -> bindValue(":emailStudente", $email);
             $result -> bindValue(":idQuesito", $idQuestion);
             $result -> bindValue(":titoloTest", $titleTest);
 

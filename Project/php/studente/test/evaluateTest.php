@@ -95,14 +95,12 @@
             /* controllo definito per accertarsi se la risposta data contenga gli id di tutte le opzioni risolutrici del quesito*/
             foreach($arrayIdOptionAnswer as $a) {
                 if(!in_array($a, $arrayIdOptionSolution)) {
-                    $_SESSION["correctionTest"] = false;
                     return 0; 
                 }       
             }
     
             return 1;
         } else {
-            $_SESSION["correctionTest"] = false;
             return 0;
         }
     }
@@ -124,25 +122,26 @@
             $resultSolution = $conn -> prepare($querySolution);
 
             $resultSolution -> execute();
-            $rowSolution = $resultSolution -> fetchAll(PDO::FETCH_OBJ);
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+        
+        $rowSolution = $resultSolution -> fetchAll(PDO::FETCH_OBJ);
 
         /* run della query posta dallo studente, successivamente oggetto di confronto rispetto alla query risolutrice */
         try {
             $resultAnswer = $conn -> prepare($queryAnswer);
 
             $resultAnswer -> execute();
-            $rowAnswer = $resultAnswer -> fetchAll(PDO::FETCH_OBJ);
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+        
+        $rowAnswer = $resultAnswer -> fetchAll(PDO::FETCH_OBJ);
 
         if ($rowAnswer == $rowSolution) {
             return 1;
         } else {
-            $_SESSION["correctionTest"] = false;
             return 0;
         }
     }
@@ -164,8 +163,48 @@
         }
     }
 
-    function checkSketch() {
-        // ACQUISISCE LA QUERY RISOLUTRICE
-        // FA IL RUN
+    function checkSketch($conn, $idQuestion, $titleTest, $queryAnswer) {
+        $sql = "SELECT Sketch_Codice.TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (Sketch_Codice.SOLUZIONE=1);";
+
+        try {
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":idQuesito", $idQuestion);
+            $result -> bindValue(":titoloTest", $titleTest);
+            
+            $result -> execute();
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        $row = $result -> fetch(PDO::FETCH_OBJ);
+        $querySolution = $row -> TESTO;
+
+        /* run della query risolutrice per ottenerne il risultato, in righe e colonne, che possa essere confrontato rispetto alla risposta data */
+        try {
+            $resultSolution = $conn -> prepare($querySolution);
+
+            $resultSolution -> execute();
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+        
+        $rowSolution = $resultSolution -> fetchAll(PDO::FETCH_OBJ);
+
+        /* run della query posta dallo studente, successivamente oggetto di confronto rispetto alla query risolutrice */
+        try {
+            $resultAnswer = $conn -> prepare($queryAnswer);
+
+            $resultAnswer -> execute();
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+        
+        $rowAnswer = $resultAnswer -> fetchAll(PDO::FETCH_OBJ);
+        
+        if ($rowAnswer == $rowSolution) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 ?> 

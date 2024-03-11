@@ -1,3 +1,10 @@
+<?php
+    session_start();
+
+    if(!isset($_SESSION["emailStudente"])) {
+        header("Location: ../../login/login.php");
+    }
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -29,14 +36,16 @@
                                 /* metodo che richiama la stored procedure per l'inserimento dello studente all'interno della tabella Completamento, in cui verrà impostato lo stato di avanzamento ad APERTO  */
                                 openTest($conn, $_SESSION["emailStudente"], $titleTest);
 
-                                /* è innescata la costruzione del form contenente tutti i quesiti del test selezionato */
+                                /* innescata la costruzione del form contenente tutti i quesiti del test selezionato */
                                 buildForm($conn, $titleTest);                        
                             } elseif(isset($_POST["btnRestartTest"])){
                                 $titleTest = $_POST["btnRestartTest"];
                                 $_SESSION["titleTestTested"] = $titleTest; 
                                 
                                 buildForm($conn, $titleTest);
-                            } elseif(isset($_POST["btnSendTest"])) {
+                            } elseif(isset($_POST["btnSendTest"]) || isset($_POST["btnExit"])) {
+                                // FORSE PROVARE AD ELIMINARE LE RISPOSTE POI TRAMITE TRIGGERE AGGIORNARE LO STATO
+
                                 /* vettore contenente l'insieme dei numeri progressivi dei quesiti che compongano il test designato */
                                 $arrayIdQuestion = getQuestionTest($conn, $_SESSION["titleTestTested"]);
                                                 
@@ -52,13 +61,11 @@
                             } elseif(isset($_POST["btnCheckSketch"])) {
                                 /* ramo del costrutto condizionale, definito per simulare la correzione di una singola domanda di codice  */
 
-                                $values = $_POST["btnCheckSketch"];
-                                $tokens = explode("|?|", $values);
+                                $idQuestion = $_POST["btnCheckSketch"];
+                                $titleTest = $_SESSION["titleTestTested"];
 
-                                $idQuestion = $tokens[0];
-                                $idQuestion = $tokens[1];
                                 $textArea = "txtAnswerSketch";
-                                $textArea = $textArea."".$tokens[0];
+                                $textArea = $textArea."".$idQuestion;
 
                                 /* valutazione della query scritta dallo studente, rispetto alla soluzione mantenuta nel database */
                                 $outcome = checkSketch($conn, $idQuestion, $titleTest, $_POST[$textArea]);
@@ -90,7 +97,7 @@
                     ?>
                 </div>
                 <div class="div-button">
-                    <button class="button-final" type="submit" name="btnSendTest">Exit</button>
+                    <button class="button-final" type="submit" name="btnExit">Exit</button>
                     <button class="button-final" type="submit" name="btnSendTest">Send</button>
                 </div>
         </form>

@@ -8,6 +8,8 @@
     </head>
     <body>
         <?php
+            session_start();
+            
             /* creazione del form del quesito di tipologia Domanda_Chiusa */
             function buildFormCheck($conn, $idQuestion, $titleTest, $enabled, $solution) {
                 /* struttura condizionale attuata per distinguere la visualizzazione del form inerente ai quesiti */
@@ -105,7 +107,7 @@
                 if($enabled == true) {
                     echo '
                             <div>
-                                <button class="button-query" name="btnCheckSketch" value="'.$idQuestion.'"|?|"'.$titleTest.'">Check</button>
+                                <button class="button-query" name="btnCheckSketch" value="'.$idQuestion.'">Check</button>
                                 <label class="label-query">'.$descriptionQuestion.'</label>
                                 <textarea class="input-solution" type="text" name="txtAnswerSketch'.$idQuestion.'"></textarea>
                             </div>
@@ -214,9 +216,10 @@
                 ';
 
                 if((($rowState -> STATO) == "CONCLUSO") || (($rowViewAnswer -> VISUALIZZA_RISPOSTE) == 1)) {
+                    $_SESSION["nameCallerPage"] = "viewAnswer.php";
                     echo ' 
                         <div class="div-button">
-                            <button class="button-solution" type="submit" name="btnViewSolution">View Solution</button>
+                            <button class="button-solution" type="submit" name="btnViewSolution" value="'.$titleTest.'">View Solution</button>
                         </div> 
                     ';
                 } else {

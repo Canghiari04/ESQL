@@ -1,3 +1,10 @@
+<?php
+    session_start();
+
+    if(!isset($_SESSION["emailStudente"])) {
+        header("Location: ../../login/login.php");
+    }
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -29,7 +36,7 @@
                     echo '
                         <div class="div-th"> 
                             <table class="table-head-test">   
-                                <tr>  
+                                <tr>
                                     <th>Nome test</th>          
                                     <th>Data creazione</th>
                                     <th>Stato test</th>
@@ -66,7 +73,7 @@
                     case "APERTO":
                         return '
                             <form action="viewAnswer.php" method="POST">
-                                <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowState -> TITOLO_TEST.'" disabled>Disabled Answers</button></th>
+                                <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Disabled Answers</button></th>
                             </form>
                             <form action="../test/buildTest.php" method="POST">
                                 <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$rowState -> TITOLO_TEST.'">Restart Test</button></th>
@@ -107,6 +114,7 @@
                                     </form>
                                 ';
                             } else {
+                                /* ramo attuato qualora il test non abbia quesiti al suo interno, quindi non sia composto da alcuna domanda */
                                 return '
                                     <form action="viewAnswer.php" method="POST">
                                         <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Disabled Answers</button></th>
@@ -116,10 +124,20 @@
                                     </form>
                                 ';
                             }
-                        } else {
+                        } elseif(checkNumAnswer($conn, $email, $titleTest)) {
                             return '
                                 <form action="viewAnswer.php" method="POST">
                                     <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowViewAnswer -> TITOLO.'">View Answers</button></th>
+                                </form>
+                                <form action="../test/buildTest.php" method="POST">
+                                    <th><button class="table-button" type="submit" name="btnStartTest" disabled>Disabled Test</button></th>
+                                </form>
+                            ';
+                        } else {
+                            $_SESSION["nameCallerPage"] = "viewTest.php";
+                            return '
+                                <form action="viewSolution.php" method="POST">
+                                    <th><button class="table-button" type="submit" name="btnViewSolution" value="'.$rowViewAnswer -> TITOLO.'">View Solution</button></th>
                                 </form>
                                 <form action="../test/buildTest.php" method="POST">
                                     <th><button class="table-button" type="submit" name="btnStartTest" disabled>Disabled Test</button></th>
@@ -140,11 +158,10 @@
                     $result -> bindValue(":titoloTest", $titleTest);
                     
                     $result -> execute();
-                    $numRows = $result -> rowCount();
                 } catch(PDOException $e) {
                     echo "Eccezione ".$e -> getMessage()."<br>";  
                 }
-
+            
                 return $result -> fetch(PDO::FETCH_OBJ);
             }
 
@@ -166,18 +183,35 @@
 
             /* valorizzazione del numero di quesiti che compongono il test */
             function checkNumQuestion($conn, $titleTest) {
-                $sql = "SELECT Quesito.ID FROM Quesito WHERE (Quesito.TITOLO_TEST=:titoloTest);";           
+                $sql = "SELECT * FROM Quesito WHERE (Quesito.TITOLO_TEST=:titoloTest);";           
 
                 try {
                     $result = $conn -> prepare($sql);
                     $result -> bindValue(":titoloTest", $titleTest);
 
                     $result -> execute();
-                    $numRows = $result -> rowCount();
                 } catch (PDOException $e) {
                     echo "Eccezione ".$e -> getMessage()."<br>"; 
                 }
+                
+                $numRows = $result -> rowCount();
+                return ($numRows > 0);
+            }
 
+            function checkNumAnswer($conn, $email, $titleTest) {
+                $sql = "SELECT * FROM Risposta WHERE (Risposta.EMAIL_STUDENTE=:emailStudente) AND (Risposta.TITOLO_TEST=:titoloTest);";           
+
+                try {
+                    $result = $conn -> prepare($sql);
+                    $result -> bindValue(":emailStudente", $email);
+                    $result -> bindValue(":titoloTest", $titleTest);
+
+                    $result -> execute();
+                } catch (PDOException $e) {
+                    echo "Eccezione ".$e -> getMessage()."<br>"; 
+                }
+                
+                $numRows = $result -> rowCount();
                 return ($numRows > 0);
             }
         ?>

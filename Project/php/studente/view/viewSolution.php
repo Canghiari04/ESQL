@@ -1,3 +1,10 @@
+<?php
+    session_start();
+    
+    if(!isset($_SESSION["emailStudente"])) {
+        header("Location: ../../login/login.php");
+    }
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,21 +16,22 @@
         <div class="container">
             <div class="navbar">
                 <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
-                <form action="viewAnswer.php" method="POST">
-                    <button class="button-undo" type="submit" name="btnUndo"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
-                </form>
+                <?php
+                    include "../handlerData/buildForm.php";
+                    include "../handlerData/dataTest.php";
+                    include "../../connectionDB.php";
+                    
+                    $conn = openConnection();
+
+                    buildButtonUndo($_SESSION["nameCallerPage"]);
+                ?>
             </div>
             <?php
-                include "../handlerData/buildForm.php";
-                include "../handlerData/dataTest.php";
-                include "../../connectionDB.php";
-                
-                session_start();
-                $conn = openConnection();  
-                
                 if(isset($_SERVER["REQUEST_METHOD"])) {
                     if(isset($_POST["btnViewSolution"])) {
-                        buildFormSolution($conn, $_SESSION["titleTest"]);
+                        $titleTest = $_POST["btnViewSolution"];
+                        
+                        buildFormSolution($conn, $titleTest);
                     }
                 }
                 
@@ -38,6 +46,14 @@
                             buildFormQuery($conn, $i, $titleTest, false, true);
                         }
                     }
+                }
+
+                function buildButtonUndo($namePage) {
+                    echo '
+                        <form action="'.$namePage.'" method="POST">
+                            <button class="button-undo" type="submit" name="btnUndo"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
+                        </form>
+                    ';
                 }
                 
                 closeConnection($conn);
