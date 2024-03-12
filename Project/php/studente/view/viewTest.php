@@ -52,7 +52,7 @@
                                     <tr>
                                         <th>'.$row -> TITOLO.'</th>
                                         <th>'.$row -> DATA_CREAZIONE.'</th>
-                                        <th>'.$row -> TITOLO.'</th>
+                                        <th>'.checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO) -> STATO.'</th>
                                         '.checkTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'
                                     </tr>
                                 </table>

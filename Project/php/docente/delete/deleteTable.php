@@ -44,7 +44,41 @@
         }
     }
 
+    function checkAfference($conn, $id){
+        $sql = "SELECT ID_QUESITO, TITOLO_TEST FROM Afferenza WHERE ID_TABELLA = :idTabella";
+
+        try {
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":idTabella", $id);
+
+            $result -> execute();
+        } catch (PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        if($result -> rowCount() > 0){
+            while($row = $result -> fetch(PDO::FETCH_OBJ)){
+                $idQuestion = $row -> ID_QUESITO;
+                $titleTest = $row -> TITOLO_TEST;
+
+                $sql = "DELETE FROM Quesito WHERE ID = :idQuesito AND TITOLO_TEST = :titoloTest";
+
+                try {
+                    $resultDelete = $conn -> prepare($sql);
+                    $resultDelete -> bindValue(":idQuesito", $idQuestion);
+                    $resultDelete -> bindValue(":titoloTest", $titleTest);
+        
+                    $resultDelete -> execute();
+                } catch (PDOException $e) {
+                    echo "Eccezione ".$e -> getMessage()."<br>";
+                }
+            }
+        }
+
+    }
+
     function deleteTableExercise($conn, $id) {
+        checkAfference($conn, $id);
         $storedProcedure = "CALL Eliminazione_Tabella_Esercizio(:id);";
             
         try {
