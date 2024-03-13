@@ -2,7 +2,7 @@
     session_start();
     
     if(!isset($_SESSION["emailStudente"])) {
-        header("Location: ../../login/login.php");
+        header("Location: ../../shared/login/login.php");
     }
 ?>
 <!DOCTYPE html>
