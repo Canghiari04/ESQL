@@ -39,7 +39,7 @@ html, body {
 .button-navbar-first {
     float: right;
     display: block;
-    width: 150px;
+    width: 170px;
     color: black;
     background-color: white;
     border: 0.33vh solid black;
@@ -55,7 +55,7 @@ html, body {
 .button-navbar-second {
     float: right;
     display: block;
-    width: 160px;
+    width: 170px;
     color: black;
     background-color: white;
     border: 0.33vh solid black;

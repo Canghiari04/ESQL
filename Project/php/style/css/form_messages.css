@@ -1,0 +1,49 @@
+.div-message {
+    margin-top: 6.25vh;
+    margin-left: 6.25vh;
+    padding: 0.5rem 1.5rem;
+    width: 50%;
+    height: 10%;
+    background-color: rgb(240, 240, 240);
+    border: 2px solid rgb(224, 224, 224);
+    border-radius: 10px;
+}
+
+.div-content {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.div-name {
+    margin-bottom: 1rem;
+}
+
+p {
+    margin: 0;
+}
+
+textarea {
+    margin-top: 2.5vh;
+    width: 350px;
+    height: 112.5px;
+    border: 2px solid darkgrey;
+    border-radius: 5px;
+}
+
+textarea:hover {
+    transition: color .4s;
+    border-color: #ff3131;
+}
+
+.div-data {
+    margin-top: 1rem;
+}
+
+.label-data {
+    margin-left: 39rem;
+}
+
+label:hover, span:hover {
+    transition: color .4s;
+    color: #ff3131;
+}
