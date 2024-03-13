@@ -30,38 +30,39 @@
                 $result = $conn -> prepare($sql);
 
                 $result -> execute();
-                $numRows = $result -> rowCount();
+            } catch(PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
             
-                if($numRows > 0) {
+            $numRows = $result -> rowCount();
+            
+            if($numRows > 0) {
+                echo '
+                    <div class="div-th"> 
+                        <table class="table-head-test">   
+                            <tr>
+                                <th>Nome test</th>          
+                                <th>Data creazione</th>
+                                <th>Stato test</th>
+                            </tr>
+                        </table>
+                    </div>
+                ';
+
+                while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                     echo '
-                        <div class="div-th"> 
-                            <table class="table-head-test">   
+                        <div class="div-td">
+                            <table class="table-list">
                                 <tr>
-                                    <th>Nome test</th>          
-                                    <th>Data creazione</th>
-                                    <th>Stato test</th>
+                                    <th>'.$row -> TITOLO.'</th>
+                                    <th>'.$row -> DATA_CREAZIONE.'</th>
+                                    <th>'.checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO) -> STATO.'</th>
+                                    '.checkTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'
                                 </tr>
                             </table>
                         </div>
                     ';
-
-                    while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                        echo '
-                            <div class="div-td">
-                                <table class="table-list">
-                                    <tr>
-                                        <th>'.$row -> TITOLO.'</th>
-                                        <th>'.$row -> DATA_CREAZIONE.'</th>
-                                        <th>'.checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO) -> STATO.'</th>
-                                        '.checkTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'
-                                    </tr>
-                                </table>
-                            </div>
-                        ';
-                    }
                 }
-            } catch(PDOException $e) {
-                echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
             /* metodo utilizzato per rendere dinamica la stampa dei bottoni, a seconda dello stato del test, da cui successivamente sarà possibile conseguire in differenti funzionalità */
@@ -134,10 +135,11 @@
                                 </form>
                             ';
                         } else {
-                            $_SESSION["nameCallerPage"] = "viewTest.php";
+                            /* stringa inviata tramite il tag value del bottone, permettendo in questo modo il corretto reindirizzamento tra file */
+                            $namePage = "viewTest.php";
                             return '
                                 <form action="viewSolution.php" method="POST">
-                                    <th><button class="table-button" type="submit" name="btnViewSolution" value="'.$rowViewAnswer -> TITOLO.'">View Solution</button></th>
+                                    <th><button class="table-button" type="submit" name="btnViewSolution" value="'.$rowViewAnswer -> TITOLO.'|?|'.$namePage.'">View Solution</button></th>
                                 </form>
                                 <form action="../test/buildTest.php" method="POST">
                                     <th><button class="table-button" type="submit" name="btnStartTest" disabled>Disabled Test</button></th>

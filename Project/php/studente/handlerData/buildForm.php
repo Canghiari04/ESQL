@@ -216,10 +216,10 @@
                 ';
 
                 if((($rowState -> STATO) == "CONCLUSO") || (($rowViewAnswer -> VISUALIZZA_RISPOSTE) == 1)) {
-                    $_SESSION["nameCallerPage"] = "viewAnswer.php";
+                    $namePage = "viewAnswer.php";
                     echo ' 
                         <div class="div-button">
-                            <button class="button-solution" type="submit" name="btnViewSolution" value="'.$titleTest.'">View Solution</button>
+                            <button class="button-solution" type="submit" name="btnViewSolution" value="'.$titleTest.'|?|'.$namePage.'">View Solution</button>
                         </div> 
                     ';
                 } else {
