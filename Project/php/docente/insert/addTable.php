@@ -313,11 +313,11 @@
     }
 
     function insertReference($conn, $idAttributeReferential, $idTableReferential, $tokensAttributeReferenced) {
-        $tokensTableReferenced = explode("(", $tokensAttributeReferenced);
+        $tokensTableReferenced = explode('(', $tokensAttributeReferenced);
 
         [$num, $idTableReferenced] = getIdTableExercise($conn, $tokensTableReferenced[0]);
 
-        $attributeReferenced="";
+        $attributeReferenced = "";
 
         if(sizeof($tokensTableReferenced)>1){
             $attributeReferenced = rtrim($tokensTableReferenced[1], ')');
@@ -325,11 +325,10 @@
 
         if(($idTableReferenced == "" OR $attributeReferenced == "" )){
             echo "<script>document.querySelector('.input-tips').value='VINCOLO INTEGRITA NON ESISTENTE. RICREARE LA TABELLA CON DEI VALORI ESISTENTI NEL DATABASE';</script>";
-            echo ""; 
+
             deleteTable($conn, $idTableReferential);
             deleteTableExercise($conn, $idTableReferential);
             return 0;
-
         } else {
             $sql = "SELECT ID FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabellaReferenziata) AND (Attributo.NOME=:nomeAttributoReferenziato);";
 
