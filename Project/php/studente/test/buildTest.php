@@ -2,7 +2,7 @@
     session_start();
 
     if(!isset($_SESSION["emailStudente"])) {
-        header("Location: ../../login/login.php");
+        header("Location: ../../shared/login/login.php");
     }
 ?>
 <!DOCTYPE html>
@@ -43,9 +43,7 @@
                                 $_SESSION["titleTestTested"] = $titleTest; 
                                 
                                 buildForm($conn, $titleTest);
-                            } elseif(isset($_POST["btnSendTest"]) || isset($_POST["btnExit"])) {
-                                // FORSE PROVARE AD ELIMINARE LE RISPOSTE POI TRAMITE TRIGGERE AGGIORNARE LO STATO
-
+                            } elseif(isset($_POST["btnSendExitTest"])) {
                                 /* vettore contenente l'insieme dei numeri progressivi dei quesiti che compongano il test designato */
                                 $arrayIdQuestion = getQuestionTest($conn, $_SESSION["titleTestTested"]);
                                                 
@@ -68,11 +66,14 @@
                                 $textArea = $textArea."".$idQuestion;
 
                                 /* valutazione della query scritta dallo studente, rispetto alla soluzione mantenuta nel database */
-                                $outcome = checkSketch($conn, $idQuestion, $titleTest, $_POST[$textArea]);
+                                [$outcome, $textMessage] = checkSketch($conn, $idQuestion, $titleTest, $_POST[$textArea]);
+                                insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], $outcome); 
                                 buildForm($conn, $titleTest);   
-                                
+
                                 if($outcome == 1) {
                                     echo "<script type='text/javascript'>alert('QUERY CORRETTA');</script>";
+                                } elseif(isset($textMessage)) {
+                                    echo "<script type='text/javascript'>alert(".json_encode($textMessage).");</script>";
                                 } else {
                                     echo "<script type='text/javascript'>alert('QUERY ERRATA');</script>";
                                 }
@@ -97,8 +98,7 @@
                     ?>
                 </div>
                 <div class="div-button">
-                    <button class="button-final" type="submit" name="btnExit">Exit</button>
-                    <button class="button-final" type="submit" name="btnSendTest">Send</button>
+                    <button class="button-final" type="submit" name="btnSendExitTest">Send & Exit</button>
                 </div>
         </form>
     </body>

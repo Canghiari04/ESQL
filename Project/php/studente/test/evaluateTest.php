@@ -154,7 +154,7 @@
             $stmt -> bindValue(":emailStudente", $email);
             $stmt -> bindValue(":idQuesito", $idQuestion);
             $stmt -> bindValue(":titoloTest", $titleTest);
-            $stmt -> bindValue(":testoRisposta", (string)$textAnswer);
+            $stmt -> bindValue(":testoRisposta", $textAnswer);
             $stmt -> bindValue(":esito", $outcome);
             
             $stmt -> execute();
@@ -196,15 +196,15 @@
 
             $resultAnswer -> execute();
         } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
+            return [0, $e -> getMessage()];
         }
         
         $rowAnswer = $resultAnswer -> fetchAll(PDO::FETCH_OBJ);
         
         if ($rowAnswer == $rowSolution) {
-            return 1;
+            return [1, null];
         } else {
-            return 0;
+            return [0, null];
         }
     }
 ?> 
