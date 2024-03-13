@@ -23,7 +23,7 @@
                 echo '
                     <tr>
                         <th><label for="txt'.$value.'">'.$value.'</label></th>
-                        <th><input class="input" type="'.setTypeInput(getAttributeType($conn, $value)).'"  name="txt'.$value.'"></th>   
+                        <th>'.checkTypeInsert($conn, $value).'</th>
                     </tr>     
                 ';    
             }
@@ -141,6 +141,121 @@
         
         $row = $result -> fetch(PDO::FETCH_OBJ);
         return $row -> TIPO;
+    }
+
+    function getAttributeId($conn, $attributeName){
+        $sql = "SELECT * FROM Attributo WHERE NOME = :nomeTabella AND ID_TABELLA = :idTabella;"; 
+
+        try{
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":nomeTabella", $attributeName);
+            $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
+            
+            $result -> execute();
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+        
+        $row = $result -> fetch(PDO::FETCH_OBJ);
+        return $row -> ID;
+    }
+
+    function checkTypeInsert($conn, $nameAttribute){
+        if(checkReferences($conn,getAttributeId($conn, $nameAttribute))){
+            
+            return getReferencesOptions($conn,getAttributeId($conn, $nameAttribute), $nameAttribute);           
+        } else {
+            return '<input class="input" type="'.setTypeInput(getAttributeType($conn, $nameAttribute)).'"  name="txt'.$nameAttribute.'">';
+        }
+
+    }
+
+    function checkReferences($conn, $idAttributeReferencing){
+        $sql = "SELECT * FROM Vincolo_Integrita WHERE REFERENTE = :idAttributo ";
+
+        try{
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":idAttributo", $idAttributeReferencing);
+            
+            $result -> execute();
+        } catch(PDOException $e) {
+            
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        if($result -> rowCount()>0){
+            return true;
+        }
+
+
+    }
+
+    function getReferencesOptions($conn, $idAttributeReferencing, $nameAttribute){
+        $sql = "SELECT * FROM Vincolo_Integrita WHERE REFERENTE = :idAttributo ";
+
+        try{
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":idAttributo", $idAttributeReferencing);
+            
+            $result -> execute();
+        } catch(PDOException $e) {
+            
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        if($result -> rowCount() > 0){
+            $row = $result -> fetch(PDO::FETCH_OBJ);
+            $idAttributeReferenced = $row -> REFERENZIATO;
+
+            $sql ="SELECT NOME, ID_TABELLA FROM Attributo WHERE ID = :idAttributoReferenziato";
+            try{
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":idAttributoReferenziato", $idAttributeReferenced);
+                
+                $result -> execute();
+            } catch(PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+
+            $row = $result -> fetch(PDO::FETCH_OBJ);
+
+            $nameAttributeReferenced = $row -> NOME;
+            $idTableReferenced = $row -> ID_TABELLA;
+
+            $sql="SELECT NOME FROM Tabella_Esercizio WHERE ID = :idTabellaReferenziata";
+            try{
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":idTabellaReferenziata", $idTableReferenced);
+                
+                $result -> execute();
+            } catch(PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+
+            $row = $result -> fetch(PDO::FETCH_OBJ);
+
+            $nameTableReferenced = $row -> NOME;
+
+
+            $sql = "SELECT DISTINCT ".$nameAttributeReferenced." FROM ".$nameTableReferenced."";
+            try{
+                $result = $conn -> prepare($sql);
+                
+                $result -> execute();
+            } catch(PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+            $string = '<select class="input" name="txt'.$nameAttribute.'">';
+            if($result -> rowCount() > 0){
+                while($row = $result -> fetch(PDO::FETCH_OBJ)){
+                    $string = $string. "<option value=\"" . $row->$nameAttributeReferenced . "\">" . $row->$nameAttributeReferenced . "</option><br>";
+                }
+            }
+            return $string;
+
+        } else {
+
+        }
     }
 
     /* funzione che permette l'inserimento dei dati acquisiti da input all'interno della collezione di riferimento */
