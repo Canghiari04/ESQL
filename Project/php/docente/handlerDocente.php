@@ -17,7 +17,7 @@
         <div class="navbar">
             <a href="index.php"><img class="zoom-on-img ESQL" width="112" height="48" src="../style/img/ESQL.png"></a>
             <a class="a-href" href="../shared/statistic.php?Teacher">Statistiche</a>
-            <a class="a-href" href="../shared/message/message.php?Teacher">Messaggi</a>
+            <a class="a-href" href="../shared/handlerMessage/message.php?Teacher">Messaggi</a>
             <a class="a-href" href="table_exercise.php">Tabelle</a>
             <a class="a-href" href="test.php">Test</a>
             <a class="a-href" href="../index.php">Logout</a>
