@@ -1,12 +1,11 @@
 <?php
-    unset($_SESSION["emailDocente"]);
     unset($_SESSION["emailStudente"]);
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/signUp.css">
     </head>
