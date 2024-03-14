@@ -1,16 +1,18 @@
 <?php
     session_start();
 
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../shared/login/login.php');
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../shared/login/login.php");
     }
 
-    include '../../connectionDB.php';
+    include "buildFormMessage.php";
+    include "../../connectionDB.php";
                 
     $conn = openConnection();
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnViewMessage"])) {
+            /* tramite il tag value del bottone è memorizzato l'id del messaggio e la tipologia di utente */
             $values = $_POST["btnViewMessage"];
             $tokens = explode("|?|", $values);
             $idMessage = $tokens[0];
@@ -28,6 +30,7 @@
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
             <?php
+                /* definizione del bottone undo, a cui è passato la tipologia di utente per impostare il corretto reindirizzamento */
                 buildButtonUndo($typeUser);
             ?>
         </div>
@@ -36,15 +39,8 @@
                         buildFormMessage($conn, $typeUser, $idMessage);
                     }
                 }
-
-                function buildButtonUndo($typeUser) {
-                    echo '
-                        <form action="message.php" method="POST">
-                            <button class="button-undo" type="submit" name="btnUndo" value="'.$typeUser.'"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
-                        </form>
-                    ';
-                }
                 
+                /* funzione che permette la visualizzazione del messaggio inviato */
                 function buildFormMessage($conn, $typeUser, $idMessage) {
                     if($typeUser == "Teacher") {
                         $sql = "SELECT * FROM Messaggio WHERE (Messaggio.ID=:idMessaggio);";
@@ -75,42 +71,6 @@
                         $row = $result -> fetch(PDO::FETCH_OBJ);
                         deployMessage($conn, $row -> EMAIL_STUDENTE, $row -> TESTO, $row -> TITOLO, $row -> TITOLO_TEST, $row -> DATA_INSERIMENTO);
                     }
-                }
-                
-                function deployMessage($conn, $email, $text, $title, $titleTest, $date) {
-                    echo '
-                        <div>
-                            <div class="div-message">
-                                <div class="div-content">
-                                    <div class="div-name">
-                                        <label class="label-name">'.getNameSurname($conn, $email).'</label>
-                                    </div>
-                                    <p>Oggetto del messaggio <span>'.$title.'</span></p>
-                                    <p>Messaggio di <span>'.getNameSurname($conn, $email).'</span>, relativo al test <span>'.$titleTest.'</span>.</p>
-                                    <textarea type="text" disabled>"'.$text.'"</textarea>
-                                    <div class="div-data">
-                                        <label class="label-data">'.$date.'</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>       
-                    ';
-                }
-                
-                function getNameSurname($conn, $email) {
-                    $sql = "SELECT Utente.NOME, Utente.COGNOME FROM Utente WHERE (Utente.EMAIL=:email);";
-                    
-                    try {
-                        $result = $conn -> prepare($sql);
-                        $result -> bindValue(":email", $email);
-                        
-                        $result -> execute();
-                    } catch(PDOException $e) {
-                        echo "Eccezione ".$e -> getMessage()."<br>";
-                    }
-                    
-                    $row = $result -> fetch(PDO::FETCH_OBJ);
-                    return ($row -> NOME.' '.$row -> COGNOME);
                 }
                 
                 closeConnection($conn);

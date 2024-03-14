@@ -1,16 +1,18 @@
 <?php
     session_start();
 
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../shared/login/login.php');
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../shared/login/login.php");
     }
 
-    include '../../connectionDB.php';
+    include "buildFormMessage.php";
+    include "../../connectionDB.php";
 
     $conn = openConnection();
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnNewMessage"])) {
+            /* è memorizzato la tipologia dell'utente per impostare la corretta logica di reindirizzamento */
             $typeUser = $_POST["btnNewMessage"];
         
 ?>
@@ -34,7 +36,9 @@
                 <div class="div-select">
                     <select name="sltTest" required>
                         <option selected disabled>TEST</option>
-                        <?php getOptions($conn, $typeUser) ?>
+                        <?php
+                            getOptions($conn, $typeUser) 
+                        ?>
                     </select>
                 </div>
                 <div class="div-textbox">
@@ -58,7 +62,9 @@
             }
         }
 
+        /* metodo che permette di acquisire tutti i test presenti dal database */
         function getOptions($conn, $typeUser){
+            /* se si dovesse trattare di un docente, sono restituiti solamente i test creati dallo stesso */
             if($typeUser == "Teacher") {
                 $sql = "SELECT TITOLO FROM Test WHERE (Test.EMAIL_DOCENTE=:emailDocente);";
 
@@ -95,15 +101,9 @@
             }
         }
 
-        function buildButtonUndo($typeUser) {
-            echo '
-                <form action="message.php" method="POST">
-                    <button class="button-undo" type="submit" name="btnUndo" value="'.$typeUser.'"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
-                </form>
-            ';
-        }
-
+        /* inserimento di un nuovo messaggio all'interno del database */
         function insertNewMessage($conn, $typeUser, $textMessage, $titleMessage, $titleTest, $date) {
+            /* costrutto che diversifica le stored procedure in base alla tipologia di utente che abbia creato il messaggio */
             if($typeUser == "Teacher") {
                 $storedProcedure = "CALL Inserimento_Messaggio_Docente(:emailDocente, :testo, :titolo, :titoloTest, :dataInserimento)";
 
@@ -120,6 +120,7 @@
                     echo "Eccezione ".$e -> getMessage()."<br>";
                 }                
             } else {
+                /* nel caso dello studente è inserito il messaggio sia all'interno della collezione Messaggio e sia all'interno della tabella Messaggio_Studente, attuata per differenziarne l'autore */
                 $storedProcedureTeacher = "CALL Inserimento_Messaggio_Docente(:emailDocente, :testo, :titolo, :titoloTest, :dataInserimento)";
 
                 try {

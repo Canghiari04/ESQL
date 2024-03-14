@@ -1,15 +1,13 @@
 <?php
-    session_start();
+    session_start();    
 
-    if(!isset($_SESSION["emailDocente"]) || !isset($_SESSION["emailStudente"])) {
-        header("Location: ../../shared/login/login.php");
-    }
+    // CORREGGERE CONTROLLO PER PREVIO ACCESSO
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://fonts.googleapis.com/css?family=Public Sans' rel='stylesheet'>
+        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/table_view_linear.css">
     </head>
@@ -27,6 +25,7 @@
                     buildMessageTest($conn, $typeUser);
                 }
             } else {
+                /* tramite l'url viene acquisita la tipologia dell'utente, in maniera tale da compiere il corretto reindirizzamento tra i file */
                 $url = $_SERVER["REQUEST_URI"];
                 $tokens = explode('?', $url);
                 $typeUser = $tokens[1];
@@ -35,6 +34,7 @@
                 buildMessageTest($conn, $typeUser);
             }
 
+            /* metodo che permette di visualizzare correttamente la navbar */
             function buildNavbar($typeUser) {
                 if($typeUser == "Teacher") {
                     $nameFile = "../../docente/handlerDocente.php";
@@ -49,7 +49,7 @@
                             <button type="submit" class="button-navbar-first" name="btnNewMessage" value="'.$typeUser.'">New Message</button>
                         </form>
                         <form action="viewMessagesReceived.php" method="POST">
-                            <button type="submit" class="button-navbar-second" name="btnViewMessages" value="'.$typeUser.'">View Messages</button>
+                            <button type="submit" class="button-navbar-second" name="btnViewMessages" value="'.$typeUser.'">Received Messages</button>
                         </form>
                         <a href="'.$nameFile.'"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
                     </div>
@@ -57,7 +57,9 @@
             }
 
 
+            /* funzione che permette di visualizzare tutti i messaggi inviati dallo specifico utente */
             function buildMessageTest($conn, $typeUser) {
+                /* in base alla tipologia e alla mail è diversificata l'interrogazione posta al database */
                 if($typeUser == "Teacher") {
                     $sql = "SELECT * FROM Messaggio WHERE (ID NOT IN (SELECT Messaggio_Studente.ID_MESSAGGIO_STUDENTE FROM Messaggio_Studente)) AND (Messaggio.EMAIL_DOCENTE=:emailDocente);";
                     
@@ -116,7 +118,9 @@
                         ';
                     }
                 }     
-            }                    
+            }              
+            
+            closeConnection($conn);
         ?>       
     </body>
 </html>

@@ -1,16 +1,18 @@
 <?php
     session_start();
 
-    if(!isset($_SESSION['emailDocente'])) {
-        header('Location: ../../shared/login/login.php');
+    if(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../../shared/login/login.php");
     }
 
-    include '../../connectionDB.php';
+    include "buildFormMessage.php";
+    include "../../connectionDB.php";
                 
     $conn = openConnection();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnViewMessages"])) {
+            /* memorizzazione della tipologia di utente, attuata per definire i reindirizzamenti */
             $typeUser = $_POST["btnViewMessages"];
 ?>
 <!DOCTYPE html>
@@ -35,14 +37,7 @@
                     }
                 }
 
-                function buildButtonUndo($typeUser) {
-                    echo '
-                        <form action="message.php" method="POST">
-                            <button class="button-undo" type="submit" name="btnUndo" value="'.$typeUser.'"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
-                        </form>
-                    ';
-                }
-
+                /* funzione che permette la visualizzazione di tutti i messaggi inviati */
                 function buildFormMessages($conn, $typeUser) {
                     if($typeUser == "Teacher") {
                         $sql = "SELECT * FROM Messaggio, Messaggio_Studente WHERE (Messaggio.ID=Messaggio_Studente.ID_MESSAGGIO_STUDENTE);";
@@ -76,41 +71,7 @@
                     }
                 }
 
-                function deployMessage($conn, $email, $text, $title, $titleTest, $date) {
-                    echo '
-                        <div>
-                            <div class="div-message">
-                                <div class="div-content">
-                                    <div class="div-name">
-                                        <label class="label-name">'.getNameSurname($conn, $email).'</label>
-                                    </div>
-                                    <p>Oggetto del messaggio <span>'.$title.'</span></p>
-                                    <p>Messaggio del docente <span>'.getNameSurname($conn, $email).'</span>, relativo al test <span>'.$titleTest.'</span>.</p>
-                                    <textarea type="text" disabled>"'.$text.'"</textarea>
-                                    <div class="div-data">
-                                        <label class="label-data">'.$date.'</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>       
-                    ';
-                }
-
-                function getNameSurname($conn, $email) {
-                    $sql = "SELECT Utente.NOME, Utente.COGNOME FROM Utente WHERE (Utente.EMAIL=:email);";
-
-                    try {
-                        $result = $conn -> prepare($sql);
-                        $result -> bindValue(":email", $email);
-
-                        $result -> execute();
-                    } catch(PDOException $e) {
-                        echo "Eccezione ".$e -> getMessage()."<br>";
-                    }
-
-                    $row = $result -> fetch(PDO::FETCH_OBJ);
-                    return ($row -> NOME.' '.$row -> COGNOME);
-                }
+                closeConnection($conn);
             ?>
         </div>
     </body>
