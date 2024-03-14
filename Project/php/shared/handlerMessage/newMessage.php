@@ -1,8 +1,12 @@
 <?php
     session_start();
 
-    if(!isset($_SESSION["emailDocente"])) {
-        header("Location: ../../shared/login/login.php");
+    if(!isset($_SESSION["emailStudente"])) {
+        header("Location: ../login/login.php");
+        exit();
+    } elseif(!isset($_SESSION["emailDocente"])) {
+        header("Location: ../login/login.php");
+        exit();
     }
 
     include "buildFormMessage.php";
