@@ -3,6 +3,7 @@
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
+        exit();
     }
 ?>
 <!DOCTYPE html>
@@ -54,7 +55,7 @@
                     insertQuestion($conn, $_SESSION["typeQuestion"], $idQuestion, $_SESSION["titleCurrentTest"], $difficulty, $numAnswers, $description);
                     
                     header("Location: insertAfferent.php");
-                    exit;
+                    exit();
                 } else {
                     echo "<script>document.querySelector('.input-textbox-question').value=".json_encode("NESSUNA TABELLA PRESENTE, INSERISCI QUALCHE COLLEZIONE PRIMA DI CREARE DEI QUESITI").";</script>";
                 }
