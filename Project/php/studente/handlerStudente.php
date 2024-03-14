@@ -3,6 +3,7 @@
     
     if(!isset($_SESSION["emailStudente"])) {
         header("Location: ../shared/login/login.php");
+        exit();
     }
 ?>
 <!DOCTYPE html>

@@ -3,6 +3,7 @@
 
     if(!isset($_SESSION["emailStudente"])) {
         header("Location: ../../shared/login/login.php");
+        exit();
     }
 ?>
 <!DOCTYPE html>
@@ -55,7 +56,7 @@
                                 checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution);
                                                 
                                 header("Location: ../view/viewTest.php");
-                                exit;
+                                exit();
                             } elseif(isset($_POST["btnCheckSketch"])) {
                                 /* ramo del costrutto condizionale, definito per simulare la correzione di una singola domanda di codice  */
 
