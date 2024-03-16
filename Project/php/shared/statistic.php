@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    if ((!isset($_SESSION["emailDocente"])) AND (!isset($_SESSION["emailStudente"]))) {
+    if ((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: login/login.php");
     } 
 
@@ -13,7 +13,6 @@
         }
     }
 ?>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -46,7 +45,7 @@
                             
                 echo '
                     <div class="div-th"> 
-                    <h2>Classifica studenti in base al numero di test completati</h2>
+                        <h2>Classifica studenti in base al numero di test completati</h2>
                         <table class="table-head">   
                             <tr> 
                                 <th>Posizione</th>
@@ -55,7 +54,7 @@
                             </tr>
                         </table>
                     </div>
-                        ';
+                ';
                             
                 if(isset($result)) {
                     $cont = 1;
@@ -71,6 +70,7 @@
                                 </table>
                             </div>
                         ';
+
                         $cont = $cont + 1;
                     }
                 }
@@ -82,7 +82,7 @@
             <?php 
                 $conn = openConnection();
 
-                $sql = 'SELECT * FROM Risposte_Corrette;';
+                $sql = "SELECT * FROM Risposte_Corrette;";
                         
                 try {
                     $result = $conn -> prepare($sql);
@@ -94,7 +94,7 @@
                             
                 echo '
                     <div class="div-th">                   
-                    <h2>Classifica studenti in base al numero di risposte corrette</h2>
+                        <h2>Classifica studenti in base al numero di risposte corrette</h2>
                         <table class="table-head">   
                             <tr>  
                                 <th>Posizione</th>
@@ -105,12 +105,13 @@
                             </tr>
                         </table>
                     </div>
-                        ';
+                ';
                             
                 if(isset($result)) {
                     $cont = 1;
                     while($row = $result->fetch(PDO::FETCH_OBJ) and $cont < 11) {
                         $perc = ($row -> PERC) * 100;
+                        
                         echo '
                             <div class="div-td">                            
                                 <table class="table-list">   
@@ -124,6 +125,7 @@
                                 </table>
                             </div>
                         ';
+
                         $cont = $cont + 1;
                     }
                 }
@@ -156,7 +158,7 @@
                             </tr>
                         </table>
                     </div>
-                        ';
+                ';
                             
                 if(isset($result)) {
                     $cont = 1;
