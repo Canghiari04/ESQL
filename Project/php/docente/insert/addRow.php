@@ -19,7 +19,6 @@
                 /* sono creati i tag input necessari per l'inserimento di dati all'interno della collezione, attraverso la concatenazione dell'intestazione scritta prima */
                 $valuesQuery = $valuesQuery.''.$value.'';
                 $valuesQuery = $valuesQuery.', ';
-
                 echo '
                     <tr>
                         <th><label for="txt'.$value.'">'.$value.'</label></th>
@@ -126,6 +125,7 @@
         }
     }
 
+    /* funzione che restituisce il  tipo dell'attributo in base al nome contenuto nella collezione Attributo */
     function getAttributeType($conn, $attributeName){
         $sql = "SELECT * FROM Attributo WHERE NOME = :nomeTabella AND ID_TABELLA = :idTabella;"; 
 
@@ -143,6 +143,7 @@
         return $row -> TIPO;
     }
 
+    /* funzione che restituisce il  tipo dell'attributo in base al nome contenuto nella collezione Attributo */
     function getAttributeId($conn, $attributeName){
         $sql = "SELECT * FROM Attributo WHERE NOME = :nomeTabella AND ID_TABELLA = :idTabella;"; 
 
@@ -160,6 +161,7 @@
         return $row -> ID;
     }
 
+    /* funzione che permette di controllare se l'attributo per cui si vuole stampare un campo di testo sia foreign key */
     function checkTypeInsert($conn, $nameAttribute){
         if(checkReferences($conn,getAttributeId($conn, $nameAttribute))){
             
@@ -170,6 +172,7 @@
 
     }
 
+    /* funzione che permette di controllare la presenza di references da parte di un attributo*/
     function checkReferences($conn, $idAttributeReferencing){
         $sql = "SELECT * FROM Vincolo_Integrita WHERE REFERENTE = :idAttributo ";
 
@@ -190,6 +193,7 @@
 
     }
 
+    /* funzione che restituisce i valori presenti all'interno dell'attributo a cui si fa riferimento attraverso foreign key */
     function getReferencesOptions($conn, $idAttributeReferencing, $nameAttribute){
         $sql = "SELECT * FROM Vincolo_Integrita WHERE REFERENTE = :idAttributo ";
 
@@ -207,6 +211,7 @@
             $row = $result -> fetch(PDO::FETCH_OBJ);
             $idAttributeReferenced = $row -> REFERENZIATO;
 
+            /* query che restituisce i metadati necessari dell'attributo a cui si fa riferimento attraverso foreign key */
             $sql ="SELECT NOME, ID_TABELLA FROM Attributo WHERE ID = :idAttributoReferenziato";
             try{
                 $result = $conn -> prepare($sql);
@@ -222,6 +227,7 @@
             $nameAttributeReferenced = $row -> NOME;
             $idTableReferenced = $row -> ID_TABELLA;
 
+            /* query che restituisce il nome della tabella contenente l'attributo a cui si fa riferimento attraverso foreign key */
             $sql="SELECT NOME FROM Tabella_Esercizio WHERE ID = :idTabellaReferenziata";
             try{
                 $result = $conn -> prepare($sql);
@@ -236,7 +242,7 @@
 
             $nameTableReferenced = $row -> NOME;
 
-
+            /* query che restituisce i valori possibili dell'attributo all'interno della tabella referenziata */
             $sql = "SELECT DISTINCT ".$nameAttributeReferenced." FROM ".$nameTableReferenced."";
             try{
                 $result = $conn -> prepare($sql);
@@ -245,7 +251,8 @@
             } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
-            $string = '<select class="input" name="txt'.$nameAttribute.'">';
+
+            $string = '<select class="input" name="txt'.$nameAttribute.'" required>';
             if($result -> rowCount() > 0){
                 while($row = $result -> fetch(PDO::FETCH_OBJ)){
                     $string = $string. "<option value=\"" . $row->$nameAttributeReferenced . "\">" . $row->$nameAttributeReferenced . "</option><br>";
@@ -253,9 +260,7 @@
             }
             return $string;
 
-        } else {
-
-        }
+        } 
     }
 
     /* funzione che permette l'inserimento dei dati acquisiti da input all'interno della collezione di riferimento */

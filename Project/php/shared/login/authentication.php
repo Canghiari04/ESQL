@@ -182,7 +182,7 @@
 
             function insertStudente($conn, $email, $password, $nome, $cognome, $telefono, $annoImmatricolazione, $codice) {
                 /* string per richiamare la stored procedure, senza che sia posti i campi */
-                $storedProcedure = "CALL Registrazione_Studente(:labelEmail, :labelPassword, :labelNome, :labelCognome, :labelTelefono, :labelAnno, :labelCodice);";
+                $storedProcedure = "CALL Inserimento_Studente(:labelEmail, :labelPassword, :labelNome, :labelCognome, :labelTelefono, :labelAnno, :labelCodice);";
                 
                 try {    
                     /* si crea lo statement necessario per richiamare la stored procedure */
@@ -203,7 +203,7 @@
             }
 
             function insertDocente($conn, $email, $password, $nome, $cognome, $telefono, $dipartimento, $corso) {
-                $storedProcedure = "CALL Registrazione_Docente(:labelEmail, :labelPassword, :labelNome, :labelCognome, :labelTelefono, :labelDipartimento, :labelCorso);";
+                $storedProcedure = "CALL Inserimento_Docente(:labelEmail, :labelPassword, :labelNome, :labelCognome, :labelTelefono, :labelDipartimento, :labelCorso);";
                 
                 try {        
                     $stmt = $conn -> prepare($storedProcedure);
