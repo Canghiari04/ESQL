@@ -12,6 +12,16 @@ input {
     border-radius: 5px;
 }
 
+select {
+    width: 15vh;
+    height: 3vh;
+    margin-left: 1vh;
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
 button {
     color: black;
     background-color: white;

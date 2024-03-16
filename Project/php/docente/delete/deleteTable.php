@@ -18,12 +18,13 @@
         } 
     }
 
-    function deleteTable($conn, $id) {
-        $sql = "SELECT NOME FROM Tabella_Esercizio WHERE (ID=:id);";
+    /* funzione che permette di cancellare la tabella dal database partendo dall'id all'interno di Tabella_Esercizio */
+    function deleteTable($conn, $idTable) {
+        $sql = "SELECT NOME FROM Tabella_Esercizio WHERE (ID=:idTabella);";
         
         try {
             $result = $conn -> prepare($sql);
-            $result -> bindValue(":id", $id);
+            $result -> bindValue(":id", $idTable);
 
             $result -> execute();
         } catch (PDOException $e) {
@@ -44,12 +45,13 @@
         }
     }
 
-    function checkAfference($conn, $id){
+     /* funzione che permette di cancellare i quesiti che riguardano la tabella eliminata */
+    function checkAfferent($conn, $idTable){
         $sql = "SELECT ID_QUESITO, TITOLO_TEST FROM Afferenza WHERE ID_TABELLA = :idTabella";
 
         try {
             $result = $conn -> prepare($sql);
-            $result -> bindValue(":idTabella", $id);
+            $result -> bindValue(":idTabella", $idTable);
 
             $result -> execute();
         } catch (PDOException $e) {
@@ -61,6 +63,7 @@
                 $idQuestion = $row -> ID_QUESITO;
                 $titleTest = $row -> TITOLO_TEST;
 
+                /* una volta ottenuti i quesisiti interessati, vengono eliminati uno alla volta */
                 $sql = "DELETE FROM Quesito WHERE ID = :idQuesito AND TITOLO_TEST = :titoloTest";
 
                 try {
@@ -77,13 +80,14 @@
 
     }
 
-    function deleteTableExercise($conn, $id) {
-        checkAfference($conn, $id);
-        $storedProcedure = "CALL Eliminazione_Tabella_Esercizio(:id);";
+    /* funzione che permette di cancellare i dati della tabella all'interno della collezione Tabella_Esercizio */
+    function deleteTableExercise($conn, $idTable) {
+        checkAfferent($conn, $idTable);
+        $storedProcedure = "CALL Eliminazione_Tabella_Esercizio(:idTabella);";
             
         try {
             $stmt = $conn -> prepare($storedProcedure);
-            $stmt -> bindValue(":id", $id);
+            $stmt -> bindValue(":id", $idTable);
 
             $stmt -> execute();
         } catch (PDOException $e) {

@@ -252,13 +252,14 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            $string = '<select class="input" name="txt'.$nameAttribute.'" required>';
+            $string = '<select name="txt'.$nameAttribute.'" required>';
             if($result -> rowCount() > 0){
                 while($row = $result -> fetch(PDO::FETCH_OBJ)){
                     $string = $string. "<option value=\"" . $row->$nameAttributeReferenced . "\">" . $row->$nameAttributeReferenced . "</option><br>";
                 }
             }
-            return $string;
+
+            return $string.'</select>';
 
         } 
     }
