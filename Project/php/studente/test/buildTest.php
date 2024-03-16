@@ -26,7 +26,6 @@
                         include "../handlerData/manageTest.php";
                         include "../../connectionDB.php";
                         
-                        session_start();
                         $conn = openConnection();  
 
                         if ($_SERVER["REQUEST_METHOD"] == "POST") {   

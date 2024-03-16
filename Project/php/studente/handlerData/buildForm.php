@@ -7,9 +7,7 @@
         <link rel="stylesheet" type="text/css" href="../../style/css/form_query.css">
     </head>
     <body>
-        <?php
-            session_start();
-            
+        <?php            
             /* creazione del form del quesito di tipologia Domanda_Chiusa */
             function buildFormCheck($conn, $idQuestion, $titleTest, $enabled, $solution) {
                 /* struttura condizionale attuata per distinguere la visualizzazione del form inerente ai quesiti */
