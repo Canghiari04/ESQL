@@ -108,7 +108,7 @@
         $questionSolutions = array();
 
         /* in presenza di un oggetto PDO non nullo, verranno salvati all'interno dell'array gli id delle opzioni di risposta */
-        if(isset($result)){
+        if($result -> rowCount()>0){
             $row = $result -> fetch(PDO::FETCH_OBJ);
             $questionSolutions =  explode('|?|', $row -> TESTO);
         }
@@ -131,7 +131,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        if(isset($result)){       
+        if($result -> rowCount()>0){       
             $row = $result -> fetch(PDO::FETCH_OBJ); 
             echo "<script>document.querySelector('textarea[name=\"txtAnswerSketch".$idQuestion."\"]').value='".$row -> TESTO."';</script>";
         }

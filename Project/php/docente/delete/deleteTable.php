@@ -24,7 +24,7 @@
         
         try {
             $result = $conn -> prepare($sql);
-            $result -> bindValue(":id", $idTable);
+            $result -> bindValue(":idTabella", $idTable);
 
             $result -> execute();
         } catch (PDOException $e) {
@@ -87,7 +87,7 @@
             
         try {
             $stmt = $conn -> prepare($storedProcedure);
-            $stmt -> bindValue(":id", $idTable);
+            $stmt -> bindValue(":idTabella", $idTable);
 
             $stmt -> execute();
         } catch (PDOException $e) {

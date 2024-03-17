@@ -22,21 +22,38 @@
 
     /* inserimento delle risposte alla domanda di riferimento, adeguando la procedure corretta, in base alla tipologia della stessa */
     function addOption($conn, $type, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution) {
+        $validity=1;
+
         if($type == "CHIUSA") {
             $storedProcedure = "CALL Inserimento_Opzione_Risposta(:id, :idQuesito, :titoloTest, :testo, :soluzione);";
-        } else {   
+        } else { 
+
+            /* controllo correttezza sintattica della query scritta dal docente */  
+            try {
+                $result = $conn -> prepare($textAnswer);
+                $result-> execute();
+
+            } catch(PDOException $e) {
+                echo '<script>alert("Inserire una query valida!");</script>';
+
+                $validity=0;
+            }
             $storedProcedure = "CALL Inserimento_Sketch_Codice(:id, :idQuesito, :titoloTest, :testo, :soluzione);";
+            
         }
 
         try {
-            $stmt = $conn -> prepare($storedProcedure);
-            $stmt -> bindValue(":id", $id);
-            $stmt -> bindValue(":idQuesito", $idQuestion);
-            $stmt -> bindValue(":titoloTest", $titleTest);
-            $stmt -> bindValue(":testo", $textAnswer);
-            $stmt -> bindValue(":soluzione", $sltSolution);
-            
-            $stmt -> execute();
+            if ($validity!=0){
+                $stmt = $conn -> prepare($storedProcedure);
+                $stmt -> bindValue(":id", $id);
+                $stmt -> bindValue(":idQuesito", $idQuestion);
+                $stmt -> bindValue(":titoloTest", $titleTest);
+                $stmt -> bindValue(":testo", $textAnswer);
+                $stmt -> bindValue(":soluzione", $sltSolution);
+                
+                $stmt -> execute();
+
+            }
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
