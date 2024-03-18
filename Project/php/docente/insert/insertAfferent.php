@@ -5,6 +5,11 @@
         header("Location: ../../shared/login/login.php");
         exit();
     }
+
+    include "addAfferent.php";
+    include "../../connectionDB.php";
+    
+    $conn = openConnection();
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,19 +25,13 @@
         </div>
         <form action="" method="POST">
             <div class="container">
-                <div class="div-textbox">
-                    <textarea class="input-tips" placeholder="INSERISCI TUTTE LE TABELLE RIFERITE ALLA DOMANDA CREATA" disabled></textarea>
-                    <button type="submit" name="btnAddAfferent">Insert</button>
-                </div>
+                <?php
+                    buildForm($conn, $_SESSION["emailDocente"]);
+                ?>
             </div>
-            <?php
-                include "addAfferent.php";
-                include "../../connectionDB.php";
-
-                $conn = openConnection();
-
-                buildForm($conn, $_SESSION["emailDocente"]);
-            ?>
+            <div class="div-button">
+                <button type="submit" name="btnAddAfferent">Insert</button>
+            </div>
         </form>
     </body>
     <?php
@@ -43,16 +42,13 @@
 
                     insertAfferent($conn, $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], $values);
                 } else {
-                    echo "<script>document.querySelector('.input-tips').value=".json_encode("DEVI SELEZIONARE ALMENO UNA DELLE TABELLE PRESENTI").";</script>";
-                }
-                
-                header("Location: ../question.php");
-                exit();
+                    echo "<script type='text/javascript'>alert(".json_encode("Seleziona una tabelle presenti.").");</script>";
+                } 
             }
         }
     
         function buildForm($conn, $email) {
-            $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:email);";
+            $sql = "SELECT * FROM Tabella_Esercizio WHERE (Tabella_Esercizio.EMAIL_DOCENTE=:email) AND (Tabella_Esercizio.NUM_RIGHE>0);";
             
             try {
                 $result = $conn -> prepare($sql);

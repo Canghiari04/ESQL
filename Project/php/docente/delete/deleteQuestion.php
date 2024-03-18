@@ -13,14 +13,14 @@
             //writeLog($manager, $document);
 
             header("Location: ../question.php");
-            exit;
+            exit();
         } elseif(isset($_POST["btnDropOption"])) {
             deleteOption($conn, $varOption = $_POST["btnDropOption"]);
                 
             /* manca writelog */
 
             header("Location: ../specifics/specificQuestion.php");
-            exit;
+            exit();
         }
     }
         

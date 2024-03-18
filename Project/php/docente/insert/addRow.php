@@ -11,15 +11,15 @@
         $attributes = getAttributes($conn);
         
         echo '
-            <table class="">
+            <table>
         ';
 
         foreach($attributes as $value){
-            /* tramite la condizione non sono stampati tutti i domini della collezione che risultino auto increment */
+            /* tramite la condizione non sono stampati tutti i domini della collezione che risultino auto_increment */
             if(!in_array($value, $checkAutoInc)) {
                 /* sono creati i tag input necessari per l'inserimento di dati all'interno della collezione, attraverso la concatenazione dell'intestazione scritta prima */
                 $valuesQuery = $valuesQuery.''.$value.'';
-                $valuesQuery = $valuesQuery.', ';
+                $valuesQuery = $valuesQuery.", ";
                 echo '
                     <tr>
                         <th><label for="txt'.$value.'">'.$value.'</label></th>
@@ -45,7 +45,7 @@
 
     /* funzione che restituisce il nome della tabella in base al suo id contenuto nella collezione Tabella_Esercizio */
     function getTableName($conn) {
-        $sql= "SELECT NOME FROM Tabella_Esercizio WHERE ID = :idTabella;";
+        $sql= "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabella);";
 
         try{
             $result = $conn -> prepare($sql);        
@@ -63,11 +63,11 @@
     }
 
     function checkAutoIncrement($conn, $nameTable){
-        /* vettore contenitivo di tutte le colonne legate al vincolo auto increment */
+        /* vettore contenitivo di tutte le colonne legate al vincolo auto_increment */
         $columns = array();
         
-        /* query che restituisce tutte le colonne della tabella in questione che siano auto increment */
-        $sql = "SHOW COLUMNS FROM ".$nameTable." WHERE Extra LIKE '%auto_increment%';";
+        /* query che restituisce tutte le colonne della tabella  auto_increment */
+        $sql = "SHOW COLUMNS FROM ".$nameTable." WHERE (Extra LIKE '%auto_increment%');";
 
         try {
             $result = $conn -> prepare($sql);
@@ -78,7 +78,6 @@
         }
         
         $rows = $result -> fetchAll(PDO::FETCH_ASSOC); 
-        
         foreach($rows as $row) {
             $column = $row["Field"];
             array_push($columns, $column);
@@ -126,7 +125,7 @@
     
     /* metodo che garantisce l'acquisizione degli attributi della tabella interessata */
     function getAttributes($conn){ 
-        $sql= "SELECT * FROM Attributo WHERE ID_TABELLA = :idTabella;";
+        $sql= "SELECT * FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabella);";
         
         $attributes = array();
         
@@ -140,7 +139,6 @@
         }
         
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-
         foreach ($rows as $row) {
             $attribute = $row["NOME"];
             array_push($attributes,$attribute);
@@ -165,7 +163,7 @@
 
     /* funzione che restituisce il  tipo dell'attributo in base al nome contenuto nella collezione Attributo */
     function getAttributeType($conn, $attributeName){
-        $sql = "SELECT * FROM Attributo WHERE NOME = :nomeTabella AND ID_TABELLA = :idTabella;"; 
+        $sql = "SELECT * FROM Attributo WHERE (Attributo.NOME=:nomeTabella) AND (Attributo.ID_TABELLA=:idTabella);"; 
 
         try{
             $result = $conn -> prepare($sql);
@@ -183,7 +181,7 @@
 
     /* funzione che restituisce il  tipo dell'attributo in base al nome contenuto nella collezione Attributo */
     function getAttributeId($conn, $attributeName){
-        $sql = "SELECT * FROM Attributo WHERE NOME = :nomeTabella AND ID_TABELLA = :idTabella;"; 
+        $sql = "SELECT * FROM Attributo WHERE (Attributo.NOME=:nomeTabella) AND (Attributo.ID_TABELLA=:idTabella);"; 
 
         try{
             $result = $conn -> prepare($sql);
@@ -202,17 +200,15 @@
     /* funzione che permette di controllare se l'attributo per cui si vuole stampare un campo di testo sia foreign key */
     function checkTypeInsert($conn, $nameAttribute, $notNullAttributes){
         if(checkReferences($conn,getAttributeId($conn, $nameAttribute))){
-            
             return getReferencesOptions($conn,getAttributeId($conn, $nameAttribute), $nameAttribute);           
         } else {
             return '<input class="input" type="'.setTypeInput(getAttributeType($conn, $nameAttribute)).'"  name="txt'.$nameAttribute.'" '.checkNotNull($nameAttribute, $notNullAttributes).' >';
         }
-
     }
 
     /* funzione che permette di controllare la presenza di references da parte di un attributo*/
     function checkReferences($conn, $idAttributeReferencing){
-        $sql = "SELECT * FROM Vincolo_Integrita WHERE REFERENTE = :idAttributo ";
+        $sql = "SELECT * FROM Vincolo_Integrita WHERE (Vincolo_Integrita.REFERENTE=:idAttributo);";
 
         try{
             $result = $conn -> prepare($sql);
@@ -220,20 +216,17 @@
             
             $result -> execute();
         } catch(PDOException $e) {
-            
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        if($result -> rowCount()>0){
+        if(($result -> rowCount()) > 0){
             return true;
         }
-
-
     }
 
     /* funzione che restituisce i valori presenti all'interno dell'attributo a cui si fa riferimento attraverso foreign key */
     function getReferencesOptions($conn, $idAttributeReferencing, $nameAttribute){
-        $sql = "SELECT * FROM Vincolo_Integrita WHERE REFERENTE = :idAttributo ";
+        $sql = "SELECT * FROM Vincolo_Integrita WHERE (Vincolo_Integrita.REFERENTE=:idAttributo);";
 
         try{
             $result = $conn -> prepare($sql);
@@ -241,16 +234,15 @@
             
             $result -> execute();
         } catch(PDOException $e) {
-            
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        if($result -> rowCount() > 0){
+        if(($result -> rowCount()) > 0){
             $row = $result -> fetch(PDO::FETCH_OBJ);
             $idAttributeReferenced = $row -> REFERENZIATO;
 
             /* query che restituisce i metadati necessari dell'attributo a cui si fa riferimento attraverso foreign key */
-            $sql ="SELECT NOME, ID_TABELLA FROM Attributo WHERE ID = :idAttributoReferenziato";
+            $sql ="SELECT NOME, ID_TABELLA FROM Attributo WHERE (Attributo.ID=:idAttributoReferenziato);";
             try{
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":idAttributoReferenziato", $idAttributeReferenced);
@@ -261,12 +253,11 @@
             }
 
             $row = $result -> fetch(PDO::FETCH_OBJ);
-
             $nameAttributeReferenced = $row -> NOME;
             $idTableReferenced = $row -> ID_TABELLA;
 
             /* query che restituisce il nome della tabella contenente l'attributo a cui si fa riferimento attraverso foreign key */
-            $sql="SELECT NOME FROM Tabella_Esercizio WHERE ID = :idTabellaReferenziata";
+            $sql="SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabellaReferenziata)";
             try{
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":idTabellaReferenziata", $idTableReferenced);
@@ -277,10 +268,9 @@
             }
 
             $row = $result -> fetch(PDO::FETCH_OBJ);
-
             $nameTableReferenced = $row -> NOME;
 
-            /* query che restituisce i valori possibili dell'attributo all'interno della tabella referenziata */
+            /* query che restituisce i possibili valori dell'attributo all'interno della tabella referenziata */
             $sql = "SELECT DISTINCT ".$nameAttributeReferenced." FROM ".$nameTableReferenced."";
             try{
                 $result = $conn -> prepare($sql);
@@ -291,14 +281,14 @@
             }
 
             $string = '<select name="txt'.$nameAttribute.'" required>';
-            if($result -> rowCount() > 0){
+
+            if(($result -> rowCount()) > 0){
                 while($row = $result -> fetch(PDO::FETCH_OBJ)){
                     $string = $string. "<option value=\"" . $row->$nameAttributeReferenced . "\">" . $row->$nameAttributeReferenced . "</option><br>";
                 }
             }
 
-            return $string.'</select>';
-
+            return $string."</select>";
         } 
     }
 
@@ -311,14 +301,14 @@
         $attributesAutoIncrement = checkAutoIncrement($conn, $nameTable);
 
         foreach($attributesInsert as $value){
-            /* tramite la condizione non sono stampati tutti i domini della collezione che risultino auto increment */
+            /* tramite la condizione non sono stampati tutti i domini della collezione che risultino auto_increment */
             if(!in_array($value, $attributesAutoIncrement)){                    
                 $str = "txt".$value."";
                 array_push($attributesText, $str);
             }
         }
 
-        /* controllo per assicurarsi che la query abbia almeno un valore,  */
+        /* controllo per assicurarsi che la query abbia almeno un valore */
         if(strstr($_SESSION["headingInsert"],'(')){
             /* sovrascrizione della stringa di intestazione  */
             $stringDatas=''.$_SESSION["headingInsert"]." VALUES (";
@@ -349,7 +339,6 @@
             }
         
             $result -> execute(); 
-            
             echo "<script>document.querySelector('.input-tips').value='INSERIMENTO AVVENUTO';</script>";
         }catch(PDOException $e) {
             echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";

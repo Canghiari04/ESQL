@@ -1,6 +1,3 @@
-<?php
-    unset($_SESSION["emailDocente"]);
-?>
 <!DOCTYPE html>
 <html>
     <head>

@@ -80,6 +80,37 @@
         return $row -> DESCRIZIONE;
     }
 
+    function checkCompletedTest($conn, $titleTest) {
+        $arrayIdQuestion = getQuestionTest($conn, $titleTest);
+
+        for($i = 0; $i <= sizeof($arrayIdQuestion) - 1; $i++) {
+            $type = getTypeQuestion($conn, $arrayIdQuestion[$i], $titleTest);
+
+            if($type == "CHIUSA") {
+                $sql = "SELECT ID FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito) AND (Opzione_Risposta.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
+            } else {
+                $sql = "SELECT TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
+            }
+
+            try { 
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":idQuesito", $arrayIdQuestion[$i]);
+                $result -> bindValue(":titoloTest", $titleTest);
+
+                $result -> execute();
+            } catch(PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+
+            $numRows = $result -> rowCount();
+            if($numRows == 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /* visualizzazione della checkbox demarcata o meno */
     function printChecked($idSolution, $questionSolutions){
         if(in_array($idSolution, $questionSolutions)){
