@@ -33,7 +33,7 @@
                     $sltSolution = $_POST["sltSolution"];
     
                     $id = getLastId($conn, strtoupper($_SESSION["typeQuestion"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);
-    
+
                     /* inserimento della risposta fornita rispetto alla domanda in questione, fornendo tipo e id della domanda */
                     addOption($conn, strtoupper($_SESSION["typeQuestion"]), $id, $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], $txtAnswer, $sltSolution);
                     

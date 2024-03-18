@@ -12,7 +12,6 @@
         }
 
         $numRows = $result -> rowCount();
-
         return ($numRows > 0);
     } 
 
@@ -29,6 +28,7 @@
         }
         
         $numRows = $result -> rowCount();
+
         $row = $result -> fetch(PDO::FETCH_OBJ);
         return ($row -> MAX_ID_QUESTION + 1);
     }

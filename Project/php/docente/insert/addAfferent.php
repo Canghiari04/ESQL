@@ -15,5 +15,8 @@
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+
+        header("Location: ../question.php");
+        exit();
     }
 ?>
