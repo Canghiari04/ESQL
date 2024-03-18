@@ -23,7 +23,6 @@
             include "../handlerData/dataTest.php";
             include "../../connectionDB.php";
 
-            session_start();
             $conn = openConnection();   
 
             $sql = "SELECT * FROM Test;";
@@ -59,7 +58,7 @@
                                     <tr>
                                         <th>'.$row -> TITOLO.'</th>
                                         <th>'.$row -> DATA_CREAZIONE.'</th>
-                                        <th>'.checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO) -> STATO.'</th>
+                                        <th>'.checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'</th>
                                         '.checkTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'
                                     </tr>
                                 </table>
@@ -74,31 +73,31 @@
                 $rowState = checkStateTest($conn, $email, $titleTest);
 
                 /* rispetto allo stato del test, circoscritto al tentativo sostenuto dallo studente in questione, si differenziano le funzionalità che possono susseguirsi, abilitando o meno il bottone di riferimento */
-                switch($rowState -> STATO) {
+                switch($rowState) {
                     case "APERTO":
                         return '
                             <form action="viewAnswer.php" method="POST">
                                 <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Disabled Answers</button></th>
                             </form>
                             <form action="../test/buildTest.php" method="POST">
-                                <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$rowState -> TITOLO_TEST.'">Restart Test</button></th>
+                                <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$titleTest.'">Restart Test</button></th>
                             </form>
                         ';
                     break;
                     case "INCOMPLETAMENTO":
                         return '
                             <form action="viewAnswer.php" method="POST">
-                                <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowState -> TITOLO_TEST.'">View Answers</button></th>
+                                <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$titleTest.'">View Answers</button></th>
                             </form>
                             <form action="../test/buildTest.php" method="POST">
-                                <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$rowState -> TITOLO_TEST.'">Restart Test</button></th>
+                                <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$titleTest.'">Restart Test</button></th>
                             </form>
                         ';
                     break;
                     case "CONCLUSO":
                         return '
                             <form action="viewAnswer.php" method="POST">
-                                <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$rowState -> TITOLO_TEST.'">View Answers</button></th>
+                                <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$titleTest.'">View Answers</button></th>
                             </form>
                             <form action="../test/buildTest.php" method="POST">
                                 <th><button class="table-button" type="submit" name="btnRestartTest" disabled>Closed Test</button></th>
@@ -156,7 +155,7 @@
 
             /* controllo relativo allo stato del test, interrogando la collezione Completamento */
             function checkStateTest($conn, $email, $titleTest) {
-                $sql = "SELECT TITOLO_TEST, STATO FROM Completamento WHERE (Completamento.EMAIL_STUDENTE=:emailStudente) AND (Completamento.TITOLO_TEST=:titoloTest);";
+                $sql = "SELECT STATO FROM Completamento WHERE (Completamento.EMAIL_STUDENTE=:emailStudente) AND (Completamento.TITOLO_TEST=:titoloTest);";
 
                 try {
                     $result = $conn -> prepare($sql);
@@ -168,7 +167,13 @@
                     echo "Eccezione ".$e -> getMessage()."<br>";  
                 }
             
-                return $result -> fetch(PDO::FETCH_OBJ);
+                $numRows = $result -> rowCount();
+                if($numRows > 0) {
+                    $row = $result -> fetch(PDO::FETCH_OBJ);
+                    return $row -> STATO;
+                } else {
+                    return " ";
+                }
             }
 
             /* metodo utilizzato per stabilire se sia possibile visualizzare le soluzioni del test */
