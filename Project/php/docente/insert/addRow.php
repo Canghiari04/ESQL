@@ -3,6 +3,7 @@
     function identifyAttributes($conn){
         $nameTable = getTableName($conn);
         $checkAutoInc = checkAutoIncrement($conn, $nameTable);
+        $notNullAttributes = getNotNull($conn, $nameTable);
  
         /* scrittura intestazione della query */
         $valuesQuery = "INSERT INTO ".$nameTable." (";
@@ -22,7 +23,7 @@
                 echo '
                     <tr>
                         <th><label for="txt'.$value.'">'.$value.'</label></th>
-                        <th>'.checkTypeInsert($conn, $value).'</th>
+                        <th>'.checkTypeInsert($conn, $value, $notNullAttributes).'</th>
                     </tr>     
                 ';    
             }
@@ -84,6 +85,43 @@
         }
 
         return $columns;
+    }
+
+    /* funzione che restituisce l'array contenente gli attributi not null */
+    function getNotNull($conn, $nameTable){
+        /* vettore contenitivo di tutte le colonne legate al vincolo not null */
+        $columns = array();
+        
+        /* query che restituisce tutte le colonne della tabella in questione che siano not null */
+        $sql = "SHOW COLUMNS FROM ".$nameTable." WHERE `Null` = 'NO';";
+
+        try {
+
+            
+            $result = $conn -> prepare($sql);
+            
+            $result -> execute();
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+        
+        $rows = $result -> fetchAll(PDO::FETCH_ASSOC); 
+        
+        foreach($rows as $row) {
+            $column = $row["Field"];
+            array_push($columns, $column);
+        }
+        
+
+        return $columns;
+    }
+
+     /* funzione che controlla la presenza dell'attributo nell'array contenente gli attributi not null */
+    function checkNotNull($nameAttribute, $notNullAttributes){
+        if(in_array($nameAttribute, $notNullAttributes)){
+             /* viene restituto un required per la textbox */
+            return "required";
+        }
     }
     
     /* metodo che garantisce l'acquisizione degli attributi della tabella interessata */
@@ -162,12 +200,12 @@
     }
 
     /* funzione che permette di controllare se l'attributo per cui si vuole stampare un campo di testo sia foreign key */
-    function checkTypeInsert($conn, $nameAttribute){
+    function checkTypeInsert($conn, $nameAttribute, $notNullAttributes){
         if(checkReferences($conn,getAttributeId($conn, $nameAttribute))){
             
             return getReferencesOptions($conn,getAttributeId($conn, $nameAttribute), $nameAttribute);           
         } else {
-            return '<input class="input" type="'.setTypeInput(getAttributeType($conn, $nameAttribute)).'"  name="txt'.$nameAttribute.'">';
+            return '<input class="input" type="'.setTypeInput(getAttributeType($conn, $nameAttribute)).'"  name="txt'.$nameAttribute.'" '.checkNotNull($nameAttribute, $notNullAttributes).' >';
         }
 
     }
