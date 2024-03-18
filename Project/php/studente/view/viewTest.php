@@ -20,6 +20,7 @@
             <a href="../handlerStudente.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
         </div>
         <?php
+            include "../handlerData/dataTest.php";
             include "../../connectionDB.php";
 
             session_start();
@@ -51,18 +52,20 @@
                 ';
 
                 while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                    echo '
-                        <div class="div-td">
-                            <table class="table-list">
-                                <tr>
-                                    <th>'.$row -> TITOLO.'</th>
-                                    <th>'.$row -> DATA_CREAZIONE.'</th>
-                                    <th>'.checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO) -> STATO.'</th>
-                                    '.checkTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'
-                                </tr>
-                            </table>
-                        </div>
-                    ';
+                    if(checkCompletedTest($conn, $row -> TITOLO)) {
+                        echo '
+                            <div class="div-td">
+                                <table class="table-list">
+                                    <tr>
+                                        <th>'.$row -> TITOLO.'</th>
+                                        <th>'.$row -> DATA_CREAZIONE.'</th>
+                                        <th>'.checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO) -> STATO.'</th>
+                                        '.checkTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'
+                                    </tr>
+                                </table>
+                            </div>
+                        ';
+                    }
                 }
             }
 
