@@ -213,7 +213,7 @@
                     <form action="viewSolution.php" method="POST">
                 ';
 
-                if((($rowState -> STATO) == "CONCLUSO") || (($rowViewAnswer -> VISUALIZZA_RISPOSTE) == 1)) {
+                if((($rowState -> STATO) == "CONCLUSO") && (($rowViewAnswer -> VISUALIZZA_RISPOSTE) == 1)) {
                     $namePage = "viewAnswer.php";
                     echo ' 
                         <div class="div-button">
