@@ -30,53 +30,16 @@
         </div>
         <div>
             <?php 
-                //VARIARE INTERNAMENTE DISPOSIZIONE DEL CODICE, AFFINCHE POSSA STAMPARE INDIPENDENTEMENTE DAL BTN
                 $conn = openConnection();
                 
-                //DOVREBBE BASTARE COSI DATO CHE NON DA ERRORE
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if(isset($_POST["btnViewRow"])) {
                         $idTable = $_POST["btnViewRow"];    
                         $_SESSION["idCurrentTable"] = $idTable;   
-                                                
-                        $nameTable = getTableName($conn, $idTable);
-                        $resultNameAttributes = getAttributesNames($conn, $idTable);
-                        $result = getValues($conn, $nameTable);
 
-                        $attributes = array();   
-
-                        echo '
-                            <div class="div-th"> 
-                                <table class="table-head">   
-                                    <tr>';  
-                                        while($rowAttributes = $resultNameAttributes -> fetch(PDO::FETCH_OBJ)) {
-                                            array_push($attributes, $rowAttributes -> NOME);
-                                            
-                                            echo '<th>'.$rowAttributes -> NOME.'</th>';
-                                        }
-                        echo '
-                                    </tr>
-                                </table>
-                            </div>
-                        ';
-        
-                        if(isset($result)) {
-                            while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                                echo '
-                                    <div class="div-td">
-                                        <table class="table-list">   
-                                            <tr>';
-                                                foreach($attributes as $value){
-                                                    $attributeName = $value;
-                                                    echo '<th>'.$row -> $attributeName .'</th>';                                                            
-                                                }
-                                echo '
-                                            </tr>
-                                        </table>
-                                    </div>
-                                ';
-                            }
-                        }                
+                        buildSpecificsTable($conn, $idTable);
+                    } elseif(isset($_POST["btnUndo"])) {
+                        buildSpecificsTable($conn, $_SESSION["idCurrentTable"]);
                     }
                 }
                 
@@ -85,23 +48,75 @@
         </div>
     </body>
     <?php
-        function getTableName($conn, $idTable){
-            $sql= "SELECT NOME FROM Tabella_Esercizio WHERE ID = :idTabella;";
+        function buildSpecificsTable($conn, $idTable) {
+            /* array che conterrà i nomi di tutti i field */
+            $nameAttributes = array();   
 
-            try{
-                $result = $conn -> prepare($sql);
+            /* oggetto PDO contenente tutti i nomi degli attributi della tabella */
+            $resultNames = getAttributesNames($conn, $idTable);
 
-                $result -> bindValue(":idTabella", $idTable);
-                
-                $result -> execute();
-            }catch(PDOException $e){
-                echo "Eccezione ".$e -> getMessage()."<br>";
+            /* oggetto PDO contenente tutti i record della tabella */
+            $resultValues = getValues($conn, getTableName($conn, $idTable));
+
+            echo '
+                <div class="div-th"> 
+                    <table class="table-head">   
+                        <tr>
+            ';  
+
+            while($rowNames = $resultNames -> fetch(PDO::FETCH_OBJ)) {
+                echo '<th>'.$rowNames -> NOME.'</th>';
+
+                /* nel vettore sono salvati i nomi degli attributi */
+                array_push($nameAttributes, $rowNames -> NOME);
             }
-            
-            $row = $result -> fetch(PDO::FETCH_OBJ);
-            return $row -> NOME;
+
+            echo '
+                        </tr>
+                    </table>
+                </div>
+            ';
+
+            $numRows = $resultValues -> rowCount();
+            if($numRows > 0) {
+                while($rowValues = $resultValues -> fetch(PDO::FETCH_OBJ)) {
+                    echo '
+                        <div class="div-td">
+                            <table class="table-list">   
+                                <tr>
+                    ';
+
+                    /* ciclo attuato sui nomi degli attributi, in maniera tale da concordare l'estrapolazione dei dati rispetto all'oggetto PDO contenente i record della tabella */
+                    foreach($nameAttributes as $name){
+                        echo '<th>'.$rowValues -> $name.'</th>';                                                            
+                    }
+
+                    echo '
+                                </tr>
+                            </table>
+                        </div>
+                    ';
+                }
+            }                
         }
 
+        /* funzione attuata per estrapolare i nomi di tutti i field che compongono la tabella */
+        function getAttributesNames($conn, $idTable){
+            $sql = "SELECT NOME FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabella);";  
+                        
+            try{
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":idTabella", $idTable);
+                
+                $result -> execute(); 
+            } catch(PDOException $e){
+                echo "Eccezione: ".$e -> getMessage()."<br>"; 
+            }
+
+            return $result;
+        }
+
+        /* ottenuto il nome della tabella esercizio, sono individuati tutti i record che la contraddistinguono */
         function getValues($conn, $nameTable) {
             $sql = "SELECT * FROM ".$nameTable.";";
                 
@@ -116,20 +131,21 @@
             return $result;
         }
 
-        function getAttributesNames($conn, $idTable){
-            $sql = "SELECT NOME FROM Attributo WHERE (ID_TABELLA = :idTabella);";  
-                        
-            try{
-                $resultNameAttributes = $conn -> prepare($sql);
-                
-                $resultNameAttributes -> bindValue(":idTabella", $idTable);
-                
-                $resultNameAttributes -> execute(); 
-            } catch(PDOException $e){
-                echo "Eccezione: ".$e -> getMessage()."<br>"; 
-            }
+        /* funzione utilizzata per acquisire il nome della tabella esercizio */
+        function getTableName($conn, $idTable){
+            $sql= "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabella);";
 
-            return $resultNameAttributes;
+            try{
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":idTabella", $idTable);
+                
+                $result -> execute();
+            }catch(PDOException $e){
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+            
+            $row = $result -> fetch(PDO::FETCH_OBJ);
+            return $row -> NOME;
         }
     ?>
 </html>
