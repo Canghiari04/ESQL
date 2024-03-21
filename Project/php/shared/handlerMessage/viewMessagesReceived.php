@@ -54,11 +54,10 @@
                             deployMessage($conn, $row -> EMAIL_STUDENTE, $row -> TESTO, $row -> TITOLO, $row -> TITOLO_TEST, $row -> DATA_INSERIMENTO);
                         }
                     } else {
-                        $sql = "SELECT * FROM Messaggio WHERE (ID NOT IN (SELECT ID_MESSAGGIO_STUDENTE FROM Messaggio_Studente WHERE (Messaggio_Studente.EMAIL_STUDENTE=:emailStudente)));";
+                        $sql = "SELECT * FROM Messaggio WHERE (ID NOT IN (SELECT ID_MESSAGGIO_STUDENTE FROM Messaggio_Studente));";
 
                         try {
                             $result = $conn -> prepare($sql);
-                            $result -> bindValue(":emailStudente", $_SESSION["emailStudente"]);
 
                             $result -> execute();
                         } catch (PDOException $e) {

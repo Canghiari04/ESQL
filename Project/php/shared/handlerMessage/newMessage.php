@@ -36,7 +36,7 @@
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
                     <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
-                    <link rel="stylesheet" type="text/css" href="../../style/css/insertQuestion.css">
+                    <link rel="stylesheet" type="text/css" href="../../style/css/insertMessage.css">
                 </head>
                 <body>
                     <div class="navbar">
@@ -45,17 +45,19 @@
                     </div>
                     <form action="" method="POST">
                         <div class="container">
-                            <div class="div-select">
+                            <div class="div-select-message">
                                 <select name="sltTest" required>
                                     <option selected disabled>TEST</option>                                    
                                     '.getOptions($conn, $typeUser).' 
                                 </select>
                             </div>
-                            <div class="div-textbox">
-                                <textarea class="input-textbox-question" type="text" name="txtTitle" placeholder="TITOLO DEL MESSAGGIO" required></textarea>
-                            </div>
-                            <div class="div-textbox">
-                                <textarea class="input-textbox-question" type="text" name="txtText" placeholder="TESTO DEL MESSAGGIO" required></textarea>
+                            <div class="div-select-message">
+                                <div class="div-title">
+                                    <textarea class="input-title" type="text" name="txtTitle" placeholder="TITOLO DEL MESSAGGIO" required></textarea>
+                                </div>
+                                <div class="div-text">
+                                    <textarea class="input-text" type="text" name="txtText" placeholder="TESTO DEL MESSAGGIO" required></textarea>
+                                </div>
                             </div>
                         </div>
                         <button type="submit" name="btnAddMessage" value="'.$typeUser.'">Add</button>
