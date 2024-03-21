@@ -17,12 +17,14 @@
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
-            <a href="../table_exercise.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
+            <form action="../specifics/specificRow.php" method="POST">
+                <button class="button-image" name="btnUndo" type="submit"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
+            </form>
         </div>
         <form action="" method="POST">
             <div class="container">
                 <div class="div-tips">
-                    <textarea class="input-tips" placeholder="SQLSTATE: POSSIBILI ERRORI DI SINTASSI" disabled></textarea>
+                    <textarea class="input-tips" placeholder="SQLSTATE: ..." disabled></textarea>
                 </div>
                 <div class="div-textbox">
                     <textarea class="input-textbox" type="text" name="txtAddRow" required></textarea>
@@ -46,7 +48,6 @@
 
                     /* controllo riferito a query di inserimento */
                     if($tokensHeader[0] == "INSERT") {
-
                         /* controllo di uguaglianza tra la tabella riferita da query rispetto alla collezione selezionata */
                         if($tokensHeader[2] == getTableName($conn)) {
                             try {
@@ -54,27 +55,25 @@
 
                                 /* inserimento effettivo dei dati all'interno della tabella */
                                 $result -> execute();
-
-                                $rowInserted = $result ->rowCount();
-
-                                for($i = 0; $i < $rowInserted; $i++){ 
-                                    $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
-                                    
-                                    try {
-                                        $stmt = $conn -> prepare($storedProcedure);
-                                        $stmt -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
-                                        
-                                        $stmt -> execute();
-                                    } catch(PDOException $e) {
-                                        echo "Eccezione ".$e -> getMessage()."<br>";
-                                    }
-                                }
-
-
                             } catch(PDOException $e) {
-
                                 echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";    
                                 echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";    
+                            }
+
+                            $rowInserted = $result -> rowCount();
+
+                            for($i = 0; $i < $rowInserted - 1; $i++){ 
+                                /* inserimento fittizio all'interno della collezione Manipolazione_Riga, utilizzato per scatenare il trigger che modificherà il numero di righe della tabella in questione */
+                                $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
+                                    
+                                try {
+                                    $stmt = $conn -> prepare($storedProcedure);
+                                    $stmt -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
+                                    
+                                    $stmt -> execute();
+                                } catch(PDOException $e) {
+                                    echo "Eccezione ".$e -> getMessage()."<br>";
+                                }
                             }
                         } else {
                             echo "<script>document.querySelector('.input-tips').value='INSERISCI I DATI PER LA TABELLA SELEZIONATA';</script>";    

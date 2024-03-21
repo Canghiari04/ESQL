@@ -35,7 +35,7 @@
 
         $valuesQuery = trim($valuesQuery);
 
-        /* si elimina la virgola finale per concatenare la parentesi tonda chiusa, come da sintassi di mysql ')' */
+        /* si elimina la virgola finale per concatenare la parentesi tonda chiusa, come da sintassi di mysql --> ')' */
         $valuesQuery = substr($valuesQuery, 0, -1);
         $valuesQuery = $valuesQuery.')';
 
@@ -63,7 +63,7 @@
     }
 
     function checkAutoIncrement($conn, $nameTable){
-        /* vettore contenitivo di tutte le colonne legate al vincolo auto_increment */
+        /* vettore contenitore di tutte le colonne legate al vincolo auto_increment */
         $columns = array();
         
         /* query che restituisce tutte le colonne della tabella  auto_increment */
@@ -88,15 +88,13 @@
 
     /* funzione che restituisce l'array contenente gli attributi not null */
     function getNotNull($conn, $nameTable){
-        /* vettore contenitivo di tutte le colonne legate al vincolo not null */
+        /* vettore contenitore di tutte le colonne legate al vincolo not null */
         $columns = array();
         
         /* query che restituisce tutte le colonne della tabella in questione che siano not null */
         $sql = "SHOW COLUMNS FROM ".$nameTable." WHERE `Null` = 'NO';";
 
         try {
-
-            
             $result = $conn -> prepare($sql);
             
             $result -> execute();
@@ -110,7 +108,6 @@
             $column = $row["Field"];
             array_push($columns, $column);
         }
-        
 
         return $columns;
     }
@@ -118,16 +115,15 @@
      /* funzione che controlla la presenza dell'attributo nell'array contenente gli attributi not null */
     function checkNotNull($nameAttribute, $notNullAttributes){
         if(in_array($nameAttribute, $notNullAttributes)){
-             /* viene restituto un required per la textbox */
+             /* viene restituto un required per il tag di input */
             return "required";
         }
     }
     
     /* metodo che garantisce l'acquisizione degli attributi della tabella interessata */
     function getAttributes($conn){ 
-        $sql= "SELECT * FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabella);";
-        
         $attributes = array();
+        $sql= "SELECT * FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabella);";
         
         try {
             $result = $conn -> prepare($sql);
@@ -152,16 +148,23 @@
         switch ($type) {
             case "DATE":
                 return "date";
+            break;
             case "DATETIME":
                 return "datetime-local";
+            break;
             case "INT":
                 return "number";
+            break;
+            case "DOUBLE":
+                return "number";
+            break;
             default:
                 return "text";
+            break;
         }
     }
 
-    /* funzione che restituisce il  tipo dell'attributo in base al nome contenuto nella collezione Attributo */
+    /* funzione che restituisce il tipo dell'attributo in base al nome contenuto nella collezione Attributo */
     function getAttributeType($conn, $attributeName){
         $sql = "SELECT * FROM Attributo WHERE (Attributo.NOME=:nomeTabella) AND (Attributo.ID_TABELLA=:idTabella);"; 
 
@@ -206,7 +209,7 @@
         }
     }
 
-    /* funzione che permette di controllare la presenza di references da parte di un attributo*/
+    /* funzione che permette di controllare la presenza di referenze da parte di un attributo */
     function checkReferences($conn, $idAttributeReferencing){
         $sql = "SELECT * FROM Vincolo_Integrita WHERE (Vincolo_Integrita.REFERENTE=:idAttributo);";
 
@@ -241,8 +244,9 @@
             $row = $result -> fetch(PDO::FETCH_OBJ);
             $idAttributeReferenced = $row -> REFERENZIATO;
 
-            /* query che restituisce i metadati necessari dell'attributo a cui si fa riferimento attraverso foreign key */
+            /* query che restituisce i meta-dati necessari dell'attributo a cui si fa riferimento attraverso foreign key */
             $sql ="SELECT NOME, ID_TABELLA FROM Attributo WHERE (Attributo.ID=:idAttributoReferenziato);";
+
             try{
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":idAttributoReferenziato", $idAttributeReferenced);
@@ -258,6 +262,7 @@
 
             /* query che restituisce il nome della tabella contenente l'attributo a cui si fa riferimento attraverso foreign key */
             $sql="SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabellaReferenziata)";
+
             try{
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":idTabellaReferenziata", $idTableReferenced);
@@ -272,6 +277,7 @@
 
             /* query che restituisce i possibili valori dell'attributo all'interno della tabella referenziata */
             $sql = "SELECT DISTINCT ".$nameAttributeReferenced." FROM ".$nameTableReferenced."";
+
             try{
                 $result = $conn -> prepare($sql);
                 
@@ -310,10 +316,10 @@
 
         /* controllo per assicurarsi che la query abbia almeno un valore */
         if(strstr($_SESSION["headingInsert"],'(')){
-            /* sovrascrizione della stringa di intestazione  */
+            /* sovrascrittura della stringa di intestazione  */
             $stringDatas=''.$_SESSION["headingInsert"]." VALUES (";
 
-            /* realizzazione completa con protezione da sql injection dinamica */
+            /* realizzazione dell'inserimento con protezione da sql injection dinamica */
             foreach($attributesText as $value){
                 $stringDatas = $stringDatas. '?' ;
                 $stringDatas = $stringDatas. ", " ;

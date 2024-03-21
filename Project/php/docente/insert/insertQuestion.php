@@ -57,7 +57,7 @@
                     header("Location: insertAfferent.php");
                     exit();
                 } else {
-                    echo "<script>document.querySelector('.input-textbox-question').value=".json_encode("NESSUNA TABELLA PRESENTE, INSERISCI QUALCHE COLLEZIONE PRIMA DI CREARE DEI QUESITI").";</script>";
+                    echo "<script type='text/javascript'>alert(".json_encode("Nessuna tabella rilevata, inserisci qualche collezione prima di creare dei quesiti").");</script>";
                 }
             } elseif($_POST["btnInsertQuestion"]) {
                 $type = $_POST["btnInsertQuestion"];

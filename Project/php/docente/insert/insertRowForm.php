@@ -17,7 +17,9 @@
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
-            <a href="../table_exercise.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
+            <form action="../specifics/specificRow.php" method="POST">
+                <button class="button-image" name="btnUndo" type="submit"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
+            </form>
         </div>
         <form action="" method="POST">
             <div class="container">
@@ -33,9 +35,12 @@
  
                         if($_SERVER["REQUEST_METHOD"] == "POST") {
                             if(isset($_POST["btnInsertForm"])) {
+                                /* build del form di inserimento */
                                 identifyAttributes($conn);
                             } elseif(isset($_POST["btnInsertData"])) {
+                                /* inserimento dei dati ottenuti da input all'interno della tabella */
                                 insertData($conn);
+                                
                                 $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
 
                                 try {
@@ -47,6 +52,7 @@
                                     echo "Eccezione ".$e -> getMessage()."<br>";
                                 }
 
+                                /* rebuild del form per nuovi inserimenti all'interno della collezione */
                                 identifyAttributes($conn);
                             }
                         }

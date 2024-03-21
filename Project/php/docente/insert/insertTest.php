@@ -27,10 +27,7 @@
                         <option value="false">NO</option>
                         <option value="true">SI</option>
                     </select>
-                    <label class="custom-file-upload">
-                        <input type="file" name="nptPhotoTest">  
-                        SELEZIONA FOTO
-                    </label>
+                    <input type="text" name="urlPhoto" placeholder="LINK FOTO"></input>
                 </div>
                 <div>
                     <textarea class="input-textbox-test" type="text" name="txtTitle" placeholder="TITOLO DEL TEST" required></textarea>
@@ -48,7 +45,7 @@
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["btnAddTest"])) {
                 $viewAnswers = $_POST["sltViewAnswers"];
-                $fileTest = $_POST["nptPhotoTest"];
+                $fileTest = $_POST["urlPhoto"];
                 $titleTest = $_POST["txtTitle"];
 
                 $_SESSION["titleTest"] = $titleTest;

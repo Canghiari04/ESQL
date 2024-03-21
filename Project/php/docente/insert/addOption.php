@@ -56,7 +56,7 @@
             
             $result-> execute();
         } catch(PDOException $e) {
-            echo '<script>alert("Inserire una query valida.");</script>';
+            echo '<script>alert("Inserire una query valida. \r\r'.$e -> getMessage().'.");</script>';
             return false;
         }
     
