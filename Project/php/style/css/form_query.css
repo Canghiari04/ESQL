@@ -32,8 +32,9 @@ label:hover {
 
 table {
     border-collapse: collapse;
-    margin-top: 2vh;
-    margin-right: 2vh;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    margin-right: 2rem;
     width: 25%;
     font-size: 11px;
 }

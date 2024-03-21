@@ -1,19 +1,12 @@
-input {
-    text-align: left;
-    width: 15wh;
+select {
+    width: 25vh;
     height: 3vh;
+    margin-top: 0.1rem;
+    margin-right: 1rem;
     color: black;
     background-color: white;
     border: 2px solid black;
     border-radius: 5px;
-}
-
-select {
-    width: 20vh;
-    height: 3.5vh;
-    border: 2px solid black;
-    border-radius: 0.7vh;
-    background-color: white;
 }
 
 button {
@@ -23,7 +16,7 @@ button {
     border-radius: 10px;
     text-align: center;
     padding: 12px 28px;
-    margin: 5vh 116vh;
+    margin-left: 108vh;
     text-decoration: none;
 }
 
@@ -33,30 +26,21 @@ button:hover, select:hover, input:hover, label:hover {
     border-color: #ff3131;
 }
 
-.container {
-    margin-top: 21.5vh;
-    display: flex;
-    justify-content: center;
+.container{
+    text-align: center;
+    margin-top: 7.5rem;
 }
 
-.div-select {
-    padding: 1.4vh 2.1vh;
-    border-radius: 2px;
-    transition: transform .4s;
+.div-select-message {
+    display: inline-block;
+    vertical-align: middle;
+    height: 35%;
 }
 
-.custom-file-upload {
-    font-size: 1.75vh;
-    padding: 0.7vh 1vh;
-    border: 2px solid black;
-    border-radius: 0.7vh;
-} 
-
-.input-textbox-test {
+.input-title {
     font-size: 14px;
     width: 35vh;
-    height: 20vh;
-    margin: 1.25vh 1vh;
+    height: 10vh;
     background-color: transparent;
     border-color: transparent;
     border-radius: 5px;
@@ -64,6 +48,17 @@ button:hover, select:hover, input:hover, label:hover {
     outline: none;
 }
 
-.input-textbox-test:hover {
+.input-text {
+    font-size: 14px;
+    width: 35vh;
+    height: 20vh;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 5px;
+    border: 2px solid darkgrey;
+    outline: none;
+}
+
+.input-title:hover, .input-text:hover {
     border: 2px solid #ff3131;
 }

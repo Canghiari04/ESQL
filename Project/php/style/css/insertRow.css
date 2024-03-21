@@ -114,3 +114,9 @@ button:hover, select:hover, input:hover {
     margin: 4vh 123.5vh;
     text-decoration: none;
 }
+
+.button-image {
+    margin: 0;
+    padding: 0;
+    border: transparent;
+}
