@@ -105,7 +105,6 @@
                     }
                     
                     $numRows = $result -> rowCount();
-
                     if($numRows > 0) {
                         $_SESSION["typeQuestion"] = "CHIUSA";
                     } else {
