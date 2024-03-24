@@ -1,9 +1,3 @@
-<?php
-    session_start();
-
-    unset($_SESSION["emailDocente"]);
-    unset($_SESSION["emailStudente"]);
-?>
 <!DOCTYPE html>
 <html>
     <head>
