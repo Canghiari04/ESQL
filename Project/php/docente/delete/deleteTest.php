@@ -45,6 +45,7 @@
 
     function deleteQuestion($conn, $varQuestion) {
         $valuesQuestion = explode('?', $varQuestion);
+        
         $storedProcedure = "CALL Eliminazione_Composizione(:titolo, :idQuesito);";
             
         try {
