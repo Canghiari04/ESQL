@@ -1,5 +1,8 @@
 <?php
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
     
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -14,7 +17,6 @@
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/specific_linear.css">        
         <?php
-            include "../../connectionDB.php";
         ?>
     </head>
     <body>
@@ -30,8 +32,6 @@
         </div>
         <div>
             <?php 
-                $conn = openConnection();
-                
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if(isset($_POST["btnViewRow"])) {
                         $idTable = $_POST["btnViewRow"];    
@@ -41,6 +41,11 @@
                     } elseif(isset($_POST["btnUndo"])) {
                         buildSpecificsTable($conn, $_SESSION["idCurrentTable"]);
                     }
+                } 
+                /* suddivisione stampa dopo eliminazione per permettere la visualizzazione della navbar */
+                elseif(isset($_SESSION["recordDeleted"])) {    
+                    unset($_SESSION["recordDeleted"]);
+                    buildSpecificsTable($conn, $_SESSION["idCurrentTable"]);
                 }
                 
                 closeConnection($conn);
@@ -52,16 +57,22 @@
             /* array che conterrà i nomi di tutti i field */
             $nameAttributes = array();   
 
+            $nameTable = getTableName($conn, $idTable);
+
+            /* oggetto PDO contenente la primary key della tabella */
+            $arrayNamePrimaryKey = getNamePrimaryKey($conn, $nameTable);
+
             /* oggetto PDO contenente tutti i nomi degli attributi della tabella */
             $resultNames = getAttributesNames($conn, $idTable);
 
             /* oggetto PDO contenente tutti i record della tabella */
-            $resultValues = getValues($conn, getTableName($conn, $idTable));
+            $resultValues = getValues($conn, $nameTable);
 
             echo '
-                <div class="div-th"> 
-                    <table class="table-head">   
-                        <tr>
+                <div class="container">
+                    <div class="div-table"> 
+                        <table>   
+                            <tr>
             ';  
 
             while($rowNames = $resultNames -> fetch(PDO::FETCH_OBJ)) {
@@ -72,32 +83,91 @@
             }
 
             echo '
-                        </tr>
-                    </table>
-                </div>
+                    <th>DELETE</th>
+                </tr>
             ';
 
             $numRows = $resultValues -> rowCount();
             if($numRows > 0) {
                 while($rowValues = $resultValues -> fetch(PDO::FETCH_OBJ)) {
-                    echo '
-                        <div class="div-td">
-                            <table class="table-list">   
-                                <tr>
+                    echo ' 
+                        <tr>
                     ';
 
                     /* ciclo attuato sui nomi degli attributi, in maniera tale da concordare l'estrapolazione dei dati rispetto all'oggetto PDO contenente i record della tabella */
-                    foreach($nameAttributes as $name){
+                    foreach($nameAttributes as $name) {
                         echo '<th>'.$rowValues -> $name.'</th>';                                                            
                     }
 
+
                     echo '
-                                </tr>
-                            </table>
-                        </div>
+                        <th>
+                    ';
+
+                    $valuePrimaryKey = "";
+                    foreach($arrayNamePrimaryKey as $namePrimaryKey) {
+                        $valuePrimaryKey = $valuePrimaryKey."".$rowValues -> $namePrimaryKey."|?|";
+                    }
+                    
+                    echo "
+                        <form action='../delete/deleteTable.php' method='POST'>
+                            <button class='button-image' type='submit' name='btnDeleteRecord' value='".$nameTable.'|?|'.$valuePrimaryKey."'>
+                                <img class='delete-img' width='24' height='24' src='../../style/img/delete.png'>
+                            </button>
+                        </form>
+                    ";
+
+                    echo '
+                            </th>
+                        </tr>
                     ';
                 }
-            }                
+            }               
+            
+            echo '
+                        </table>
+                    </div>
+                </div>
+            ';
+        }
+
+        /* funzione utilizzata per acquisire il nome della tabella esercizio */
+        function getTableName($conn, $idTable){
+            $sql= "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabella);";
+
+            try{
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":idTabella", $idTable);
+                
+                $result -> execute();
+            }catch(PDOException $e){
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+            
+            $row = $result -> fetch(PDO::FETCH_OBJ);
+            return $row -> NOME;
+        }
+
+        function getNamePrimaryKey($conn, $nameTable) {
+            $arrayNamePrimaryKey = array();
+            $sql = "SHOW KEYS FROM ".$nameTable.";";
+
+            try {
+                $result = $conn -> prepare($sql);
+
+                $result -> execute();
+            } catch(PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()." <br>";
+            }
+
+            $numRows = $result -> rowCount();
+            if($numRows > 0) {    
+                while($row = $result -> fetch(PDO::FETCH_ASSOC)) {
+                    array_push($arrayNamePrimaryKey, $row["Column_name"]);
+                } 
+            }
+
+            return $arrayNamePrimaryKey;
         }
 
         /* funzione attuata per estrapolare i nomi di tutti i field che compongono la tabella */
@@ -129,23 +199,6 @@
             }
             
             return $result;
-        }
-
-        /* funzione utilizzata per acquisire il nome della tabella esercizio */
-        function getTableName($conn, $idTable){
-            $sql= "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabella);";
-
-            try{
-                $result = $conn -> prepare($sql);
-                $result -> bindValue(":idTabella", $idTable);
-                
-                $result -> execute();
-            }catch(PDOException $e){
-                echo "Eccezione ".$e -> getMessage()."<br>";
-            }
-            
-            $row = $result -> fetch(PDO::FETCH_OBJ);
-            return $row -> NOME;
         }
     ?>
 </html>

@@ -22,7 +22,7 @@
             <a><img class="zoom-on-img ESQL" width="112" height="48" src="../../style/img/ESQL.png"></a>
             <a href="../table_exercise.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
         </div>
-        <div>
+        <div class="container">
             <?php 
                 $conn = openConnection();
 
@@ -42,15 +42,13 @@
                         }
                             
                         echo '
-                            <div class="div-th"> 
-                                <table class="table-head">   
+                            <div class="div-table"> 
+                                <table>   
                                     <tr>  
-                                        <th>Nome</th>
-                                        <th>Tipo</th>
-                                        <th>Chiave primaria</th>
+                                        <th>NOME</th>
+                                        <th>TIPO</th>
+                                        <th>CHIAVE PRIMARIA</th>
                                     </tr>
-                                </table>
-                            </div>
                         ';
                             
                         if(isset($result)) {
@@ -58,26 +56,27 @@
                                 /* metodo che restituisce se l'attributo visualizzato costituisca o meno la chiave primaria della tabella */
                                 $primaryKey = convertPrimaryKey($row -> CHIAVE_PRIMARIA);
                                 echo '
-                                    <div class="div-td">
-                                        <table class="table-list">   
                                             <tr>  
                                                 <th>'.$row -> NOME.'</th>
                                                 <th>'.$row -> TIPO.'</th>
                                                 <th>'.$primaryKey.'</th>
                                             </tr>
-                                        </table>
-                                    </div>
                                 ';
                             }
                         }
+
+                        echo '
+                                </table>
+                            </div>
+                        ';
                     }
                 }
 
                 function convertPrimaryKey($value) {
                     if($value == 0) {
-                        return "No";
+                        return "NO";
                     } else {
-                        return "Si";
+                        return "SI";
                     }
                 }
                 
