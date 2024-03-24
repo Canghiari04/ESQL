@@ -1,29 +1,59 @@
-.div-th {
-    margin: 6.45vh 23vh 2.5vh;
+table {
+    border-collapse: collapse;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-right: 2rem;
+    font-size: 11px;
 }
 
-.table-head {
-    table-layout: fixed;
-    width: 100%;
+tr, th, td {
+    text-align: center;
+    align-items: center;
+    width: auto;
+    padding: 5px;
+    font-size: 11pt;
+    border: 2px solid black;
 }
 
-.div-td {
+.container {
     display: flex;
-    justify-content: space-between;
-    padding: 38px;
-    margin: 5vh 18.75vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.div-table {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10rem;
+    width: 70%;
+    height: 50%;
     background-color: rgb(240, 240, 240);
     border: 2px solid rgb(224, 224, 224);
     border-radius: 10px;
-    align-items: center;
-}
-
-.table-list {
-    table-layout: fixed;
-    width: 100%;
 }
 
 th:hover {
     transition: color .4s;
     color: #ff3131;
+}
+
+.div-table:hover {
+    transition: color .4s;
+    border: 2px solid #ff3131;
+}
+
+.button-image {
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    border: transparent;
+}
+
+.delete-img {
+    transition: transform .4s;
+}
+
+.delete-img:hover {
+    transform: scale(1.099);
 }
