@@ -6,6 +6,7 @@ DROP TRIGGER IF EXISTS Inserimento_Sketch_Codice;
 DROP TRIGGER IF EXISTS Inserimento_Test_Concluso;
 DROP TRIGGER IF EXISTS Aggiornamento_Test_InCompletamento;
 DROP TRIGGER IF EXISTS Aggiornamento_Test_Concluso;
+DROP TRIGGER IF EXISTS Aggiornamento_Visualizza_Risposte;
 DROP TRIGGER IF EXISTS Cancellazione_Record;
 DROP TRIGGER IF EXISTS Cancellazione_Opzione_Risposta;
 DROP TRIGGER IF EXISTS Cancellazione_Sketch_Codice;
@@ -71,6 +72,20 @@ BEGIN
     SET countRisposteCorrette = (SELECT COUNT(*) FROM Risposta WHERE (Risposta.TITOLO_TEST=NEW.TITOLO_TEST) AND (Risposta.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE) AND (Risposta.ESITO=1));
     IF (countQuesiti=countRisposteCorrette) THEN 
         UPDATE Completamento SET Completamento.STATO='CONCLUSO' WHERE (Completamento.TITOLO_TEST=NEW.TITOLO_TEST) AND (Completamento.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE);
+    END IF; 
+END
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Aggiornamento_Visualizza_Risposte
+AFTER UPDATE ON Test
+FOR EACH ROW
+BEGIN
+    DECLARE viewAnswer BOOLEAN DEFAULT 0;
+    SET viewAnswer = (SELECT VISUALIZZA_RISPOSTE FROM Test WHERE (Test.TITOLO=NEW.TITOLO));
+    IF (viewAnswer=1) THEN 
+        UPDATE Completamento SET Completamento.STATO='CONCLUSO' WHERE (Completamento.TITOLO_TEST=NEW.TITOLO);
     END IF; 
 END
 |
