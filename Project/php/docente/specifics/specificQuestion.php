@@ -34,7 +34,7 @@
                 if($_SERVER["REQUEST_METHOD"] == "POST") {
                     if(isset($_POST["btnSpecificQuestion"])) {
                         $values = $_POST["btnSpecificQuestion"];
-                        $tokens = explode("?", $values);
+                        $tokens = explode("|?|", $values);
 
                         $idQuestion = $tokens[0];
                         $titleTest = $tokens[1];
@@ -82,7 +82,7 @@
                                         </tr>
                                         <tr>
                                             <form action="../delete/deleteQuestion.php" method="POST">
-                                                <td><button class="drop-btn" name="btnDropOption" value="'.$type.'?'.$row -> ID.'?'.$idQuestion.'?'.$titleTest.'">Drop Option</button></td>
+                                                <td><button class="drop-btn" name="btnDropOption" value="'.$type.'|?|'.$row -> ID.'|?|'.$idQuestion.'|?|'.$titleTest.'">Drop Option</button></td>
                                             </form>
                                         </tr>
                                     </table>

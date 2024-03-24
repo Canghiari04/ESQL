@@ -19,7 +19,7 @@
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
             <a href="../test.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
         </div>
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
             <div class="container">
                 <div class="div-select">
                     <select name="sltViewAnswers" required>
@@ -27,7 +27,7 @@
                         <option value="false">NO</option>
                         <option value="true">SI</option>
                     </select>
-                    <input type="text" name="urlPhoto" placeholder="LINK FOTO"></input>
+                    <input type="file" name="photo" placeholder="CARICA FOTO" required></input>
                 </div>
                 <div>
                     <textarea class="input-textbox-test" type="text" name="txtTitle" placeholder="TITOLO DEL TEST" required></textarea>
@@ -45,8 +45,10 @@
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["btnAddTest"])) {
                 $viewAnswers = $_POST["sltViewAnswers"];
-                $fileTest = $_POST["urlPhoto"];
                 $titleTest = $_POST["txtTitle"];
+
+                $uploadFile = $_FILES['photo']['tmp_name'];
+                $fileTest = file_get_contents($uploadFile);
 
                 $_SESSION["titleTest"] = $titleTest;
 

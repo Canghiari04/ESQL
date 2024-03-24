@@ -133,7 +133,7 @@
         $arrayNameTable = getNameTable($conn, $idQuestion, $titleTest);
 
         /* stampa delle tabelle che siano collegate al quesito mediante la tabella Afferenza */
-        buildTable($conn, $arrayNameTable);
+        buildTable($conn, $arrayNameTable, null, null);
 
         echo '
             </div>

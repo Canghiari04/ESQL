@@ -18,22 +18,22 @@
         $mongoHost = 'localhost';
         $mongoPort = 27017;
 
-        //$manager = new MongoDB\Driver\Manager("mongodb://$mongoHost:$mongoPort");
+        $manager = new MongoDB\Driver\Manager("mongodb://$mongoHost:$mongoPort");
 
-        //return $manager;
+        return $manager;
     }
 
     function writeLog($manager, $document) {
         $mongoDatabase = 'ESQL';
         $mongoCollection = 'logs';
 
-        //$bulkWrite = new MongoDB\Driver\BulkWrite;
-        //$bulkWrite->insert($document);
+        $bulkWrite = new MongoDB\Driver\BulkWrite;
+        $bulkWrite->insert($document);
 
         try{
-            //$manager->executeBulkWrite("$mongoDatabase.$mongoCollection", $bulkWrite);
+            $manager->executeBulkWrite("$mongoDatabase.$mongoCollection", $bulkWrite);
         } catch (Exception $e){
-            //echo($e -> getMessage());
+            echo($e -> getMessage());
         }
     }
 

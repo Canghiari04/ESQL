@@ -76,10 +76,10 @@
                                         <th>'.$row -> DIFFICOLTA.'</th>
                                         <th>'.$row -> NUM_RISPOSTE.'</th>
                                         <form action="specifics/specificQuestion.php" method="POST">
-                                            <th><button class="table-button" type="submit" name="btnSpecificQuestion" value="'.$row -> ID.'?'.$row -> TITOLO_TEST.'?'.$row -> DESCRIZIONE.'">Options</button></th>
+                                            <th><button class="table-button" type="submit" name="btnSpecificQuestion" value="'.$row -> ID.'|?|'.$row -> TITOLO_TEST.'|?|'.$row -> DESCRIZIONE.'">Options</button></th>
                                         </form>
                                         <form action="delete/deleteQuestion.php" method="POST">
-                                            <th><button class="table-button" type="submit" name="btnDropQuestion" value="'.$row -> ID.'?'.$row -> TITOLO_TEST.'">Drop Question</button></th>
+                                            <th><button class="table-button" type="submit" name="btnDropQuestion" value="'.$row -> ID.'|?|'.$row -> TITOLO_TEST.'">Drop Question</button></th>
                                         </form>
                                     </tr>
                                 </table>

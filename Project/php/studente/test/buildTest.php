@@ -85,12 +85,15 @@
                                         echo "<script type='text/javascript'>alert('Query errata.');</script>";
                                         insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 0);
                                     }
+
+                                    buildForm($conn, $titleTest, $rowAnswer, $rowSolution);  
                                 } else {
                                     echo "<script type='text/javascript'>alert('Inserire una query valida.');</script>";
                                     insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 0);
+                                    buildForm($conn, $titleTest, null, null);  
                                 }
 
-                                buildForm($conn, $titleTest, $rowAnswer, $rowSolution);   
+                                 
                                 unset($_SESSION["checkedQuestion"]);
                                 unset($_SESSION["fieldAnswer"]);
                                 unset($_SESSION["fieldSolution"]);
