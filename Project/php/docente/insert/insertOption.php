@@ -29,7 +29,7 @@
     
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddAnswer"])) {
-                    $txtAnswer = $_POST["txtAnswer"];
+                    $txtAnswer = strtoupper($_POST["txtAnswer"]);
                     $sltSolution = $_POST["sltSolution"];
     
                     $id = getLastId($conn, strtoupper($_SESSION["typeQuestion"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);

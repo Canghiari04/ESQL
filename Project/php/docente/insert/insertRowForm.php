@@ -40,17 +40,6 @@
                             } elseif(isset($_POST["btnInsertData"])) {
                                 /* inserimento dei dati ottenuti da input all'interno della tabella */
                                 insertData($conn);
-                                
-                                $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
-
-                                try {
-                                    $storedProcedure = $conn -> prepare($storedProcedure);
-                                    $storedProcedure -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
-                                    
-                                    $storedProcedure -> execute();
-                                } catch(PDOException $e) {
-                                    echo "Eccezione ".$e -> getMessage()."<br>";
-                                }
 
                                 /* rebuild del form per nuovi inserimenti all'interno della collezione */
                                 identifyAttributes($conn);
