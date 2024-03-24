@@ -16,8 +16,6 @@
         <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/specific_linear.css">        
-        <?php
-        ?>
     </head>
     <body>
         <div class="navbar">
@@ -78,7 +76,7 @@
             while($rowNames = $resultNames -> fetch(PDO::FETCH_OBJ)) {
                 echo '<th>'.$rowNames -> NOME.'</th>';
 
-                /* nel vettore sono salvati i nomi degli attributi */
+                /* nel vettore sono memorizzati i nomi degli attributi */
                 array_push($nameAttributes, $rowNames -> NOME);
             }
 
@@ -90,19 +88,14 @@
             $numRows = $resultValues -> rowCount();
             if($numRows > 0) {
                 while($rowValues = $resultValues -> fetch(PDO::FETCH_OBJ)) {
-                    echo ' 
-                        <tr>
-                    ';
+                    echo '<tr>';
 
                     /* ciclo attuato sui nomi degli attributi, in maniera tale da concordare l'estrapolazione dei dati rispetto all'oggetto PDO contenente i record della tabella */
                     foreach($nameAttributes as $name) {
                         echo '<th>'.$rowValues -> $name.'</th>';                                                            
                     }
 
-
-                    echo '
-                        <th>
-                    ';
+                    echo '<th>';
 
                     $valuePrimaryKey = "";
                     foreach($arrayNamePrimaryKey as $namePrimaryKey) {
@@ -148,8 +141,10 @@
             return $row -> NOME;
         }
 
+        /* funzione restituente i field che compongono la chiave primaria della tabella */
         function getNamePrimaryKey($conn, $nameTable) {
             $arrayNamePrimaryKey = array();
+
             $sql = "SHOW KEYS FROM ".$nameTable.";";
 
             try {

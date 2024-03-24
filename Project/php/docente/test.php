@@ -1,5 +1,8 @@
 <?php
+    include "../connectionDB.php";
+    
     session_start();
+    $conn = openConnection();   
     
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../shared/login/login.php");
@@ -13,9 +16,6 @@
         <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../style/css/table_view_linear.css">
-        <?php 
-            include "../connectionDB.php";
-        ?>
     </head>
     <body>
         <form action="insert/insertTest.php" method="POST">
@@ -26,8 +26,6 @@
             </div>
         </form>
         <?php
-            $conn = openConnection();   
-
             $sql = "SELECT * FROM Test WHERE (EMAIL_DOCENTE=:emailDocente);";
 
             try {
@@ -40,7 +38,6 @@
             }
                 
             $numRows = $result -> rowCount();
-            
             if($numRows > 0) {
                 echo '
                     <div class="div-th"> 
@@ -55,7 +52,7 @@
                 ';
 
                 while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                    $var = convertToString($row -> VISUALIZZA_RISPOSTE);
+                    $viewAnswers = convertToString($row -> VISUALIZZA_RISPOSTE);
 
                     echo '
                         <div class="div-td">
@@ -63,7 +60,7 @@
                                 <tr>
                                     <th>'.$row -> TITOLO.'</th>
                                     <th>'.$row -> DATA_CREAZIONE.'</th>
-                                    <th>'.$var.'</th>
+                                    <th>'.$viewAnswers.'</th>
                                     <form action="question.php" method="POST">
                                         <th><button class="table-button" type="submit" name="btnQuestionTest" value="'.$row -> TITOLO.'">Questions</button></th>
                                     </form>
@@ -82,9 +79,9 @@
 
             function convertToString($var) {
                 if($var == 0) {
-                    return "false";
+                    return "FALSE";
                 } else {
-                    return "true";
+                    return "TRUE";
                 }
             }
         ?>

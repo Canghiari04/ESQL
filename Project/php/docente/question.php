@@ -1,5 +1,8 @@
 <?php
+    include "../connectionDB.php";
+    
     session_start();
+    $conn = openConnection();
     
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../shared/login/login.php");
@@ -13,9 +16,6 @@
         <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../style/css/table_view_linear.css">
-        <?php
-            include "../connectionDB.php";
-        ?>
     </head>
     <body>
         <div class="navbar">
@@ -27,8 +27,6 @@
             <a href="test.php"><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a>
         </div>
         <?php 
-            $conn = openConnection();
-
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnQuestionTest"])) {
                     $_SESSION["titleCurrentTest"] = $_POST["btnQuestionTest"];
@@ -53,7 +51,6 @@
                 }
                 
                 $numRows = $result -> rowCount();
-                
                 if($numRows > 0) {
                     echo '
                         <div class="div-th"> 

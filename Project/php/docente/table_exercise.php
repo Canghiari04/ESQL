@@ -1,5 +1,8 @@
 <?php
+    include "../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../shared/login/login.php");
@@ -13,9 +16,6 @@
         <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../style/css/table_view_linear.css">
-        <?php 
-            include "../connectionDB.php";
-        ?>
     </head>
     <body>
         <form action="insert/insertTable.php" method="POST">
@@ -26,16 +26,12 @@
             </div>
         </form>
         <div>
-            <?php 
-                $conn = openConnection();
-                
-                $email = $_SESSION["emailDocente"];
-
+            <?php                 
                 $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente);";
                 
                 try {
                     $result = $conn -> prepare($sql);
-                    $result -> bindValue(":emailDocente", $email);
+                    $result -> bindValue(":emailDocente", $_SESSION["emailDocente"]);
 
                     $result -> execute();
                 } catch (PDOException $e) {
@@ -43,7 +39,6 @@
                 }
                 
                 $numRows = $result -> rowCount();
-
                 if($numRows > 0) {
                     echo '
                         <div class="div-th"> 

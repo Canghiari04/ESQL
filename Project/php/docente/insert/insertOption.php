@@ -1,5 +1,9 @@
 <?php
+    include "addOption.php";
+    include "../../connectionDB.php";
+    
     session_start();
+    $conn = openConnection();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -21,12 +25,7 @@
                 <button class="button-undo" type="submit" name="btnUndo"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
             </form>
         </div>
-        <?php
-            include "addOption.php";
-            include "../../connectionDB.php";
-    
-            $conn = openConnection();
-    
+        <?php    
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddAnswer"])) {
                     $txtAnswer = strtoupper($_POST["txtAnswer"]);

@@ -34,6 +34,7 @@
 
             if($token[0] == "PRIMARY") {
                 $flagPrimaryKey = true;
+                
                 updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql));
             } elseif ($token[0] == "FOREIGN") {
                 insertForeignKey($conn, $sql, $numRows, $idTableReferential);
@@ -41,8 +42,8 @@
                 /* break necessario per interrompere il ciclo foreach, dato l'inserimento delle foreign key da metodo soprastante */
                 break;
             } elseif($flagPrimaryKey == false) {
-
                 $deleteTableBool = insertAttribute($conn, $numRows, $idTableReferential, $token);
+
                 if($deleteTableBool == 0){
                     break;
                 }
@@ -56,23 +57,23 @@
     
         try {
             $result = $conn->prepare($sql);
-            $result->bindValue(":nome", $nameTable);
+            $result -> bindValue(":nome", $nameTable);
             
-            $result->execute();
-            $numRows = $result->rowCount();
-    
+            $result -> execute();
+
+            $numRows = $result -> rowCount();
             if ($numRows > 0) {
-                $row = $result->fetch(PDO::FETCH_ASSOC);
-                $idTableReferential = $row["ID"];
+                $row = $result -> fetch(PDO::FETCH_OBJ);
+                $idTableReferential = $row -> ID;
             } else {
-                return array(0, null);
+                return [0, null];
             }
         } catch(PDOException $e) {
-            echo "Eccezione ".$e->getMessage()."<br>";
-            return array(0, null);
+            echo "Eccezione ".$e -> getMessage()."<br>";
+            return [0, null];
         }
     
-        return array($numRows, $idTableReferential);
+        return [$numRows, $idTableReferential];
     }
 
     /* aggiornamento del campo Chiave_Primaria degli attributi che costituiscono il vincolo di primary key  */
@@ -172,6 +173,7 @@
 
                 /* individuazione dell'id della tabella referenziata, per la costruzione del vincolo di integrità */
                 [$numRows, $idTableReferenced] = getIdTableExercise($conn, $nameTableReferenced);
+
                 $sqlReferential = "SELECT Attributo.ID FROM Attributo JOIN Tabella_Esercizio ON (Attributo.ID_TABELLA=Tabella_Esercizio.ID) WHERE (Attributo.ID_TABELLA=:idTabellaReferenziante) AND (Attributo.NOME=:nomeAttributoReferenziante)";
                 $sqlReferenced = "SELECT Attributo.ID FROM Attributo JOIN Tabella_Esercizio ON (Attributo.ID_TABELLA=Tabella_Esercizio.ID) WHERE (Attributo.ID_TABELLA=:idTabellaReferenziata) AND (Attributo.NOME=:nomeAttributoReferenziato)";
                 
@@ -192,11 +194,11 @@
                 }
 
                 /* acquisizione dei valori necessari per inserimento di record nella tabella Vincolo_Integrita, prima della collezione referenziante e poi della collezione referenziata */
-                $rowReferential = $resultReferential -> fetch(PDO::FETCH_ASSOC);
-                $rowReferenced = $resultReferenced -> fetch(PDO::FETCH_ASSOC);
+                $rowReferential = $resultReferential -> fetch(PDO::FETCH_OBJ);
+                $rowReferenced = $resultReferenced -> fetch(PDO::FETCH_OBJ);
                 
-                $idAttributeReferential = $rowReferential["ID"];
-                $idAttributeReferenced = $rowReferenced["ID"];
+                $idAttributeReferential = $rowReferential -> ID;
+                $idAttributeReferenced = $rowReferenced -> ID;
                 
                 $storedProcedure = "CALL Inserimento_Vincolo_Integrita(:idAttributoReferenziante, :idAttributoReferenziato)";
 
@@ -323,7 +325,7 @@
             $attributeReferenced = rtrim($tokensTableReferenced[1], ')');
         }
 
-        if(($idTableReferenced == "" OR $attributeReferenced == "" )){
+        if(($idTableReferenced == "" || $attributeReferenced == "")){
             echo "<script>document.querySelector('.input-tips').value='VINCOLO INTEGRITA NON ESISTENTE. RICREARE LA TABELLA CON DEI VALORI ESISTENTI NEL DATABASE';</script>";
 
             deleteTable($conn, $idTableReferential);
@@ -338,14 +340,14 @@
                 $result -> bindValue(":nomeAttributoReferenziato", $attributeReferenced);
     
                 $result -> execute();
-                $numRows = $result ->  rowCount();
             } catch (PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
-    
+            
+            $numRows = $result -> rowCount();
             if($numRows > 0) {
-                $row = $result -> fetch(PDO::FETCH_ASSOC);
-                $idAttributeReferenced = $row["ID"];
+                $row = $result -> fetch(PDO::FETCH_OBJ);
+                $idAttributeReferenced = $row -> ID;
                 
                 $storedProcedure = "CALL Inserimento_Vincolo_Integrita(:idAttributoReferenziante, :idAttributoReferenziato)";
                 

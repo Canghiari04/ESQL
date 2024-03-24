@@ -1,5 +1,9 @@
 <?php
+    include "addRow.php";
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -27,12 +31,7 @@
                     <textarea class="input-tips" disabled></textarea>
                 </div>
                 <div class="div-textbox-generative">
-                    <?php             
-                        include "addRow.php";
-                        include "../../connectionDB.php";
-
-                        $conn = openConnection();
- 
+                    <?php              
                         if($_SERVER["REQUEST_METHOD"] == "POST") {
                             if(isset($_POST["btnInsertForm"])) {
                                 /* build del form di inserimento */

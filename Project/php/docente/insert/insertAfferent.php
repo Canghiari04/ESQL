@@ -1,15 +1,14 @@
 <?php
+    include "addAfferent.php";
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
         exit();
     }
-
-    include "addAfferent.php";
-    include "../../connectionDB.php";
-    
-    $conn = openConnection();
 ?>
 <!DOCTYPE html>
 <html>

@@ -24,6 +24,7 @@
     function addOption($conn, $type, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution) {
         if($type == "CHIUSA") {
             $storedProcedure = "CALL Inserimento_Opzione_Risposta(:id, :idQuesito, :titoloTest, :testo, :soluzione);";
+            
             insertOption($conn, $storedProcedure, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution);
         } else { 
             $storedProcedure = "CALL Inserimento_Sketch_Codice(:id, :idQuesito, :titoloTest, :testo, :soluzione);";
@@ -81,7 +82,6 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
         
-        $numRows = $result -> rowCount();
         $row = $result -> fetch(PDO::FETCH_OBJ);
         return ($row -> MAX_ID_ANSWER + 1);
     }

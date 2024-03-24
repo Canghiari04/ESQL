@@ -1,5 +1,10 @@
 <?php
+    include "addRow.php";
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
+    $manager = openConnectionMongoDB();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -33,12 +38,6 @@
             <button class="button-insert" type="submit" name="btnAddData">Add</button>
         </form>
         <?php 
-            include "addRow.php";
-            include "../../connectionDB.php";
-            
-            $conn = openConnection();
-            $manager = openConnectionMongoDB();
-
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddData"])) {
                     $sql = $_POST["txtAddRow"];
@@ -62,7 +61,7 @@
 
                             $rowInserted = $result -> rowCount();
 
-                            for($i = 0; $i < $rowInserted - 1; $i++){ 
+                            for($i = 0; $i < ($rowInserted - 1); $i++){ 
                                 /* inserimento fittizio all'interno della collezione Manipolazione_Riga, utilizzato per scatenare il trigger che modificherà il numero di righe della tabella in questione */
                                 $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
                                     

@@ -1,5 +1,8 @@
 <?php
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
     
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -13,9 +16,6 @@
         <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
         <link rel="stylesheet" type="text/css" href="../../style/css/specific_linear.css">
-        <?php
-            include "../../connectionDB.php";
-        ?>
     </head>
     <body>
         <div class="navbar">
@@ -24,8 +24,6 @@
         </div>
         <div class="container">
             <?php 
-                $conn = openConnection();
-
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {   
                     if(isset($_POST["btnSpecificTable"])) {
                         $idTable = $_POST["btnSpecificTable"];    
@@ -55,12 +53,13 @@
                             while($row = $result->fetch(PDO::FETCH_OBJ)) {
                                 /* metodo che restituisce se l'attributo visualizzato costituisca o meno la chiave primaria della tabella */
                                 $primaryKey = convertPrimaryKey($row -> CHIAVE_PRIMARIA);
+                                
                                 echo '
-                                            <tr>  
-                                                <th>'.$row -> NOME.'</th>
-                                                <th>'.$row -> TIPO.'</th>
-                                                <th>'.$primaryKey.'</th>
-                                            </tr>
+                                    <tr>  
+                                        <th>'.$row -> NOME.'</th>
+                                        <th>'.$row -> TIPO.'</th>
+                                        <th>'.$primaryKey.'</th>
+                                    </tr>
                                 ';
                             }
                         }

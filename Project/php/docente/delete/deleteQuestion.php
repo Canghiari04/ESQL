@@ -6,21 +6,21 @@
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnDropQuestion"])) {
-            deleteQuestion($conn, $manager, $varQuestion = $_POST["btnDropQuestion"]);
+            deleteQuestion($conn, $manager, $_POST["btnDropQuestion"]);
             header("Location: ../question.php");
             exit();
-        } elseif(isset($_POST["btnDropOption"])) {
-            deleteOption($conn, $manager, $varOption = $_POST["btnDropOption"]);
+        } elseif(isset($_POST["btnDropAnswer"])) {
+            deleteOption($conn, $manager, $_POST["btnDropAnswer"]);
             header("Location: ../specifics/specificQuestion.php");
             exit();
         }
     }
         
+    /* metodo in grado di eliminare un quesito di un test */
     function deleteQuestion($conn, $manager, $varQuestion) {
-        /* explode attuato per acquisire tutti i token del quesito necessari per richiamare la procedure */
-        $valuesQuestion = explode('|?|', $varQuestion);
+        /* explode attuato per acquisire tutti i token del quesito necessari per richiamare la procedure di eliminazione */
+        $valuesQuestion = explode("|?|", $varQuestion);
         
-        var_dump($valuesQuestion);
         $storedProcedure = "CALL Eliminazione_Quesito(:idQuesito, :titoloTest);";
             
         try {
@@ -29,21 +29,19 @@
             $result -> bindValue(":titoloTest", $valuesQuestion[1]);
 
             $result -> execute();
-            
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        /* scrittura log eliminazione di un record relativo alla tabella Quesito */
+        /* scrittura log --> eliminazione di un record relativo alla tabella Quesito */
         $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$valuesQuestion[0].'', 'Timestamp' => date('Y-m-d H:i:s')];
         writeLog($manager, $document);
-        
     }
 
-    /* metodo che permette l'eliminazione di una risposta ad un specifico quesito */
-    function deleteOption($conn, $manager, $varOption) {
+    /* metodo che permette l'eliminazione di una risposta di uno specifico quesito */
+    function deleteOption($conn, $manager, $varAnswer) {
         /* explode attuato per acquisire tutti i token della risposta necessari per richiamare la procedure */
-        $valuesOption = explode('|?|', $varOption);
+        $valuesOption = explode("|?|", $varAnswer);
 
         /* diversificazione della procedure a seconda della tipologia */
         if($valuesOption[0] == "CHIUSA") {
@@ -63,7 +61,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        /* scrittura log eliminazione di una risposta riferita ad un quesito */
+        /* scrittura log --> eliminazione di una risposta riferita ad un quesito */
         $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione risposta id: '.$valuesOption[1].'', 'Timestamp' => date('Y-m-d H:i:s')];
         writeLog($manager, $document);
     }

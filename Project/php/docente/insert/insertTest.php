@@ -1,5 +1,9 @@
 <?php
+    include "addTest.php";
+    include "../../connectionDB.php";
+    
     session_start();
+    $conn = openConnection();
     
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -27,7 +31,7 @@
                         <option value="false">NO</option>
                         <option value="true">SI</option>
                     </select>
-                    <input type="file" name="photo" placeholder="CARICA FOTO" required></input>
+                    <input type="file" name="txtPhoto" placeholder="CARICA FOTO"></input>
                 </div>
                 <div>
                     <textarea class="input-textbox-test" type="text" name="txtTitle" placeholder="TITOLO DEL TEST" required></textarea>
@@ -37,17 +41,12 @@
         </form>
     </body>
     <?php
-        include "addTest.php";
-        include "../../connectionDB.php";
-
-        $conn = openConnection();
-
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["btnAddTest"])) {
                 $viewAnswers = $_POST["sltViewAnswers"];
                 $titleTest = $_POST["txtTitle"];
+                $uploadFile = $_FILES["txtPhoto"]["tmp_name"];
 
-                $uploadFile = $_FILES['photo']['tmp_name'];
                 $fileTest = file_get_contents($uploadFile);
 
                 $_SESSION["titleTest"] = $titleTest;

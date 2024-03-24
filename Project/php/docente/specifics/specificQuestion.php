@@ -1,5 +1,8 @@
 <?php
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -27,10 +30,6 @@
         </div>
         <div class="center">
             <?php 
-                include "../../connectionDB.php";
-
-                $conn = openConnection();
-
                 if($_SERVER["REQUEST_METHOD"] == "POST") {
                     if(isset($_POST["btnSpecificQuestion"])) {
                         $values = $_POST["btnSpecificQuestion"];
@@ -42,8 +41,8 @@
 
                         $_SESSION["idCurrentQuestion"] = $idQuestion;
                         $_SESSION["descriptionCurrentQuestion"] = $descriptionQuestion;
+
                         setTypeQuestion($conn, $idQuestion, $titleTest);   
-                        
                         buildSpecificQuestion($conn, $_SESSION["typeQuestion"], $idQuestion, $titleTest);     
                     } elseif(isset($_POST["btnUndo"])) {
                         buildSpecificQuestion($conn, $_SESSION["typeQuestion"], $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);     
@@ -82,7 +81,7 @@
                                         </tr>
                                         <tr>
                                             <form action="../delete/deleteQuestion.php" method="POST">
-                                                <td><button class="drop-btn" name="btnDropOption" value="'.$type.'|?|'.$row -> ID.'|?|'.$idQuestion.'|?|'.$titleTest.'">Drop Option</button></td>
+                                                <td><button class="drop-btn" name="btnDropAnswer" value="'.$type.'|?|'.$row -> ID.'|?|'.$idQuestion.'|?|'.$titleTest.'">Drop Option</button></td>
                                             </form>
                                         </tr>
                                     </table>

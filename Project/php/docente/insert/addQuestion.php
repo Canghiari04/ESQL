@@ -27,8 +27,6 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
         
-        $numRows = $result -> rowCount();
-
         $row = $result -> fetch(PDO::FETCH_OBJ);
         return ($row -> MAX_ID_QUESTION + 1);
     }
@@ -51,6 +49,7 @@
 
         /* viene salvato l'id dell'ultima domanda inserita, dato che conseguentemente dovranno essere inseriti riferimenti delle risposte e delle tabelle */
         $_SESSION["idCurrentQuestion"] = $idQuestion;
+        
         addQuestion($conn, strtoupper($type), $idQuestion, $titleTest);
     }
 

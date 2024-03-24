@@ -1,5 +1,9 @@
 <?php
+    include "addQuestion.php";
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -39,11 +43,6 @@
         </form>
     </body>
     <?php 
-        include "addQuestion.php";
-        include "../../connectionDB.php";
-        
-        $conn = openConnection();
-
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["btnAddQuestion"])) {
                 if(checkTable($conn, $_SESSION["emailDocente"])) {
