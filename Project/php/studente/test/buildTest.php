@@ -12,6 +12,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/navbar_button_undo.css">
+        <link rel="stylesheet" type="text/css" href="../../style/css/form_option.css">
+        <link rel="stylesheet" type="text/css" href="../../style/css/form_query.css">
     </head>
     <body>
         <div class="navbar">
@@ -21,7 +23,8 @@
                 <div class="container">
                     <?php
                         include "evaluateTest.php";
-                        include "../handlerData/buildForm.php";      
+                        include "../handlerData/buildForm.php";
+                        include "../handlerData/check.php";      
                         include "../handlerData/dataTest.php";      
                         include "../handlerData/manageTest.php";
                         include "../../connectionDB.php";
@@ -37,17 +40,17 @@
                                 openTest($conn, $_SESSION["emailStudente"], $titleTest);
 
                                 /* innescata la costruzione del form contenente tutti i quesiti del test selezionato */
-                                buildForm($conn, $titleTest);                        
+                                buildForm($conn, $titleTest, null, null);                        
                             } elseif(isset($_POST["btnRestartTest"])){
                                 $titleTest = $_POST["btnRestartTest"];
                                 $_SESSION["titleTestTested"] = $titleTest; 
                                 
-                                buildForm($conn, $titleTest);
+                                buildForm($conn, $titleTest, null, null);
                             } elseif(isset($_POST["btnSendExitTest"])) {
                                 /* vettore contenente l'insieme dei numeri progressivi dei quesiti che compongano il test designato */
                                 $arrayIdQuestion = getQuestionTest($conn, $_SESSION["titleTestTested"]);
                                                 
-                                /* metodi restituenti di mappe, le quali contengono rispettivamente le soluzioni dei quesiti e le risposte dello studente ai quesiti */
+                                /* metodi restituenti di mappe, le quali contengono rispettivamente le risposte dello studente ai quesiti e le soluzioni dei quesiti */
                                 $mapArrayAnswer = setValueSentMap($arrayIdQuestion);
                                 $mapArraySolution = setValueSolutionMap($conn, $arrayIdQuestion, $_SESSION["titleTestTested"]); 
                                                 
@@ -62,25 +65,39 @@
                                 $idQuestion = $_POST["btnCheckSketch"];
                                 $titleTest = $_SESSION["titleTestTested"];
 
+                                $_SESSION["checkedQuestion"] = $idQuestion;
+
                                 $textArea = "txtAnswerSketch";
                                 $textArea = $textArea."".$idQuestion;
 
                                 /* valutazione della query scritta dallo studente, rispetto alla soluzione mantenuta nel database */
-                                [$outcome, $textMessage] = checkSketch($conn, $idQuestion, $titleTest, $_POST[$textArea]);
-                                insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], $outcome); 
-                                buildForm($conn, $titleTest);   
-
-                                if($outcome == 1) {
-                                    echo "<script type='text/javascript'>alert('QUERY CORRETTA');</script>";
-                                } elseif(isset($textMessage)) {
-                                    echo "<script type='text/javascript'>alert(".json_encode($textMessage).");</script>";
+                                if(strlen($_POST[$textArea]) > 0) {
+                                    /* risultati ottenuti */
+                                    [$rowSolution, $rowAnswer] = checkSketch($conn, $idQuestion, $titleTest, $_POST[$textArea]);
+                                    
+                                    if($rowSolution == 0) {
+                                        echo "<script type='text/javascript'>alert(".json_encode($rowAnswer).");</script>";
+                                        insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 0);
+                                    } elseif($rowSolution == $rowAnswer) {
+                                        echo "<script type='text/javascript'>alert('Query corretta.');</script>";
+                                        insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 1);
+                                    } else {
+                                        echo "<script type='text/javascript'>alert('Query errata.');</script>";
+                                        insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 0);
+                                    }
                                 } else {
-                                    echo "<script type='text/javascript'>alert('QUERY ERRATA');</script>";
+                                    echo "<script type='text/javascript'>alert('Inserire una query valida.');</script>";
+                                    insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 0);
                                 }
+
+                                buildForm($conn, $titleTest, $rowAnswer, $rowSolution);   
+                                unset($_SESSION["checkedQuestion"]);
+                                unset($_SESSION["fieldAnswer"]);
+                                unset($_SESSION["fieldSolution"]);
                             }
                         }
 
-                        function buildForm($conn, $titleTest) {
+                        function buildForm($conn, $titleTest, $rowAnswer, $rowSolution) {
                             /* funzione restituente l'insieme degli id dei quesiti che compongono il test selezionato */
                             $arrayIdQuestion = getQuestionTest($conn, $titleTest);
             
@@ -89,7 +106,7 @@
                                 if(getTypeQuestion($conn, $i, $titleTest) == "CHIUSA"){
                                     buildFormCheck($conn, $i, $titleTest, true, false);
                                 } else {
-                                    buildFormQuery($conn, $i, $titleTest, true, false);
+                                    buildFormQuery($conn, $i, $titleTest, $rowAnswer, $rowSolution, true, false);
                                 }
                             }
                         }

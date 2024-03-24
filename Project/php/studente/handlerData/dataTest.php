@@ -60,7 +60,6 @@
         }
     }
 
-
     /* metodo necessario per acquisire la descrizione del quesito */
     function getQuestionDescription($conn, $idQuestion, $titleTest) {
         $sql = "SELECT DESCRIZIONE FROM Quesito WHERE (ID=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
@@ -76,115 +75,23 @@
         }
 
         $row = $result -> fetch(PDO::FETCH_OBJ);
-
         return $row -> DESCRIZIONE;
     }
 
-    function checkCompletedTest($conn, $titleTest) {
-        $arrayIdQuestion = getQuestionTest($conn, $titleTest);
-
-        for($i = 0; $i <= sizeof($arrayIdQuestion) - 1; $i++) {
-            $type = getTypeQuestion($conn, $arrayIdQuestion[$i], $titleTest);
-
-            if($type == "CHIUSA") {
-                $sql = "SELECT ID FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito) AND (Opzione_Risposta.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
-            } else {
-                $sql = "SELECT TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
-            }
-
-            try { 
-                $result = $conn -> prepare($sql);
-                $result -> bindValue(":idQuesito", $arrayIdQuestion[$i]);
-                $result -> bindValue(":titoloTest", $titleTest);
-
-                $result -> execute();
-            } catch(PDOException $e) {
-                echo "Eccezione ".$e -> getMessage()."<br>";
-            }
-
-            $numRows = $result -> rowCount();
-            if($numRows == 0) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /* visualizzazione della checkbox demarcata o meno */
-    function printChecked($idSolution, $questionSolutions){
-        if(in_array($idSolution, $questionSolutions)){
-            return "checked";
-        }
-        else {
-            return "";
-        }
-    }
-
-    /* individuazione delle opzioni di risposta date in tentavi precedenti, da cui verrà visualizzata o meno la checkbox demarcata */
-    function checkChecked($conn, $email, $idQuestion, $titleTest){
-        $sql = "SELECT TESTO FROM Risposta WHERE (EMAIL_STUDENTE=:emailStudente) AND (ID_QUESITO=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
+    function getIdTable($conn, $nameTable) {
+        $sql = "SELECT ID FROM Tabella_Esercizio WHERE (Tabella_Esercizio.NOME=:nomeTabella);";
 
         try {
             $result = $conn -> prepare($sql);
-            $result -> bindValue(":emailStudente", $email);
-            $result -> bindValue(":idQuesito", $idQuestion);
-            $result -> bindValue(":titoloTest", $titleTest);
+            $result -> bindValue(":nomeTabella", $nameTable);
 
             $result -> execute();
-        } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
+        } catch (PDOException $e) {
+            echo 'Eccezione '.$e -> getMessage().'<br>'; 
         }
 
-        $questionSolutions = array();
-
-        /* in presenza di un oggetto PDO non nullo, verranno salvati all'interno dell'array gli id delle opzioni di risposta */
-        if($result -> rowCount()>0){
-            $row = $result -> fetch(PDO::FETCH_OBJ);
-            $questionSolutions =  explode('|?|', $row -> TESTO);
-        }
-        
-        return $questionSolutions;
-    }
-
-    /* funzione simile a quella precedente, in cui si osserva se lo studente abbia dato qualche risposta in tentavi precedenti */
-    function checkAnswered($conn, $email, $idQuestion, $titleTest){
-        $sql = "SELECT TESTO FROM Risposta WHERE (EMAIL_STUDENTE=:emailStudente) AND (ID_QUESITO=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
-
-        try {
-            $result = $conn -> prepare($sql);
-            $result -> bindValue(":emailStudente", $email);
-            $result -> bindValue(":idQuesito", $idQuestion);
-            $result -> bindValue(":titoloTest", $titleTest);
-
-            $result -> execute();
-        } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
-        }
-
-        if($result -> rowCount()>0){       
-            $row = $result -> fetch(PDO::FETCH_OBJ); 
-            echo "<script>document.querySelector('textarea[name=\"txtAnswerSketch".$idQuestion."\"]').value='".$row -> TESTO."';</script>";
-        }
-    }
-
-    function checkSolution($conn, $idQuestion, $titleTest) {
-        $sql = "SELECT TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (Sketch_Codice.SOLUZIONE=1);";
-
-        try {
-            $result = $conn -> prepare($sql);
-            $result -> bindValue(":idQuesito", $idQuestion);
-            $result -> bindValue(":titoloTest", $titleTest);
-
-            $result -> execute();
-        } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
-        }
-
-        if(isset($result)){       
-            $row = $result -> fetch(PDO::FETCH_OBJ); 
-            echo "<script>document.querySelector('textarea[name=\"txtAnswerSketch".$idQuestion."\"]').value='".$row -> TESTO."';</script>";
-        }
+        $row = $result -> fetch(PDO::FETCH_OBJ);
+        return $row -> ID;
     }
 
     /* acquisizione di tutte le tabelle che abbiano un'afferenza rispetto al quesito visualizzato */
@@ -256,5 +163,22 @@
 
         $rows = $result -> fetchAll(PDO::FETCH_ASSOC); 
         return $rows;
+    }
+
+    function getFieldName($resultAnswer, $resultSolution) {
+        $fieldNameAnswer = array();
+        $fieldNameResult = array();
+
+        for ($i = 0; $i < ($resultAnswer -> columnCount()); $i++) {
+            $field = $resultAnswer -> getColumnMeta($i);
+            array_push($fieldNameAnswer, $field["name"]);
+        }
+
+        for ($i = 0; $i < ($resultSolution -> columnCount()); $i++) {
+            $field = $resultSolution -> getColumnMeta($i);
+            array_push($fieldNameResult, $field["name"]);
+        }
+
+        return [$fieldNameAnswer, $fieldNameResult];
     }
 ?>

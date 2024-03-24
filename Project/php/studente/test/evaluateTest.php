@@ -48,8 +48,8 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
+            /* distinzione, nei due rami del costrutto, dell'argomento dato al metodo fetch poichè le domande chiuse sono caratterizzate da array di possibili soluzioni */
             if($type == "CHIUSA") {
-                /* distinzione, nei due rami del costrutto, dell'argomento dato al metodo fetch poichè le domande chiuse sono caratterizzate da array di possibili soluzioni */
                 while($row = $result -> fetch(PDO::FETCH_ASSOC)){
                     foreach($row as $item) {
                         array_push($arrayText, $item);
@@ -89,6 +89,7 @@
         }
     }
 
+    /* funzione che controlla la validità della risposta data per la Domanda_Chiusa */
     function checkOption($conn, $arrayIdOptionAnswer, $arrayIdOptionSolution) {
         /* primo controllo sulla dimensione dei due array, per verificare se il numero di risposte date coincida con il vettore contenente l'insieme delle risposte risolutive della domanda di riferimento */
         if(sizeof($arrayIdOptionAnswer) == sizeof($arrayIdOptionAnswer)) {
@@ -105,6 +106,7 @@
         }
     }
 
+    /* funzione per convertire le risposte date per domande chiuse */
     function convertToString($array) {
         $str = "";
 
@@ -116,8 +118,9 @@
         return $str;
     }
 
+    /* funzione che definisce la validità della query data dallo studente, rispetto alla soluzione mantenuta nel database */
     function checkQuery($conn, $queryAnswer, $querySolution) {
-        /* run della query risolutrice per ottenerne il risultato, in righe e colonne, che possa essere confrontato rispetto alla risposta data */
+        /* run della query risolutrice per ottenerne il risultato in righe e colonne, che possa essere confrontato rispetto alla risposta data */
         try {
             $resultSolution = $conn -> prepare($querySolution);
 
@@ -146,6 +149,7 @@
         }
     }
     
+    /* inserimento di una nuova risposta all'interno della collezione Risposta */
     function insertAnswer($conn, $email, $idQuestion, $titleTest, $textAnswer, $outcome) {
         $storedProcedure = "CALL Inserimento_Risposta(:emailStudente, :idQuesito, :titoloTest, :testoRisposta, :esito)";
 
@@ -154,7 +158,7 @@
             $stmt -> bindValue(":emailStudente", $email);
             $stmt -> bindValue(":idQuesito", $idQuestion);
             $stmt -> bindValue(":titoloTest", $titleTest);
-            $stmt -> bindValue(":testoRisposta", $textAnswer);
+            $stmt -> bindValue(":testoRisposta", strtoupper($textAnswer));
             $stmt -> bindValue(":esito", $outcome);
             
             $stmt -> execute();
@@ -163,6 +167,7 @@
         }
     }
 
+    /* check della singola domanda di codice */
     function checkSketch($conn, $idQuestion, $titleTest, $queryAnswer) {
         $sql = "SELECT Sketch_Codice.TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (Sketch_Codice.SOLUZIONE=1);";
 
@@ -179,7 +184,7 @@
         $row = $result -> fetch(PDO::FETCH_OBJ);
         $querySolution = $row -> TESTO;
 
-        /* run della query risolutrice per ottenerne il risultato, in righe e colonne, che possa essere confrontato rispetto alla risposta data */
+        /* run della query risolutrice per ottenerne il risultato in righe e colonne, che possa essere confrontato rispetto alla risposta data */
         try {
             $resultSolution = $conn -> prepare($querySolution);
 
@@ -188,23 +193,22 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
         
-        $rowSolution = $resultSolution -> fetchAll(PDO::FETCH_OBJ);
-
         /* run della query posta dallo studente, successivamente oggetto di confronto rispetto alla query risolutrice */
         try {
             $resultAnswer = $conn -> prepare($queryAnswer);
-
+            
             $resultAnswer -> execute();
         } catch(PDOException $e) {
-            return [0, $e -> getMessage()];
+            return [null, $e -> getMessage()];
         }
-        
-        $rowAnswer = $resultAnswer -> fetchAll(PDO::FETCH_OBJ);
-        
-        if ($rowAnswer == $rowSolution) {
-            return [1, null];
-        } else {
-            return [0, null];
-        }
+
+        [$arrayFieldAnswer, $arrayFieldSolution] = getFieldName($resultAnswer, $resultSolution);
+        $_SESSION["fieldAnswer"] = $arrayFieldAnswer;
+        $_SESSION["fieldSolution"] = $arrayFieldSolution;
+
+        $rowSolution = $resultSolution -> fetchAll(PDO::FETCH_ASSOC);
+        $rowAnswer = $resultAnswer -> fetchAll(PDO::FETCH_ASSOC);
+                
+        return [$rowSolution, $rowAnswer];
     }
 ?> 
