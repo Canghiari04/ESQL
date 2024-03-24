@@ -315,7 +315,7 @@
         }
 
         /* controllo per assicurarsi che la query abbia almeno un valore */
-        if(strstr($_SESSION["headingInsert"],'(')){
+        if(strstr($_SESSION["headingInsert"], '(')){
             /* sovrascrittura della stringa di intestazione  */
             $stringDatas=''.$_SESSION["headingInsert"]." VALUES (";
 
@@ -346,6 +346,18 @@
         
             $result -> execute(); 
             echo "<script>document.querySelector('.input-tips').value='INSERIMENTO AVVENUTO';</script>";
+
+            /* se e solo se l'inserimento del record va a buon fine è possibile variare il numero di righe relative alla collezione in questione */
+            $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
+        
+            try {
+                $storedProcedure = $conn -> prepare($storedProcedure);
+                $storedProcedure -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
+                                        
+                $storedProcedure -> execute();
+            } catch(PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
         }catch(PDOException $e) {
             echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";
         }
