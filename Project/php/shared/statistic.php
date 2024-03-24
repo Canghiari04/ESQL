@@ -5,11 +5,22 @@
         header("Location: login/login.php");
     } 
 
-    function getUndo() {
-        if  ($_SESSION["emailStudente"] != null) {
-            echo "../studente/handlerStudente.php";
-        } else if ($_SESSION["emailDocente"] != null) {
-            echo "../docente/handlerDocente.php";
+    include "../connectionDB.php";
+
+    /* tramite l'url viene acquisita la tipologia dell'utente, in maniera tale da compiere il corretto reindirizzamento tra i file */
+    $url = $_SERVER["REQUEST_URI"];
+    $tokens = explode('?', $url);
+    $typeUser = $tokens[1];
+
+    function getUndo($typeUser) {
+        if((isset($_SESSION["emailDocente"])) AND ($typeUser == "Teacher")) {
+            echo ' 
+                <a href="../docente/handlerDocente.php"><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a> 
+            ';
+        } elseif((isset($_SESSION["emailStudente"])) AND ($typeUser == "Student")) {
+            echo ' 
+                <a href="../studente/handlerStudente.php"><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a> 
+            ';
         }
     }
 ?>
@@ -19,17 +30,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../style/css/navbar_button_undo.css">
-        <link rel="stylesheet" type="text/css" href="../style/css/static.css">
-        <?php
-            include "../connectionDB.php";
-        ?>
+        <link rel="stylesheet" type="text/css" href="../style/css/statistic.css">
     </head>
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img ESQL" width="112" height="48" src="../style/img/ESQL.png"></a>
-            <a href=<?php getUndo()?>><img class="zoom-on-img undo" width="32" height="32" src="../style/img/undo.png"></a>
+            <?php getUndo($typeUser) ?>
         </div>
-        <div>
+        <div class="container">
             <?php 
                 $conn = openConnection();
 
@@ -174,6 +182,7 @@
                                 </table>
                             </div>
                         ';
+
                         $cont = $cont + 1;
                     }
                 }

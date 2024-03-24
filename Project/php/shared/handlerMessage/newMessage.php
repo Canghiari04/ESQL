@@ -18,8 +18,8 @@
             buildPage($conn, $typeUser);
          } elseif(isset($_POST["btnAddMessage"])) {
             $typeUser = $_POST["btnAddMessage"];
-            $textMessage = $_POST["txtText"];        
-            $titleMessage = $_POST["txtTitle"];
+            $textMessage = strtoupper($_POST["txtText"]);        
+            $titleMessage = strtoupper($_POST["txtTitle"]);
             $titleTest = $_POST["sltTest"];
             $date = date("Y-m-d");
 
