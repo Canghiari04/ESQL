@@ -1,7 +1,33 @@
 h2 {
     margin-left: 5rem;
+    text-decoration: underline;
+}
+
+table {
+    border-collapse: collapse;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    margin-right: 2rem;
+    width: auto;
+    font-size: 12px;
+}
+
+table, th, td {  
+    border: 1.25px solid black;
+    text-align: left;
+}
+  
+th, td {
+    padding: 5px;
+    font: bold;
+}
+
+h2:hover, th:hover, td:hover {
+    transition: color .4s;
+    color: #ff3131;
 }
 
 .container {
-    display: flex;
+    display: inline-block;
+    align-items: center;
 }

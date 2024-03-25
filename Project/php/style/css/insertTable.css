@@ -1,15 +1,15 @@
-input {
-    width: 60px;
-    height: 20px;
+select {
+    width: 120px;
+    height: 25px;
     color: black;
     background-color: white;
     border: 2px solid black;
     border-radius: 5px;
 }
 
-select {
-    width: 120px;
-    height: 25px;
+input {
+    width: 60px;
+    height: 20px;
     color: black;
     background-color: white;
     border: 2px solid black;

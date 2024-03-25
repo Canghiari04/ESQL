@@ -1,19 +1,14 @@
-input {
-    text-align: left;
-    width: 15wh;
-    height: 3vh;
-    color: black;
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 5px;
-}
-
 select {
     width: 20vh;
     height: 3.5vh;
     border: 2px solid black;
     border-radius: 0.7vh;
     background-color: white;
+}
+
+input[type=file] {
+    width: 0px;
+    height: 0px;
 }
 
 button {
@@ -23,7 +18,7 @@ button {
     border-radius: 10px;
     text-align: center;
     padding: 12px 28px;
-    margin: 5vh 116vh;
+    margin: 5vh 114.5vh;
     text-decoration: none;
 }
 
@@ -46,6 +41,7 @@ button:hover, select:hover, input:hover, label:hover {
 }
 
 .custom-file-upload {
+    height: 2vh;
     font-size: 1.75vh;
     padding: 0.7vh 1vh;
     border: 2px solid black;
