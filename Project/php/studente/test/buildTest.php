@@ -53,7 +53,6 @@
                                                 
                                 /* correzione delle risposte date dallo studente */
                                 checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution);
-                                                
                                 header("Location: ../view/viewTest.php");
                                 exit();
                             } elseif(isset($_POST["btnCheckSketch"])) {
