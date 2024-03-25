@@ -40,7 +40,7 @@
         <?php 
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddData"])) {
-                    $sql = $_POST["txtAddRow"];
+                    $sql = stroupper($_POST["txtAddRow"]);
 
                     $tokens = explode('(', trim($sql));
                     $tokensHeader = explode(' ', $tokens[0]);

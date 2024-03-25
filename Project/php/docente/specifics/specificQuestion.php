@@ -32,18 +32,13 @@
             <?php 
                 if($_SERVER["REQUEST_METHOD"] == "POST") {
                     if(isset($_POST["btnSpecificQuestion"])) {
-                        $values = $_POST["btnSpecificQuestion"];
-                        $tokens = explode("|?|", $values);
+                        $tokens = explode("|?|", $_POST["btnSpecificQuestion"]);
 
-                        $idQuestion = $tokens[0];
-                        $titleTest = $tokens[1];
-                        $descriptionQuestion = $tokens[2];
+                        $_SESSION["idCurrentQuestion"] = $tokens[0];
+                        $_SESSION["descriptionCurrentQuestion"] = $tokens[2];
 
-                        $_SESSION["idCurrentQuestion"] = $idQuestion;
-                        $_SESSION["descriptionCurrentQuestion"] = $descriptionQuestion;
-
-                        setTypeQuestion($conn, $idQuestion, $titleTest);   
-                        buildSpecificQuestion($conn, $_SESSION["typeQuestion"], $idQuestion, $titleTest);     
+                        setTypeQuestion($conn, $tokens[0], $tokens[1]);   
+                        buildSpecificQuestion($conn, $_SESSION["typeQuestion"], $tokens[0], $tokens[1]);     
                     } elseif(isset($_POST["btnUndo"])) {
                         buildSpecificQuestion($conn, $_SESSION["typeQuestion"], $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);     
                     }
@@ -68,7 +63,8 @@
                         echo "Eccezione ".$e -> getMessage()."<br>";
                     }
                         
-                    if(isset($result)) {
+                    $numRows = $result -> rowCount();
+                    if($numRows > 0) {
                         while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                             echo '
                                 <div class="div-question">
@@ -91,6 +87,7 @@
                     }
                 }
 
+                /* metodo che definisce da sessione il tipo del quesito, attuato per visualizzare correttamente le proprie caratteristiche */
                 function setTypeQuestion($conn, $idQuestion, $titleTest) {
                     $sql = "SELECT * FROM Domanda_Chiusa WHERE (Domanda_Chiusa.ID_DOMANDA_CHIUSA=:idQuesito) AND (Domanda_Chiusa.TITOLO_TEST=:titoloTest);";
 

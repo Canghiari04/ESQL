@@ -1,8 +1,14 @@
 <?php
-    function insertTest($conn, $email, $viewAnswers, $fileTest, $titleTest) {
-        $storedProcedure = "CALL Inserimento_Test(:titolo, :email, :foto, :dataCreazione, :visualizzaRisposte);";
+    function insertTest($conn, $email, $viewAnswers, $uploadFile, $titleTest) {
+        if($uploadFile != null) {
+            $fileTest = file_get_contents($uploadFile);
+        } else {
+            $fileTest = null;
+        }
 
         $viewAnswers = convertToBoolean($viewAnswers);
+
+        $storedProcedure = "CALL Inserimento_Test(:titolo, :email, :foto, :dataCreazione, :visualizzaRisposte);";
 
         try {
             $stmt = $conn -> prepare($storedProcedure);
@@ -14,7 +20,7 @@
             
             $stmt -> execute();
         } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
+            echo '<script>alert("Si è verificato un errore. \r\rRitenta.");</script>';
         }
     }
 

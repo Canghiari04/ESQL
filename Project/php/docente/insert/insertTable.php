@@ -40,12 +40,12 @@
                 if(isset($_POST["btnAddTable"])) {
                     $sql = strtoupper($_POST["txtAddTable"]);
 
-                    /* controllo della presenza della key PRIMARY all'interno della query di creazione della tabella */
-                    if(str_contains($sql, "PRIMARY")) {
-                            /* suddivisione della query nei token principali, per ottenere il nome della tabella di riferimento */
-                            $tokens = explode(' ', $sql);
-                            
-                            if($tokens[0] == "CREATE") {
+                    /* suddivisione della query nei token principali, per ottenere il nome della tabella di riferimento */
+                    $tokens = explode(' ', $sql);
+
+                    if($tokens[0] == "CREATE") {
+                        /* controllo della presenza della key PRIMARY all'interno della query di creazione della tabella */
+                        if(str_contains($sql, "PRIMARY")) {
                                 $tokenName = explode('(', $tokens[2]);
                                 
                                 try {
@@ -66,13 +66,15 @@
                                 } catch(PDOException $e) {
                                     /* funzioni che rendono compatibili caratteri speciali rispetto agli script delle textarea, dovuto principalmente ad un uso spropositato di spaziature */
                                     echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";
-                                    echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";
+                                    echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";                                
                                 }
                             } else {
-                                echo "<script>document.querySelector('.input-tips').value='SONO ACCETTATE SOLO QUERY CREATE';</script>";
+                                echo "<script>document.querySelector('.input-tips').value='SQLSTATE: NESSUNA PRIMARY KEY RILEVATA';</script>";
+                                echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";
                             }
                     } else {
-                        echo "<script>document.querySelector('.input-tips').value='NESSUNA PRIMARY KEY RILEVATA';</script>";
+                        echo "<script>document.querySelector('.input-tips').value='SQLSTATE: SONO ACCETTATE SOLO QUERY CREATE';</script>";
+                        echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";
                     }
                 }
             }

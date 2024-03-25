@@ -32,15 +32,15 @@
             <?php 
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if(isset($_POST["btnViewRow"])) {
-                        $idTable = $_POST["btnViewRow"];    
-                        $_SESSION["idCurrentTable"] = $idTable;   
+                        /* campo della sessione utilizzato per visualizzare correttamente le specifiche qualora l'evento undo sia elaborato */
+                        $_SESSION["idCurrentTable"] = $_POST["btnViewRow"];   
 
-                        buildSpecificsTable($conn, $idTable);
+                        buildSpecificsTable($conn, $_POST["btnViewRow"]);
                     } elseif(isset($_POST["btnUndo"])) {
                         buildSpecificsTable($conn, $_SESSION["idCurrentTable"]);
                     }
                 } 
-                /* suddivisione stampa dopo eliminazione per permettere la visualizzazione della navbar */
+                /* stampa delle specifiche dopo eliminazione di record, per permettere la visualizzazione della navbar */
                 elseif(isset($_SESSION["recordDeleted"])) {    
                     unset($_SESSION["recordDeleted"]);
                     buildSpecificsTable($conn, $_SESSION["idCurrentTable"]);
@@ -52,18 +52,11 @@
     </body>
     <?php
         function buildSpecificsTable($conn, $idTable) {
-            /* array che conterrà i nomi di tutti i field */
             $nameAttributes = array();   
-
             $nameTable = getTableName($conn, $idTable);
 
-            /* oggetto PDO contenente la primary key della tabella */
             $arrayNamePrimaryKey = getNamePrimaryKey($conn, $nameTable);
-
-            /* oggetto PDO contenente tutti i nomi degli attributi della tabella */
             $resultNames = getAttributesNames($conn, $idTable);
-
-            /* oggetto PDO contenente tutti i record della tabella */
             $resultValues = getValues($conn, $nameTable);
 
             echo '
@@ -141,7 +134,7 @@
             return $row -> NOME;
         }
 
-        /* funzione restituente i field che compongono la chiave primaria della tabella */
+        /* funzione contenitrice i field che compongono la chiave primaria della tabella */
         function getNamePrimaryKey($conn, $nameTable) {
             $arrayNamePrimaryKey = array();
 
@@ -181,7 +174,7 @@
             return $result;
         }
 
-        /* ottenuto il nome della tabella esercizio, sono individuati tutti i record che la contraddistinguono */
+        /* ottenuto il nome della tabella, sono estrapolati tutti i dati che contiene */
         function getValues($conn, $nameTable) {
             $sql = "SELECT * FROM ".$nameTable.";";
                 

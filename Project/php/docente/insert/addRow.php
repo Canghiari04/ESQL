@@ -301,7 +301,7 @@
         $nameTable = getTableName($conn);
         
         $attributesInsert = getAttributes($conn);
-        $attributesAutoIncrement = checkAutoIncrement($conn, $nameTable);
+        $attributesAutoIncrement = getAutoIncrement($conn, $nameTable);
 
         foreach($attributesInsert as $value) {
             /* tramite la condizione non sono stampati tutti i domini della collezione che risultino auto_increment */

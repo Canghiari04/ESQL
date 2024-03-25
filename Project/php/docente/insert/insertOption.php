@@ -28,14 +28,8 @@
         <?php    
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddAnswer"])) {
-                    $txtAnswer = strtoupper($_POST["txtAnswer"]);
-                    $sltSolution = $_POST["sltSolution"];
-    
-                    $id = getLastId($conn, strtoupper($_SESSION["typeQuestion"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);
-
                     /* inserimento della risposta fornita rispetto alla domanda in questione, fornendo tipo e id della domanda */
-                    addOption($conn, strtoupper($_SESSION["typeQuestion"]), $id, $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], $txtAnswer, $sltSolution);
-                    
+                    addOption($conn, strtoupper($_SESSION["typeQuestion"]), getLastId($conn, strtoupper($_SESSION["typeQuestion"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], strtoupper($_POST["txtAnswer"]), $_POST["sltSolution"]);
                     buildForm($conn, $_SESSION["typeQuestion"], $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);
                     printQuestion($_SESSION["descriptionCurrentQuestion"]);
                 } elseif(isset($_POST["btnAddOption"])) {

@@ -9,6 +9,16 @@
         header("Location: ../../shared/login/login.php");
         exit();
     }
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+        if(isset($_POST["btnAddTest"])) {
+            $_SESSION["titleTest"] = $_POST["txtTitle"];
+
+            insertTest($conn, $_SESSION["emailDocente"],  $_POST["sltViewAnswers"], $_FILES["txtPhoto"]["tmp_name"], $_POST["txtTitle"]);
+        }
+    }
+
+    closeConnection($conn);
 ?>
 <!DOCTYPE html>
 <hmtl>
@@ -31,7 +41,7 @@
                         <option value="false">NO</option>
                         <option value="true">SI</option>
                     </select>
-                    <input type="file" name="txtPhoto" placeholder="CARICA FOTO"></input>
+                    <label class="custom-file-upload">CARICA FOTO<input type="file" name="txtPhoto"></input></label>
                 </div>
                 <div>
                     <textarea class="input-textbox-test" type="text" name="txtTitle" placeholder="TITOLO DEL TEST" required></textarea>
@@ -40,21 +50,4 @@
             <button class="button-test" type="submit" name="btnAddTest">Add</button>
         </form>
     </body>
-    <?php
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            if(isset($_POST["btnAddTest"])) {
-                $viewAnswers = $_POST["sltViewAnswers"];
-                $titleTest = $_POST["txtTitle"];
-                $uploadFile = $_FILES["txtPhoto"]["tmp_name"];
-
-                $fileTest = file_get_contents($uploadFile);
-
-                $_SESSION["titleTest"] = $titleTest;
-
-                insertTest($conn, $_SESSION["emailDocente"], $viewAnswers, $fileTest, $titleTest);
-            }
-        }
-
-        closeConnection($conn);
-    ?>
 </hmtl>

@@ -44,23 +44,16 @@
     </body>
     <?php 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-            if(isset($_POST["btnAddQuestion"])) {
+            if($_POST["btnInsertQuestion"]) {
+                $_SESSION["typeQuestion"] = $_POST["btnInsertQuestion"];
+            } elseif(isset($_POST["btnAddQuestion"])) {
                 if(checkTable($conn, $_SESSION["emailDocente"])) {
-                    $difficulty = $_POST["sltDifficulty"];
-                    $description = $_POST["txtDescription"];
-                    $numAnswers = 0;
-                        
-                    $idQuestion = getLastId($conn, $_SESSION["titleCurrentTest"]);
-                    insertQuestion($conn, $_SESSION["typeQuestion"], $idQuestion, $_SESSION["titleCurrentTest"], $difficulty, $numAnswers, $description);
-                    
+                    insertQuestion($conn, $_SESSION["typeQuestion"], getLastId($conn, $_SESSION["titleCurrentTest"]), $_SESSION["titleCurrentTest"], $_POST["sltDifficulty"], 0, $_POST["txtDescription"]);
                     header("Location: insertAfferent.php");
                     exit();
                 } else {
                     echo "<script type='text/javascript'>alert(".json_encode("Nessuna tabella rilevata, inserisci qualche collezione prima di creare dei quesiti").");</script>";
                 }
-            } elseif($_POST["btnInsertQuestion"]) {
-                $type = $_POST["btnInsertQuestion"];
-                $_SESSION["typeQuestion"] = $type;
             }
         }
         

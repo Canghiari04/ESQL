@@ -26,13 +26,11 @@
             <?php 
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {   
                     if(isset($_POST["btnSpecificTable"])) {
-                        $idTable = $_POST["btnSpecificTable"];    
-
                         $sql = "SELECT Attributo.TIPO, Attributo.NOME, Attributo.CHIAVE_PRIMARIA FROM Tabella_Esercizio JOIN Attributo ON (Tabella_Esercizio.ID=Attributo.ID_TABELLA) WHERE (Tabella_Esercizio.ID=:idTable);";
                         
                         try {
                             $result = $conn -> prepare($sql);
-                            $result -> bindValue(":idTable", $idTable);
+                            $result -> bindValue(":idTable", $_POST["btnSpecificTable"]);
 
                             $result -> execute();
                         } catch (PDOException $e) {
@@ -50,7 +48,7 @@
                         ';
                             
                         if(isset($result)) {
-                            while($row = $result->fetch(PDO::FETCH_OBJ)) {
+                            while($row = $result -> fetch(PDO::FETCH_OBJ)) {
                                 /* metodo che restituisce se l'attributo visualizzato costituisca o meno la chiave primaria della tabella */
                                 $primaryKey = convertPrimaryKey($row -> CHIAVE_PRIMARIA);
                                 
