@@ -1,18 +1,17 @@
 <?php
+    include "../handlerData/buildForm.php";
+    include "../handlerData/check.php";
+    include "../handlerData/dataTest.php";
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
     
     if(!isset($_SESSION["emailStudente"])) {
         header("Location: ../../shared/login/login.php");
         exit();
     }
-
-    include "../handlerData/buildForm.php";
-    include "../handlerData/check.php";
-    include "../handlerData/dataTest.php";
-    include "../../connectionDB.php";
     
-    $conn = openConnection();
-
     if(isset($_SERVER["REQUEST_METHOD"])) {
         if(isset($_POST["btnViewSolution"])) {
             $values = $_POST["btnViewSolution"];
@@ -21,7 +20,7 @@
             $_SESSION["titleTestSolution"] = $tokens[0];
             $_SESSION["namePageSolution"] = $tokens[1];
 
-            buildPage($conn, $_SESSION["namePageSolution"], $_SESSION["titleTestSolution"]);
+            buildPage($conn, $tokens[1], $tokens[0]);
         } elseif(isset($_POST["btnUndo"])) {
             buildPage($conn, $_SESSION["namePageSolution"], $_SESSION["titleTestSolution"]);
         }
@@ -42,15 +41,13 @@
                     <div class="container">
                         <div class="navbar">
                             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
-                            <form action="../test/photoTest.php" method="POST">
-                                <button class="button-navbar" type="submit" name="btnPhotoTest" value="../view/viewSolution.php">View photo</button>
-                            </form>
         ';
 
+        buildButtonPhoto($conn, "../view/viewSolution.php");
         buildButtonUndo($namePage);
 
         echo '
-                        </div>
+            </div>
         ';
 
         buildFormSolution($conn, $titleTest);

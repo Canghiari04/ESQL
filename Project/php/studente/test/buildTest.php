@@ -1,5 +1,13 @@
 <?php
+    include "evaluateTest.php";
+    include "../handlerData/buildForm.php";
+    include "../handlerData/check.php";      
+    include "../handlerData/dataTest.php";      
+    include "../handlerData/manageTest.php";
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();  
 
     if(!isset($_SESSION["emailStudente"])) {
         header("Location: ../../shared/login/login.php");
@@ -22,30 +30,19 @@
             <form action="" method="POST">
                 <div class="container">
                     <?php
-                        include "evaluateTest.php";
-                        include "../handlerData/buildForm.php";
-                        include "../handlerData/check.php";      
-                        include "../handlerData/dataTest.php";      
-                        include "../handlerData/manageTest.php";
-                        include "../../connectionDB.php";
-                        
-                        $conn = openConnection();  
-
                         if ($_SERVER["REQUEST_METHOD"] == "POST") {   
                             if(isset($_POST["btnStartTest"])) {
-                                $titleTest = $_POST["btnStartTest"];
-                                $_SESSION["titleTestTested"] = $titleTest; 
+                                $_SESSION["titleTestTested"] = $_POST["btnStartTest"];
 
                                 /* metodo che richiama la stored procedure per l'inserimento dello studente all'interno della tabella Completamento, in cui verrà impostato lo stato di avanzamento ad APERTO  */
-                                openTest($conn, $_SESSION["emailStudente"], $titleTest);
+                                openTest($conn, $_SESSION["emailStudente"], $_POST["btnStartTest"]);
 
                                 /* innescata la costruzione del form contenente tutti i quesiti del test selezionato */
-                                buildForm($conn, $titleTest, null, null);                        
+                                buildForm($conn, $_POST["btnStartTest"], null, null);                        
                             } elseif(isset($_POST["btnRestartTest"])){
-                                $titleTest = $_POST["btnRestartTest"];
-                                $_SESSION["titleTestTested"] = $titleTest; 
+                                $_SESSION["titleTestTested"] = $_POST["btnRestartTest"]; 
                                 
-                                buildForm($conn, $titleTest, null, null);
+                                buildForm($conn, $_POST["btnRestartTest"], null, null);
                             } elseif(isset($_POST["btnSendExitTest"])) {
                                 /* vettore contenente l'insieme dei numeri progressivi dei quesiti che compongano il test designato */
                                 $arrayIdQuestion = getQuestionTest($conn, $_SESSION["titleTestTested"]);
@@ -61,39 +58,34 @@
                                 exit();
                             } elseif(isset($_POST["btnCheckSketch"])) {
                                 /* ramo del costrutto condizionale, definito per simulare la correzione di una singola domanda di codice  */
-
-                                $idQuestion = $_POST["btnCheckSketch"];
-                                $titleTest = $_SESSION["titleTestTested"];
-
-                                $_SESSION["checkedQuestion"] = $idQuestion;
+                                $_SESSION["checkedQuestion"] = $_POST["btnCheckSketch"];
 
                                 $textArea = "txtAnswerSketch";
-                                $textArea = $textArea."".$idQuestion;
+                                $textArea = $textArea."".$_POST["btnCheckSketch"];
 
                                 /* valutazione della query scritta dallo studente, rispetto alla soluzione mantenuta nel database */
                                 if(strlen($_POST[$textArea]) > 0) {
                                     /* risultati ottenuti */
-                                    [$rowSolution, $rowAnswer] = checkSketch($conn, $idQuestion, $titleTest, $_POST[$textArea]);
+                                    [$rowSolution, $rowAnswer] = checkSketch($conn, $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea]);
                                     
                                     if($rowSolution == 0) {
                                         echo "<script type='text/javascript'>alert(".json_encode($rowAnswer).");</script>";
-                                        insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 0);
+                                        insertAnswer($conn, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
                                     } elseif($rowSolution == $rowAnswer) {
                                         echo "<script type='text/javascript'>alert('Query corretta.');</script>";
-                                        insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 1);
+                                        insertAnswer($conn, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 1);
                                     } else {
                                         echo "<script type='text/javascript'>alert('Query errata.');</script>";
-                                        insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 0);
+                                        insertAnswer($conn, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
                                     }
 
-                                    buildForm($conn, $titleTest, $rowAnswer, $rowSolution);  
+                                    buildForm($conn, $_SESSION["titleTestTested"], $rowAnswer, $rowSolution);  
                                 } else {
                                     echo "<script type='text/javascript'>alert('Inserire una query valida.');</script>";
-                                    insertAnswer($conn, $_SESSION["emailStudente"], $idQuestion, $titleTest, $_POST[$textArea], 0);
-                                    buildForm($conn, $titleTest, null, null);  
+                                    insertAnswer($conn, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
+                                    buildForm($conn, $_SESSION["titleTestTested"], null, null);  
                                 }
 
-                                 
                                 unset($_SESSION["checkedQuestion"]);
                                 unset($_SESSION["fieldAnswer"]);
                                 unset($_SESSION["fieldSolution"]);

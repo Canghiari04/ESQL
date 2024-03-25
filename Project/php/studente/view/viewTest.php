@@ -1,5 +1,11 @@
 <?php
+    include "../handlerData/buildForm.php";
+    include "../handlerData/check.php";
+    include "../handlerData/dataTest.php";
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();   
 
     if(!isset($_SESSION["emailStudente"])) {
         header("Location: ../../shared/login/login.php");
@@ -20,13 +26,6 @@
             <a href="../handlerStudente.php"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></a>
         </div>
         <?php
-            include "../handlerData/buildForm.php";
-            include "../handlerData/check.php";
-            include "../handlerData/dataTest.php";
-            include "../../connectionDB.php";
-
-            $conn = openConnection();   
-
             $sql = "SELECT * FROM Test;";
 
             try {
