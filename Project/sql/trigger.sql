@@ -42,8 +42,8 @@ FOR EACH ROW
 BEGIN
     DECLARE countQuesiti INT DEFAULT 0;
     DECLARE countRisposteCorrette INT DEFAULT 0;
-    SET countQuesiti = (SELECT COUNT(*) FROM Quesito WHERE (Quesito.TITOLO_TEST=NEW.TITOLO_TEST));
-    SET countRisposteCorrette = (SELECT COUNT(*) FROM Risposta WHERE (Risposta.TITOLO_TEST=NEW.TITOLO_TEST) AND (Risposta.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE) AND (Risposta.ESITO=1));
+    SET countQuesiti=(SELECT COUNT(*) FROM Quesito WHERE (Quesito.TITOLO_TEST=NEW.TITOLO_TEST));
+    SET countRisposteCorrette=(SELECT COUNT(*) FROM Risposta WHERE (Risposta.TITOLO_TEST=NEW.TITOLO_TEST) AND (Risposta.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE) AND (Risposta.ESITO=1));
     IF (countQuesiti=countRisposteCorrette) THEN 
         UPDATE Completamento SET Completamento.STATO='CONCLUSO', Completamento.DATA_PRIMARISPOSTA=NOW() WHERE (Completamento.TITOLO_TEST=NEW.TITOLO_TEST) AND (Completamento.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE);
     END IF; 
@@ -68,8 +68,8 @@ FOR EACH ROW
 BEGIN
     DECLARE countQuesiti INT DEFAULT 0;
     DECLARE countRisposteCorrette INT DEFAULT 0;
-    SET countQuesiti = (SELECT COUNT(*) FROM Quesito WHERE (Quesito.TITOLO_TEST=NEW.TITOLO_TEST));
-    SET countRisposteCorrette = (SELECT COUNT(*) FROM Risposta WHERE (Risposta.TITOLO_TEST=NEW.TITOLO_TEST) AND (Risposta.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE) AND (Risposta.ESITO=1));
+    SET countQuesiti=(SELECT COUNT(*) FROM Quesito WHERE (Quesito.TITOLO_TEST=NEW.TITOLO_TEST));
+    SET countRisposteCorrette=(SELECT COUNT(*) FROM Risposta WHERE (Risposta.TITOLO_TEST=NEW.TITOLO_TEST) AND (Risposta.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE) AND (Risposta.ESITO=1));
     IF (countQuesiti=countRisposteCorrette) THEN 
         UPDATE Completamento SET Completamento.STATO='CONCLUSO' WHERE (Completamento.TITOLO_TEST=NEW.TITOLO_TEST) AND (Completamento.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE);
     END IF; 
@@ -83,7 +83,7 @@ AFTER UPDATE ON Test
 FOR EACH ROW
 BEGIN
     DECLARE viewAnswer BOOLEAN DEFAULT 0;
-    SET viewAnswer = (SELECT VISUALIZZA_RISPOSTE FROM Test WHERE (Test.TITOLO=NEW.TITOLO));
+    SET viewAnswer=(SELECT VISUALIZZA_RISPOSTE FROM Test WHERE (Test.TITOLO=NEW.TITOLO));
     IF (viewAnswer=1) THEN 
         UPDATE Completamento SET Completamento.STATO='CONCLUSO' WHERE (Completamento.TITOLO_TEST=NEW.TITOLO);
     END IF; 
