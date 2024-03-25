@@ -1,30 +1,21 @@
 <?php
+    include "buildFormMessage.php";
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
 
     if ((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: ../login/login.php");
     } 
-
-    include "buildFormMessage.php";
-    include "../../connectionDB.php";
-
-    $conn = openConnection();
-
+    
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnNewMessage"])) {
-            /* è memorizzata la tipologia dell'utente per impostare la corretta logica di reindirizzamento */
-            $typeUser = $_POST["btnNewMessage"];
-
-            buildPage($conn, $typeUser);
+            /* metodo acquisisce tramite il post la tipologia dell'utente, compiendo in questo modo il corretto reindirizzamento */
+            buildPage($conn, $_POST["btnNewMessage"]);
          } elseif(isset($_POST["btnAddMessage"])) {
-            $typeUser = $_POST["btnAddMessage"];
-            $textMessage = strtoupper($_POST["txtText"]);        
-            $titleMessage = strtoupper($_POST["txtTitle"]);
-            $titleTest = $_POST["sltTest"];
-            $date = date("Y-m-d");
-
-            insertNewMessage($conn, $typeUser, $textMessage, $titleMessage, $titleTest, $date);
-            buildPage($conn, $typeUser);
+            insertNewMessage($conn, $_POST["btnAddMessage"], strtoupper($_POST["txtText"]), strtoupper($_POST["txtTitle"]), $_POST["sltTest"], date("Y-m-d"));
+            buildPage($conn, $_POST["btnAddMessage"]);
         }
     }
 
@@ -76,7 +67,7 @@
         if($typeUser == "Teacher") {
             $sql = "SELECT TITOLO FROM Test WHERE (Test.EMAIL_DOCENTE=:emailDocente);";
 
-            try{
+            try {
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":emailDocente", $_SESSION["emailDocente"]);
 
@@ -87,11 +78,11 @@
         } else {
             $sql = "SELECT TITOLO FROM Test;";
 
-            try{
+            try {
                 $result = $conn -> prepare($sql);
     
                 $result -> execute();
-            }catch(PDOException $e) {
+            } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }     
         }

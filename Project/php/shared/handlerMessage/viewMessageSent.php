@@ -1,22 +1,19 @@
 <?php
+    include "buildFormMessage.php";
+    include "../../connectionDB.php";
+    
     session_start();
+    $conn = openConnection();
 
     if ((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: ../login/login.php");
     } 
-
-    include "buildFormMessage.php";
-    include "../../connectionDB.php";
-                
-    $conn = openConnection();
-    
+        
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnViewMessage"])) {
             /* tramite il tag value del bottone è memorizzato l'id del messaggio e la tipologia di utente */
             $values = $_POST["btnViewMessage"];
             $tokens = explode("|?|", $values);
-            $idMessage = $tokens[0];
-            $typeUser = $tokens[1];
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,12 +28,12 @@
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
             <?php
                 /* definizione del bottone undo, a cui è passato la tipologia di utente per impostare il corretto reindirizzamento */
-                buildButtonUndo($typeUser);
+                buildButtonUndo($tokens[1]);
             ?>
         </div>
         <div class="container">
             <?php  
-                        buildFormMessage($conn, $typeUser, $idMessage);
+                        buildFormMessage($conn, $tokens[1], $tokens[0]);
                     }
                 }
                 

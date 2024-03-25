@@ -1,5 +1,8 @@
 <?php 
     session_start();
+
+    $conn = openConnection();
+    $manager = openConnectionMongoDB();
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,11 +17,8 @@
 </html>
     <body>
         <?php
-            $conn = openConnection();
-            $manager = openConnectionMongoDB();
-
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                if (isset($_POST["txtEmailLogin"])) {
+            if($_SERVER["REQUEST_METHOD"] == "POST") {
+                if(isset($_POST["txtEmailLogin"])) {
                     $email = $_POST["txtEmailLogin"];
                     $password = $_POST["txtPasswordLogin"];
 
@@ -38,7 +38,7 @@
                     }  
                         
                     $numRows = $result -> rowCount();
-                    if($numRows > 0){
+                    if($numRows > 0) {
                         $tipo =  typeUtente($conn, $email);
 
                         /* tramite lo start della sessione viene salvata la email dell'utente che abbia effettuato il login */
@@ -57,7 +57,7 @@
                     } else {
                         loginError();
                     } 
-                } elseif (isset($_POST["txtEmailSignupStudente"])) {
+                } elseif(isset($_POST["txtEmailSignupStudente"])) {
                     $email = $_POST["txtEmailSignupStudente"];
                     $password = $_POST["txtPasswordSignupStudente"];
                     $nome = $_POST["txtNomeSignupStudente"];
@@ -78,9 +78,9 @@
                     }  
                     
                     $numRows = $result -> rowCount();
-                    if($numRows > 0){
+                    if($numRows > 0) {
                         signUpError("signUpStudente.php");
-                    } else{
+                    } else {
                         /* controllo per verifica assenza di recapito telefonico */
                         $telefono = checkTelephone($telefono);
                         insertStudente($conn, $email, $password, $nome, $cognome, $telefono, $annoImmatricolazione, $codice);
@@ -92,7 +92,7 @@
                         header("Location: login.php");
                         exit();
                     }
-                } elseif (isset($_POST["txtEmailSignupDocente"])) {
+                } elseif(isset($_POST["txtEmailSignupDocente"])) {
                     $email = $_POST["txtEmailSignupDocente"];
                     $password = $_POST["txtPasswordSignupDocente"];
                     $nome = $_POST["txtNomeSignupDocente"];
