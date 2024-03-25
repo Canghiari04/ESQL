@@ -35,145 +35,147 @@
             <?php getUndo($typeUser) ?>
         </div>
         <div class="container">
-            <div>
-                <?php 
-                    $sql = "SELECT * FROM Test_Completati;";
-                            
-                    try {
-                        $result = $conn -> prepare($sql);
-
-                        $result -> execute();
-                    } catch (PDOException $e) {
-                        echo "Eccezione: ".$e -> getMessage()."<br>"; 
-                    }
+            <div class="div-statistic">
+                <div class="single-div">
+                    <?php 
+                        $sql = "SELECT * FROM Test_Completati;";
                                 
-                    echo '
-                        <h2>Classifica studenti in base al numero di test completati</h2>
-                        <table>   
-                            <tr> 
-                                <th>POSIZIONE</th>
-                                <th>STUDENTE</th>
-                                <th>TEST COMPLETATI</th>
-                            </tr>
-                    ';
-                                
-                    $numRows = $result -> rowCount();
-                    if($numRows > 0) {
-                        $cont = 1;
+                        try {
+                            $result = $conn -> prepare($sql);
 
-                        while($row = $result->fetch(PDO::FETCH_OBJ) and $cont < 11) {
-                            echo '  
-                                <tr>  
-                                    <th>'.$cont.'</th>  
-                                    <th>'.$row -> CODICE.'</th>
-                                    <th>'.$row -> NUMERO.'</th>
+                            $result -> execute();
+                        } catch (PDOException $e) {
+                            echo "Eccezione: ".$e -> getMessage()."<br>"; 
+                        }
+                                    
+                        echo '
+                            <h2>Classifica studenti in base al numero di test completati</h2>
+                            <table>   
+                                <tr> 
+                                    <th>POSIZIONE</th>
+                                    <th>STUDENTE</th>
+                                    <th>TEST COMPLETATI</th>
                                 </tr>
-                            ';
+                        ';
+                                    
+                        $numRows = $result -> rowCount();
+                        if($numRows > 0) {
+                            $cont = 1;
 
-                            $cont++;
+                            while($row = $result->fetch(PDO::FETCH_OBJ) and $cont < 11) {
+                                echo '  
+                                    <tr>  
+                                        <th>'.$cont.'</th>  
+                                        <th>'.$row -> CODICE.'</th>
+                                        <th>'.$row -> NUMERO.'</th>
+                                    </tr>
+                                ';
+
+                                $cont++;
+                            }
+
+                            echo '</table>';
                         }
 
-                        echo '</table>';
-                    }
+                        closeConnection($conn);
+                    ?>
+                </div>
+                <div class="single-div">
+                    <?php 
+                        $conn = openConnection();
 
-                    closeConnection($conn);
-                ?>
-            </div>
-            <div>
-                <?php 
-                    $conn = openConnection();
-
-                    $sql = "SELECT * FROM Risposte_Corrette;";
-                            
-                    try {
-                        $result = $conn -> prepare($sql);
-
-                        $result -> execute();
-                    } catch (PDOException $e) {
-                        echo "Eccezione: ".$e -> getMessage()."<br>"; 
-                    }
+                        $sql = "SELECT * FROM Risposte_Corrette;";
                                 
-                    echo '
-                            <h2>Classifica studenti in base al numero di risposte corrette</h2>
+                        try {
+                            $result = $conn -> prepare($sql);
+
+                            $result -> execute();
+                        } catch (PDOException $e) {
+                            echo "Eccezione: ".$e -> getMessage()."<br>"; 
+                        }
+                                    
+                        echo '
+                                <h2>Classifica studenti in base al numero di risposte corrette</h2>
+                                <table class="table-head">   
+                                    <tr>  
+                                        <th>POSIZIONE</th>
+                                        <th>STUDENTE</th>
+                                        <th>RISPOSTE CORRETTE</th>                  
+                                        <th>RISPOSTE COMPLETATE</th>
+                                        <th>PERCENTUALE</th>
+                                    </tr>
+                        ';
+                                    
+                        $numRows = $result -> rowCount();
+                        if($numRows > 0) {
+                            $cont = 1;
+
+                            while($row = $result->fetch(PDO::FETCH_OBJ) and $cont < 11) {
+                                $perc = ($row -> PERC) * 100;
+                                
+                                echo '
+                                    <tr>  
+                                        <th>'.$cont.'</th>  
+                                        <th>'.$row -> CODICE.'</th>
+                                        <th>'.$row -> NUMEROCORR.'</th>
+                                        <th>'.$row -> NUMERORIS.'</th>
+                                        <th>'.$perc.'%</th>
+                                    </tr>
+                                ';
+
+                                $cont++;
+                            }
+
+                            echo '</table>';
+                        }
+                        
+                        closeConnection($conn);
+                    ?>
+                </div>
+                <div class="single-div">
+                    <?php 
+                        $sql = "SELECT * FROM Risposte_Inserite;";
+                                
+                        try {
+                            $result = $conn -> prepare($sql);
+
+                            $result -> execute();
+                        } catch (PDOException $e) {
+                            echo "Eccezione: ".$e -> getMessage()."<br>"; 
+                        }
+                                    
+                        echo '
+                            <h2>Classifica dei questiti in base al numero di risposte inserite</h2>
                             <table class="table-head">   
                                 <tr>  
                                     <th>POSIZIONE</th>
-                                    <th>STUDENTE</th>
-                                    <th>RISPOSTE CORRETTE</th>                  
-                                    <th>RISPOSTE COMPLETATE</th>
-                                    <th>PERCENTUALE</th>
+                                    <th>QUESITO</th>
+                                    <th>RISPOSTE</th>                  
                                 </tr>
-                    ';
-                                
-                    $numRows = $result -> rowCount();
-                    if($numRows > 0) {
-                        $cont = 1;
+                        ';
+                                    
+                        $numRows = $result -> rowCount();
+                        if($numRows > 0) {
+                            $cont = 1;
 
-                        while($row = $result->fetch(PDO::FETCH_OBJ) and $cont < 11) {
-                            $perc = ($row -> PERC) * 100;
-                            
-                            echo '
-                                <tr>  
-                                    <th>'.$cont.'</th>  
-                                    <th>'.$row -> CODICE.'</th>
-                                    <th>'.$row -> NUMEROCORR.'</th>
-                                    <th>'.$row -> NUMERORIS.'</th>
-                                    <th>'.$perc.'%</th>
-                                </tr>
-                            ';
+                            while($row = $result->fetch(PDO::FETCH_OBJ) and $cont < 11) {
+                                echo '
+                                    <tr>
+                                        <th>'.$cont.'</th>  
+                                        <th>'.$row -> ID_QUESITO.'</th>
+                                        <th>'.$row -> NUMERO.'</th>
+                                    </tr>
+                                ';
 
-                            $cont++;
+                                $cont++;
+                            }
+
+                            echo '</table>';
                         }
 
-                        echo '</table>';
-                    }
-                    
-                    closeConnection($conn);
-                ?>
-            </div>
-            <div>
-                <?php 
-                    $sql = "SELECT * FROM Risposte_Inserite;";
-                            
-                    try {
-                        $result = $conn -> prepare($sql);
-
-                        $result -> execute();
-                    } catch (PDOException $e) {
-                        echo "Eccezione: ".$e -> getMessage()."<br>"; 
-                    }
-                                
-                    echo '
-                        <h2>Classifica dei questiti in base al numero di risposte inserite</h2>
-                        <table class="table-head">   
-                            <tr>  
-                                <th>POSIZIONE</th>
-                                <th>QUESITO</th>
-                                <th>RISPOSTE</th>                  
-                            </tr>
-                    ';
-                                
-                    $numRows = $result -> rowCount();
-                    if($numRows > 0) {
-                        $cont = 1;
-
-                        while($row = $result->fetch(PDO::FETCH_OBJ) and $cont < 11) {
-                            echo '
-                                <tr>
-                                    <th>'.$cont.'</th>  
-                                    <th>'.$row -> ID_QUESITO.'</th>
-                                    <th>'.$row -> NUMERO.'</th>
-                                </tr>
-                            ';
-
-                            $cont++;
-                        }
-
-                        echo '</table>';
-                    }
-
-                    closeConnection($conn);
-                ?>
+                        closeConnection($conn);
+                    ?>
+                </div>
             </div>
         </div>
     </body>
