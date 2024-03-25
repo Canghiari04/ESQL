@@ -15,6 +15,22 @@
         return ($numRows > 0);
     } 
 
+    function checkNumberRows($conn, $email) {
+        $sql = "SELECT * FROM Tabella_Esercizio WHERE (Tabella_Esercizio.EMAIL_DOCENTE=:email) AND (Tabella_Esercizio.NUM_RIGHE > 0);";
+
+        try {
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":email", $email);
+            
+            $result -> execute();
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        $numRows = $result -> rowCount();
+        return ($numRows > 0);
+    }
+
     function getLastId($conn, $titleTest) {
         $sql = "SELECT MAX(ID) AS MAX_ID_QUESTION FROM Quesito WHERE (Quesito.TITOLO_TEST=:titoloTest);";
 
