@@ -1,19 +1,17 @@
 <?php
+    include "../handlerData/buildForm.php";
+    include "../../connectionDB.php";
+
     session_start();
+    $conn = openConnection();
 
     if(!isset($_SESSION["emailStudente"])) {
         header("Location: ../../shared/login/login.php");
         exit();
     }
 
-    include "../handlerData/buildForm.php";
-    include "../../connectionDB.php";
-
-    $conn = openConnection();
-
     if(isset($_SERVER["REQUEST_METHOD"])) {
         if(isset($_POST["btnPhotoTest"])) {
-            $namePage = $_POST["btnPhotoTest"];
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,43 +26,41 @@
             <div class="navbar">
                 <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
                 <?php
-                            /* costruzione del bottone undo dinamica */
-                            buildButtonUndo($namePage);
+                            buildButtonUndo($_POST["btnPhotoTest"]);
                         }
                     }
                 ?>
             </div>
             <?php  
-                $filePhoto = getPhoto($conn);
-                printPhoto($filePhoto);
-
-                /* funzione che restituisce il file dati dell'immagine del test */   
-                function getPhoto($conn){
-
-                    $sql = "SELECT * FROM Test WHERE (TITOLO=:titoloTest);";
-
-                    try {
-                        $result = $conn -> prepare($sql);
-                        $result -> bindValue(":titoloTest", $_SESSION["titleTest"]);
-        
-                        $result -> execute();
-                    } catch(PDOException $e) {
-                        echo "Eccezione ".$e -> getMessage()."<br>";
-                    }
-    
-                    $row = $result -> fetch(PDO::FETCH_OBJ);
-                    $filePhoto = $row -> FOTO;
-
-                    return $filePhoto;
-                }
-
-                /* funzione che permette la visualizzazione dell'immagine del test */  
-                function printPhoto($filePhoto){
-                    echo '<img class="image-test" src="data:image/jpeg;base64,'.base64_encode($filePhoto).'" alt="FOTO NON DISPONIBILE">';
-                }
+                printPhoto(getPhoto($conn));
 
                 closeConnection($conn);
             ?>    
         </div>
     </body>
+    <?php 
+        /* funzione che restituisce il file dell'immagine del test */   
+        function getPhoto($conn){
+            $sql = "SELECT FOTO FROM Test WHERE (TITOLO=:titoloTest);";
+
+            try {
+                $result = $conn -> prepare($sql);
+                $result -> bindValue(":titoloTest", $_SESSION["titleTest"]);
+        
+                $result -> execute();
+            } catch(PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+    
+            $row = $result -> fetch(PDO::FETCH_OBJ);
+            $filePhoto = $row -> FOTO;
+
+            return $filePhoto;
+        }
+
+        /* funzione che permette la visualizzazione dell'immagine del test */  
+        function printPhoto($filePhoto){
+            echo '<img class="image-test" src="data:image/jpeg;base64,'.base64_encode($filePhoto).'" alt="FOTO NON DISPONIBILE">';
+        }
+    ?>
 </html>
