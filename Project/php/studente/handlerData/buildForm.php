@@ -1,4 +1,40 @@
-<?php          
+<?php  
+    function buildButtonUndo($namePage) {
+        echo '
+            <form action="'.$namePage.'" method="POST">
+                <button class="button-undo" type="submit" name="btnUndo"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
+            </form>
+        ';
+    }
+
+    function buildButtonPhoto($conn, $namePage) {
+        $sql = "SELECT FOTO FROM Test WHERE (Test.TITOLO=:titoloTest);";
+
+        try {
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":titoloTest", $_SESSION["titleTest"]);
+
+            $result -> execute();
+        } catch(PDOException $e) {
+            echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        $row = $result -> fetch(PDO::FETCH_OBJ);
+        if(($row -> FOTO) != null) {
+            echo ' 
+                <form action="../test/photoTest.php" method="POST">
+                    <button class="button-navbar" type="submit" name="btnPhotoTest" value="'.$namePage.'">View photo</button>
+                </form> 
+            ';
+        } else {
+            echo ' 
+                <form action="../test/photoTest.php" method="POST">
+                    <button class="button-navbar" type="submit" name="btnPhotoTest" disabled>None photo</button>
+                </form> 
+            ';
+        }
+    }
+
     /* metodo utilizzato per rendere dinamica la stampa dei bottoni, a seconda dello stato del test e dai quesiti che lo compongono */
     function buildButtonForm($conn, $email, $titleTest, $stateTest) {
         /* rispetto allo stato del test, circoscritto al tentativo sostenuto dallo studente, si differenziano le funzionalità che possono susseguirsi, abilitando o meno il bottone di riferimento */
@@ -6,7 +42,7 @@
             case "APERTO":
                 return '
                     <form action="viewAnswer.php" method="POST">
-                        <th><button class="table-button" type="submit" name="btnViewRisposte" disabled>Disabled Answers</button></th>
+                        <th><button class="table-button" type="submit" name="btnViewAnswer" disabled>Disabled Answers</button></th>
                     </form>
                     <form action="../test/buildTest.php" method="POST">
                         <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$titleTest.'">Restart Test</button></th>
@@ -16,7 +52,7 @@
             case "INCOMPLETAMENTO":
                 return '
                     <form action="viewAnswer.php" method="POST">
-                        <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$titleTest.'">View Answers</button></th>
+                        <th><button class="table-button" type="submit" name="btnViewAnswer" value="'.$titleTest.'">View Answers</button></th>
                     </form>
                     <form action="../test/buildTest.php" method="POST">
                         <th><button class="table-button" type="submit" name="btnRestartTest" value="'.$titleTest.'">Restart Test</button></th>
@@ -27,7 +63,7 @@
                 if(checkNumAnswer($conn, $email, $titleTest)) {
                     return '
                         <form action="viewAnswer.php" method="POST">
-                            <th><button class="table-button" type="submit" name="btnViewRisposte" value="'.$titleTest.'">View Answers</button></th>
+                            <th><button class="table-button" type="submit" name="btnViewAnswer" value="'.$titleTest.'">View Answers</button></th>
                         </form>
                         <form action="../test/buildTest.php" method="POST">
                             <th><button class="table-button" type="submit" name="btnStartTest" disabled>Disabled Test</button></th>
@@ -98,6 +134,7 @@
         echo '
             <div class="div-question">
                 <label>'.$descriptionQuestion.'</label>
+                <div class="div-checkbox">
         ';
 
         /* vettore contente gli id delle opzioni di risposta dati da tentativi precedenti sostenuti dallo studente */
@@ -107,21 +144,21 @@
             /* abilitate oppure disabilitate le checkbox, a seconda della pagina che abbia richiamato il metodo, nel caso di visualizzazione delle risposte sarà pari a false contrariamente per tentativi di svolgimento del test sarà impostato a true */
             if($enabled == true) {
                 echo '
-                    <div class="div-checkbox">
+                    <div>
                         <input type="checkbox" name="checkbox'.$idQuestion.'[]" value="'.$row -> ID.'"'.printChecked($row -> ID, $arrayChecked).'>
                         <label>'.$row -> TESTO.'</label>
                     </div>
                 ';
             } elseif($solution == true) {
                 echo '
-                    <div class="div-checkbox">
+                    <div>
                         <input type="checkbox" name="checkbox'.$idQuestion.'[]" value="'.$row -> ID.'" checked disabled>
                         <label>'.$row -> TESTO.'</label>
                     </div>
                 ';
             } else {
                 echo '
-                    <div class="div-checkbox">
+                    <div>
                         <input type="checkbox" name="checkbox'.$idQuestion.'[]" value="'.$row -> ID.'"'.printChecked($row -> ID, $arrayChecked).' disabled>
                         <label>'.$row -> TESTO.'</label>
                     </div>
@@ -132,9 +169,13 @@
         /* vettore contenente l'insieme dei nomi delle tabelle che abbiano il riferimento al quesito visualizzato */
         $arrayNameTable = getNameTable($conn, $idQuestion, $titleTest);
 
+        echo '
+                </div>
+        ';
+
         /* stampa delle tabelle che siano collegate al quesito mediante la tabella Afferenza */
         buildTable($conn, $arrayNameTable, null, null);
-
+        
         echo '
             </div>
         ';
@@ -255,14 +296,26 @@
     }
 
     function buildResultTables($conn, $rowResult, $rowSolution) {
+        /* array contenenti i field delle tabelle risultato generate dal singolo check */
         $arrayFieldAnswer = $_SESSION["fieldAnswer"];
         $arrayFieldSolution = $_SESSION["fieldSolution"];
 
         echo '
             <div class="div-table">
-                <label>TABELLA RISPOSTA</label>
-                <table>
-                    <tr>
+        ';
+
+        /* diversificazione dello style associata alla correttezza della risposta data dallo studente */
+        if($rowResult != $rowSolution) {
+            echo '<div class="div-table-answer-wrong">';
+        } else {
+            echo '<div class="div-table-answer-correct">';
+        }
+
+        /* visualizzazione all'interno del form della tabella risposta, generata dalla query data dallo studente */
+        echo '
+            <label>TABELLA RISPOSTA</label>
+            <table>
+                <tr>
         ';
 
         foreach($arrayFieldAnswer as $field) {
@@ -283,11 +336,14 @@
             echo '</tr>';
         }
 
+        /* visualizzazione all'interno del form della tabella soluzione, generata dalla query salvata nel database */
         echo '
-            </table>
-            <label>TABELLA SOLUZIONE</label>
-            <table>
-                <tr>
+                </table>
+            </div>
+            <div class="div-table-solution">
+                <label>TABELLA SOLUZIONE</label>
+                <table>
+                    <tr>
         ';
 
         foreach($arrayFieldSolution as $field) {
@@ -309,7 +365,8 @@
         }
 
         echo '
-                </table>
+                    </table>
+                </div>
             </div>
         ';
     }
@@ -362,14 +419,6 @@
         }
 
         echo '
-            </form>
-        ';
-    }
-
-    function buildButtonUndo($namePage) {
-        echo '
-            <form action="'.$namePage.'" method="POST">
-                <button class="button-undo" type="submit" name="btnUndo"><img class="zoom-on-img undo" width="32" height="32" src="../../style/img/undo.png"></button>
             </form>
         ';
     }

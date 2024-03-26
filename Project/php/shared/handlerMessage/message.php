@@ -1,5 +1,9 @@
 <?php
+    include "buildFormMessage.php";
+    include "../../connectionDB.php";
+
     session_start();    
+    $conn = openConnection();
 
     if ((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: ../login/login.php");
@@ -15,26 +19,19 @@
     </head>
     <body>
         <?php
-            include "buildFormMessage.php";
-            include "../../connectionDB.php";
-
-            $conn = openConnection();
-
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnUndo"])) {
-                    $typeUser = $_POST["btnUndo"];
-
-                    buildNavbar($typeUser);        
-                    buildMessageTest($conn, $typeUser);
+                    /* metodi acquisiscono tramite il POST la tipologia dell'utente */
+                    buildNavbar($_POST["btnUndo"]);        
+                    buildMessageTest($conn, $_POST["btnUndo"]);
                 }
             } else {
-                /* tramite l'url viene acquisita la tipologia dell'utente, in maniera tale da compiere il corretto reindirizzamento tra i file */
+                /* tramite l'url viene acquisita la tipologia dell'utente, in maniera tale da compiere il corretto build delle pagine */
                 $url = $_SERVER["REQUEST_URI"];
                 $tokens = explode('?', $url);
-                $typeUser = $tokens[1];
 
-                buildNavbar($typeUser);        
-                buildMessageTest($conn, $typeUser);
+                buildNavbar($tokens[1]);        
+                buildMessageTest($conn, $tokens[1]);
             }
             
             closeConnection($conn);

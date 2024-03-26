@@ -151,19 +151,42 @@
     
     /* inserimento di una nuova risposta all'interno della collezione Risposta */
     function insertAnswer($conn, $email, $idQuestion, $titleTest, $textAnswer, $outcome) {
-        $storedProcedure = "CALL Inserimento_Risposta(:emailStudente, :idQuesito, :titoloTest, :testoRisposta, :esito)";
+        if(checkState($conn, $email, $titleTest)) {
+            $storedProcedure = "CALL Inserimento_Risposta(:emailStudente, :idQuesito, :titoloTest, :testoRisposta, :esito)";
+            
+            try {
+                $stmt = $conn -> prepare($storedProcedure);
+                $stmt -> bindValue(":emailStudente", $email);
+                $stmt -> bindValue(":idQuesito", $idQuestion);
+                $stmt -> bindValue(":titoloTest", $titleTest);
+                $stmt -> bindValue(":testoRisposta", strtoupper($textAnswer));
+                $stmt -> bindValue(":esito", $outcome);
+                
+                $stmt -> execute();
+            } catch(PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+        }
+    }
+
+    function checkState($conn, $email, $titleTest) {
+        $sql = "SELECT STATO FROM Completamento WHERE (Completamento.EMAIL_STUDENTE=:email) AND (Completamento.TITOLO_TEST=:titoloTest);";
 
         try {
-            $stmt = $conn -> prepare($storedProcedure);
-            $stmt -> bindValue(":emailStudente", $email);
-            $stmt -> bindValue(":idQuesito", $idQuestion);
-            $stmt -> bindValue(":titoloTest", $titleTest);
-            $stmt -> bindValue(":testoRisposta", strtoupper($textAnswer));
-            $stmt -> bindValue(":esito", $outcome);
-            
-            $stmt -> execute();
+            $result = $conn -> prepare($sql);
+            $result -> bindValue(":email", $email);
+            $result -> bindValue(":titoloTest", $titleTest);
+
+            $result -> execute();
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
+        }
+
+        $row = $result -> fetch(PDO::FETCH_OBJ);
+        if(($row -> STATO) == "CONCLUSO") {
+            return 0;
+        } else {
+            return 1;
         }
     }
 

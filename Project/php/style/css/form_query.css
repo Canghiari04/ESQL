@@ -30,6 +30,18 @@ label:hover {
     display: inline;
 }
 
+.div-table-answer-wrong {
+    color: #bb3f3f;
+}
+
+.div-table-answer-correct {
+    color: green;
+}
+
+.div-table-solution {
+    color: green;
+}
+
 table {
     border-collapse: collapse;
     margin-top: 1rem;

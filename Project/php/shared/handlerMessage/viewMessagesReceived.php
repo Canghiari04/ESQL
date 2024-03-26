@@ -1,19 +1,16 @@
 <?php
+    include "buildFormMessage.php";
+    include "../../connectionDB.php";
+    
     session_start();
+    $conn = openConnection();
 
     if ((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: ../login/login.php");
-    } 
-
-    include "buildFormMessage.php";
-    include "../../connectionDB.php";
-                
-    $conn = openConnection();
+    }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnViewMessages"])) {
-            /* memorizzazione della tipologia di utente, attuata per definire i reindirizzamenti */
-            $typeUser = $_POST["btnViewMessages"];
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,13 +24,13 @@
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
             <?php 
-                buildButtonUndo($typeUser);
+                buildButtonUndo($_POST["btnViewMessages"]);
             ?>
         </div>
         <div class="container">
             <?php 
                 
-                        buildFormMessages($conn, $typeUser);
+                        buildFormMessages($conn, $_POST["btnViewMessages"]);
                     }
                 }
 
