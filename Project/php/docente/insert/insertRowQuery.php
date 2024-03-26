@@ -40,7 +40,7 @@
         <?php 
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddData"])) {
-                    $sql = stroupper($_POST["txtAddRow"]);
+                    $sql = strtoupper($_POST["txtAddRow"]);
 
                     $tokens = explode('(', trim($sql));
                     $tokensHeader = explode(' ', $tokens[0]);
@@ -48,7 +48,7 @@
                     /* controllo riferito a query di inserimento */
                     if($tokensHeader[0] == "INSERT") {
                         /* controllo di uguaglianza tra la tabella riferita da query rispetto alla collezione selezionata */
-                        if($tokensHeader[2] == getTableName($conn)) {
+                        if(trim($tokensHeader[2]) == getTableName($conn)) {
                             try {
                                 $result = $conn -> prepare($sql);
 
@@ -61,7 +61,7 @@
 
                             $rowInserted = $result -> rowCount();
 
-                            for($i = 0; $i < ($rowInserted - 1); $i++){ 
+                            for($i = 0; $i < $rowInserted ; $i++){ 
                                 /* inserimento fittizio all'interno della collezione Manipolazione_Riga, utilizzato per scatenare il trigger che modificherà il numero di righe della tabella in questione */
                                 $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
                                     
