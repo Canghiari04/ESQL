@@ -1,3 +1,6 @@
+<?php
+    session_destroy(); // metodo attuato per eliminare i campi immessi precedentemente all'interno della sessione  
+?>
 <!DOCTYPE html>
 <html>
     <head>
