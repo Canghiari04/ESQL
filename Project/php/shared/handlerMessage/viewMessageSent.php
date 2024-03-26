@@ -11,9 +11,7 @@
         
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnViewMessage"])) {
-            /* tramite il tag value del bottone è memorizzato l'id del messaggio e la tipologia di utente */
-            $values = $_POST["btnViewMessage"];
-            $tokens = explode("|?|", $values);
+            $tokens = explode("|?|", $_POST["btnViewMessage"]);
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,19 +25,17 @@
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
             <?php
-                /* definizione del bottone undo, a cui è passato la tipologia di utente per impostare il corretto reindirizzamento */
-                buildButtonUndo($tokens[1]);
+                buildButtonUndo($tokens[1]); // definizione del buttone undo, dinamica a seconda della pagina chiamante
             ?>
         </div>
         <div class="container">
             <?php  
-                        buildFormMessage($conn, $tokens[1], $tokens[0]);
+                        buildFormMessage($conn, $tokens[1], $tokens[0]); // costruzione del form contenente tutti i messaggi inviati
                     }
                 }
                 
-                /* funzione che permette la visualizzazione del messaggio inviato */
                 function buildFormMessage($conn, $typeUser, $idMessage) {
-                    if($typeUser == "Teacher") {
+                    if($typeUser == "Teacher") { // diversificazione della query a seconda della tipologia
                         $sql = "SELECT * FROM Messaggio WHERE (Messaggio.ID=:idMessaggio);";
                         
                         try{

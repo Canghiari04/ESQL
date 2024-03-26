@@ -1,7 +1,6 @@
 <?php
-    /* metodo che permette di visualizzare correttamente la navbar */
     function buildNavbar($typeUser) {
-        if($typeUser == "Teacher") {
+        if($typeUser == "Teacher") { // diversificazione del reindirizzamento a seconda della tipologia dell'utente
             $nameFile = "../../docente/handlerDocente.php";
         } else {
             $nameFile = "../../studente/handlerStudente.php";
@@ -21,71 +20,44 @@
         ';
     }
 
-
-    /* funzione che permette di visualizzare tutti i messaggi inviati dallo specifico utente */
     function buildMessageTest($conn, $typeUser) {
-        /* in base alla tipologia e alla mail è diversificata l'interrogazione posta al database */
-        if($typeUser == "Teacher") {
-            $sql = "SELECT * FROM Messaggio WHERE (ID NOT IN (SELECT Messaggio_Studente.ID_MESSAGGIO_STUDENTE FROM Messaggio_Studente)) AND (Messaggio.EMAIL_DOCENTE=:emailDocente);";
+        if($typeUser == "Teacher") { // diversificazione della query a seconda della tipoligia
+            $sql = "SELECT * FROM Messaggio WHERE (ID NOT IN (SELECT Messaggio_Studente.ID_MESSAGGIO_STUDENTE FROM Messaggio_Studente)) AND (Messaggio.EMAIL_DOCENTE=:email);";
             
             try{
                 $result = $conn -> prepare($sql);
-                $result -> bindValue(":emailDocente", $_SESSION["emailDocente"]);
+                $result -> bindValue(":email", $_SESSION["emailDocente"]);
                 
                 $result -> execute();
             } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+
+            $numRows = $result -> rowCount();
+            if($numRows > 0) {
+                $row = $result -> fetch(PDO::FETCH_OBJ);    
+                deployMessage($conn, $row -> EMAIL_DOCENTE, $row -> TESTO, $row -> TITOLO, $row -> TITOLO_TEST, $row -> DATA_INSERIMENTO);
             }
         } else {
-            $sql = "SELECT * FROM Messaggio, Messaggio_Studente WHERE (Messaggio.ID=Messaggio_Studente.ID_MESSAGGIO_STUDENTE) AND (Messaggio_Studente.EMAIL_STUDENTE=:emailStudente);";
+            $sql = "SELECT * FROM Messaggio, Messaggio_Studente WHERE (Messaggio.ID=Messaggio_Studente.ID_MESSAGGIO_STUDENTE) AND (Messaggio_Studente.EMAIL_STUDENTE=:email);";
             
             try{
                 $result = $conn -> prepare($sql);
-                $result -> bindValue(":emailStudente", $_SESSION["emailStudente"]);
+                $result -> bindValue(":email", $_SESSION["emailStudente"]);
                 
                 $result -> execute();
             } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
+
+            $numRows = $result -> rowCount();
+            if($numRows > 0) {  
+                $row = $result -> fetch(PDO::FETCH_OBJ);
+                deployMessage($conn, $row -> EMAIL_STUDENTE, $row -> TESTO, $row -> TITOLO, $row -> TITOLO_TEST, $row -> DATA_INSERIMENTO);
+            }   
         }
-            
-        echo '
-            <div class="center">
-                <div class="div-th"> 
-                    <table class="table-head-message">   
-                        <tr>  
-                            <th>TITOLO</th>
-                            <th>TEST RIFERIMENTO</th>
-                            <th>DATA</th>
-                        </tr>
-                    </table>
-                </div>
-        ';
-            
-        if(isset($result)) {
-            while($row = $result->fetch(PDO::FETCH_OBJ)) {
-                echo '
-                        <div class="div-td">
-                            <table class="table-list">   
-                                <tr>  
-                                    <th>'.$row -> TITOLO.'</th>
-                                    <th>'.$row -> TITOLO_TEST.'</th>
-                                    <th>'.$row -> DATA_INSERIMENTO.'</th>
-                                    <th>
-                                        <form action="viewMessageSent.php" method="POST">
-                                            <button class="table-button" type="submit" name="btnViewMessage" value= "'.$row -> ID.'|?|'.$typeUser.'">View Message</button>
-                                        </form>
-                                    </th>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                ';
-            }
-        }     
     }              
 
-    /* definizione del bottone undo all'interno della navbar */
     function buildButtonUndo($typeUser) {
         echo '
             <form action="message.php" method="POST">
@@ -94,8 +66,7 @@
         ';
     }  
 
-    /* costruzione del form per la visualizzazione dei messaggi inviati e ricevuti */
-    function deployMessage($conn, $email, $text, $title, $titleTest, $date) {
+    function deployMessage($conn, $email, $text, $title, $titleTest, $date) { // definizione del form per la visualizzazione dei messaggi 
         echo '
             <div>
                 <div class="div-message">
@@ -115,8 +86,7 @@
         ';
     }
     
-    /* metodo che permette di memorizzare il nome e il cognome dell'utente, utilizzati per la visualizzazione del messaggio */
-    function getNameSurname($conn, $email) {
+    function getNameSurname($conn, $email) { // funzione attuata per restituire il nome e cognome dell'utente
         $sql = "SELECT Utente.NOME, Utente.COGNOME FROM Utente WHERE (Utente.EMAIL=:email);";
         
         try {

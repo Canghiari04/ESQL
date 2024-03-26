@@ -27,25 +27,24 @@
         </div>
         <?php    
             if($_SERVER["REQUEST_METHOD"] == "POST") {
-                if(isset($_POST["btnAddAnswer"])) {
-                    /* inserimento della risposta fornita rispetto alla domanda in questione, fornendo tipo e id della domanda */
-                    addOption($conn, strtoupper($_SESSION["typeQuestion"]), getLastId($conn, strtoupper($_SESSION["typeQuestion"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], strtoupper($_POST["txtAnswer"]), $_POST["sltSolution"]);
+                if(isset($_POST["btnAddOption"])) {
+                    buildForm($conn, $_SESSION["typeQuestion"], $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]); // costruzione del form per inserimento di risposte al quesito 
+                    printQuestion($_SESSION["descriptionCurrentQuestion"]); // stampa all'interno della textarea dedicata del quesito in evidenza
+                } elseif(isset($_POST["btnAddAnswer"])) {
+                    addOption($conn, strtoupper($_SESSION["typeQuestion"]), getLastId($conn, strtoupper($_SESSION["typeQuestion"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], strtoupper($_POST["txtAnswer"]), $_POST["sltSolution"]); // inserimento della nuova risposta all'interno del database
                     buildForm($conn, $_SESSION["typeQuestion"], $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);
                     printQuestion($_SESSION["descriptionCurrentQuestion"]);
-                } elseif(isset($_POST["btnAddOption"])) {
-                    buildForm($conn, $_SESSION["typeQuestion"], $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);
-                    printQuestion($_SESSION["descriptionCurrentQuestion"]);
-                }
+                } 
             }   
         ?>
     </body>
     <?php 
         function printQuestion($textQuestion) {
-            echo "<script>document.querySelector('.input-tips').value=".json_encode("QUESITO: $textQuestion").";</script>";
+            echo "<script>document.querySelector('.input-tips').value=".json_encode("QUESITO: $textQuestion").";</script>"; // metodo in grado di rendere compatibili caratteri speciali con la visualizzazione all'interno della textarea
         }
 
         function buildForm($conn, $type) {
-            if($type == "CHIUSA") {
+            if($type == "CHIUSA") { // diversificazione del form visualizzato a seconda della tipologia
                 echo '
                     <form action="" method="POST">
                         <div class="container">

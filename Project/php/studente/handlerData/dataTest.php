@@ -1,7 +1,7 @@
 <?php   
-    /* metodo che restituisce tutti gli id dei quesiti che compongono il test selezionato */
-    function getQuestionTest($conn, $titleTest) {
+    function getQuestionTest($conn, $titleTest) { // funzione attuata per acquisire tutti i quesiti che compongono il test
         $arrayIdQuestion = array();
+
         $sql = "SELECT Quesito.ID FROM Quesito WHERE (Quesito.TITOLO_TEST=:titoloTest);";       
 
         try {
@@ -20,8 +20,7 @@
         return $arrayIdQuestion;
     }
 
-    /* funzione restituente l'insieme delle risposte date dallo studente rispetto allo specifico test */
-    function getAnswerTest($conn, $email, $titleTest) {
+    function getAnswerTest($conn, $email, $titleTest) { // funzione ideata per estrapolare tutte le risposte date dallo studente ai quesiti dei test
         $sql = "SELECT * FROM Risposta WHERE (Risposta.EMAIL_STUDENTE=:emailStudente) AND (Risposta.TITOLO_TEST=:titoloTest);";
                     
         try {
@@ -37,7 +36,6 @@
         return $result;
     }
 
-    /* funzione che distingue la tipologia di quesito, da cui scaturisce la stampa del form di risposta alla domanda proposta */
     function getTypeQuestion($conn, $idQuestion, $titleTest) {
         $sql = "SELECT * FROM Domanda_Chiusa WHERE (Domanda_Chiusa.ID_DOMANDA_CHIUSA=:idQuesito) AND (Domanda_Chiusa.TITOLO_TEST=:titoloTest);";
 
@@ -60,8 +58,7 @@
         }
     }
 
-    /* metodo necessario per acquisire la descrizione del quesito */
-    function getQuestionDescription($conn, $idQuestion, $titleTest) {
+    function getQuestionDescription($conn, $idQuestion, $titleTest) { // estrapolata la descrizione della domanda, successivamente visualizzata all'interno delle textarea
         $sql = "SELECT DESCRIZIONE FROM Quesito WHERE (ID=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
 
         try {
@@ -94,11 +91,10 @@
         return $row -> ID;
     }
 
-    /* acquisizione di tutte le tabelle che abbiano un'afferenza rispetto al quesito visualizzato */
-    function getNameTable($conn, $idQuestion, $titleTest) {
+    function getNameTable($conn, $idQuestion, $titleTest) { // funzione attuata per risalire a tutte le tabelle che abbiano un'associazione con il quesito circoscritto
         $arrayNameTable = array();
 
-        $sql = "SELECT ID_TABELLA FROM Afferenza WHERE (ID_QUESITO=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
+        $sql = "SELECT ID_TABELLA FROM Afferenza WHERE (ID_QUESITO=:idQuesito) AND (TITOLO_TEST=:titoloTest);"; 
 
         try {
             $resultIdTable = $conn -> prepare($sql);
@@ -111,7 +107,6 @@
         } 
 
         while($row = $resultIdTable -> fetch(PDO::FETCH_OBJ)) {
-            /* dagli id delle tabelle sono ricondotti i nomi di ognuna di esse*/
             $idTable = $row -> ID_TABELLA;
 
             $sql = "SELECT NOME FROM Tabella_Esercizio WHERE (ID=:idTabella);";
@@ -125,7 +120,6 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            /* inserimento all'interno di un vettore di tutti i nomi delle tabelle che abbiano un'afferenza con il quesito di riferimento */
             $row = $resultNameTable -> fetch(PDO::FETCH_OBJ);
             array_push($arrayNameTable, $row -> NOME);
         }
@@ -133,9 +127,8 @@
         return $arrayNameTable;
     }
 
-    /* restituzione dei field che compongano la tabella circoscritta */
     function getHeaderTable($conn, $nameTable) {
-        $sql = "SHOW COLUMNS FROM ".$nameTable.";";
+        $sql = "SHOW COLUMNS FROM ".$nameTable.";"; // query definita per estrapolare i nomi dei domini che compongono la tabella
 
         try {
             $result = $conn -> prepare($sql);
@@ -149,8 +142,7 @@
         return $rows;
     }
 
-    /* metodo che acquisisce tutti i record che caratterizzano la collezione */
-    function getContentTable($conn, $nameTable) {
+    function getContentTable($conn, $nameTable) { // funzione attuata per estrapolare tutti i record che contraddistinguono la collezione data in input
         $sql = "SELECT * FROM ".$nameTable.";";
 
         try {
@@ -165,8 +157,8 @@
         return $rows;
     }
 
-    function getFieldName($resultAnswer, $resultSolution) {
-        $fieldNameAnswer = array();
+    function getFieldName($resultAnswer, $resultSolution) { // funzione definita per acquisire i field che compongono gli oggetti stdClass, affinchè siano manipolabili 
+        $fieldNameAnswer = array(); // array contenenti i nomi dei field che compongono la query immessa dallo studente e la query soluzione appartenente al database
         $fieldNameResult = array();
 
         for ($i = 0; $i < ($resultAnswer -> columnCount()); $i++) {

@@ -8,8 +8,7 @@
         header("Location: login/login.php");
     } 
 
-    /* tramite l'url viene acquisita la tipologia dell'utente, in maniera tale da compiere il corretto reindirizzamento tra i file */
-    $url = $_SERVER["REQUEST_URI"];
+    $url = $_SERVER["REQUEST_URI"]; // acquisito tramite URL la tipologia dell'utente, in modo tale da compiere il correttamento reindirizzamento
     $tokens = explode('?', $url);
     $typeUser = $tokens[1];
 
@@ -32,7 +31,9 @@
     <body>
         <div class="navbar">
             <a><img class="zoom-on-img ESQL" width="112" height="48" src="../style/img/ESQL.png"></a>
-            <?php getUndo($typeUser) ?>
+            <?php
+                getUndo($typeUser) 
+            ?>
         </div>
         <div class="container">
             <div class="div-statistic">

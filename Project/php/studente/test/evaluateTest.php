@@ -1,12 +1,10 @@
 <?php 
-    /* funzione restituente la mappa contenitrice di tutte le risposte date dallo studente, ordinate secondo il numero progressivo dei quesiti */
-    function setValueSentMap($arrayIdQuestion) {
+    function setValueSentMap($arrayIdQuestion) { // funzione attuata per restituire l'insieme delle risposte date dallo studente
         $mapArrayAnswer = array();
         $arrayNameCheckbox = array();
 
         for($i = 0; $i <= sizeof($arrayIdQuestion) - 1; $i++) {
-            /* costruzione del tag name di ogni input definito a livello di HTML */
-            $varCheckbox = "checkbox";
+            $varCheckbox = "checkbox"; // costruzione dinamica dei tag name a seconda dell'id del quesito
             $varCheckbox = $varCheckbox."".$arrayIdQuestion[$i];
 
             $varTextarea = "txtAnswerSketch";
@@ -22,17 +20,15 @@
         return $mapArrayAnswer;
     }
 
-    /* funzione che restituisce l'insieme delle soluzioni dei quesiti che compongono il test in questione, ordinate secondo la numerazione progressiva dei quesiti */
-    function setValueSolutionMap($conn, $arrayIdQuestion, $titleTest) {
+    function setValueSolutionMap($conn, $arrayIdQuestion, $titleTest) { // funzione definita per garantire l'insieme delle soluzioni dei quesiti del test
         $mapArraySolution = array();
 
         for($i = 0; $i <= sizeof($arrayIdQuestion) - 1; $i++) {
             $arrayText = array();
 
-            /* è definita la tipologia del quesito, in maniera tale da diversificare la query che interrogherà le collezione di riferimento */
             $type = getTypeQuestion($conn, $arrayIdQuestion[$i], $_SESSION["titleTestTested"]); 
 
-            if($type == "CHIUSA") {
+            if($type == "CHIUSA") { // diversificazione della query a seconda della tipologia
                 $sql = "SELECT ID FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito) AND (Opzione_Risposta.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
             } else {
                 $sql = "SELECT TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
@@ -48,8 +44,7 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            /* distinzione, nei due rami del costrutto, dell'argomento dato al metodo fetch poichè le domande chiuse sono caratterizzate da array di possibili soluzioni */
-            if($type == "CHIUSA") {
+            if($type == "CHIUSA") { // diversificazione della funzione fetch a seconda della tipologia della domanda, attuata poichè varia l'oggetto stdClass circoscritto
                 while($row = $result -> fetch(PDO::FETCH_ASSOC)){
                     foreach($row as $item) {
                         array_push($arrayText, $item);
@@ -66,35 +61,27 @@
         return $mapArraySolution;
     }
 
-    function checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution) {
+    function checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution) { // metodo generale imposto come classificatore di funzioni
         foreach($arrayIdQuestion as $i) {  
             if(!$mapArrayAnswer[$i] == NULL) {
-                /* acquisisce la tipologia della domanda, in base all'id del quesito e al test di appartenenza */
                 $type = getTypeQuestion($conn, $i, $_SESSION["titleTestTested"]);
 
-                /* in base alla tipologia è attuato un controllo differente */
-                if($type == "CHIUSA") {
+                if($type == "CHIUSA") { // diversifacazione dei metodi a seconda della tipologia del quesito
                     $outcome = checkOption($conn, $mapArrayAnswer[$i], $mapArraySolution[$i]);
-
-                    /* conversione in una stringa dell'array di risposte, dato che contiene gli id di tipo numerico */
                     $textAnswer = convertToString($mapArrayAnswer[$i]);
                 } else {
                     $outcome = checkQuery($conn, $mapArrayAnswer[$i], $mapArraySolution[$i]);
                     $textAnswer = $mapArrayAnswer[$i];
                 }
                 
-                /* inserimento all'interno della tabella Risposta */
                 insertAnswer($conn, $_SESSION["emailStudente"], $i, $_SESSION["titleTestTested"], $textAnswer, $outcome);
             }
         }
     }
 
-    /* funzione che controlla la validità della risposta data per la Domanda_Chiusa */
-    function checkOption($conn, $arrayIdOptionAnswer, $arrayIdOptionSolution) {
-        /* primo controllo sulla dimensione dei due array, per verificare se il numero di risposte date coincida con il vettore contenente l'insieme delle risposte risolutive della domanda di riferimento */
-        if(sizeof($arrayIdOptionAnswer) == sizeof($arrayIdOptionAnswer)) {
-            /* controllo definito per accertarsi se la risposta data contenga gli id di tutte le opzioni risolutrici del quesito*/
-            foreach($arrayIdOptionAnswer as $a) {
+    function checkOption($conn, $arrayIdOptionAnswer, $arrayIdOptionSolution) { // funzione attuata per convalidare la risposta al quesito chiuso
+        if(sizeof($arrayIdOptionAnswer) == sizeof($arrayIdOptionAnswer)) { // controllo sulla dimensione, per accertarsi che il numero di risposte coincida
+            foreach($arrayIdOptionAnswer as $a) { // ciclo definito per accertarsi se la risposta dello studente sia presente all'interno dell'insieme risolutivo della domanda
                 if(!in_array($a, $arrayIdOptionSolution)) {
                     return 0; 
                 }       
@@ -106,22 +93,18 @@
         }
     }
 
-    /* funzione per convertire le risposte date per domande chiuse */
     function convertToString($array) {
         $str = "";
 
         foreach($array as $option) {
-            /* utilizzo di un carattere speciale in maniera tale da poter concatenare le risposte e poi recuperarle per successive visualizzazioni */
             $str = $str."".$option."|?|";
         }
 
         return $str;
     }
 
-    /* funzione che definisce la validità della query data dallo studente, rispetto alla soluzione mantenuta nel database */
-    function checkQuery($conn, $queryAnswer, $querySolution) {
-        /* run della query risolutrice per ottenerne il risultato in righe e colonne, che possa essere confrontato rispetto alla risposta data */
-        try {
+    function checkQuery($conn, $queryAnswer, $querySolution) { // funzione ideata per convalidare la risposta al quesito di codice
+        try { // avviene l'execute della query risolutrice
             $resultSolution = $conn -> prepare($querySolution);
 
             $resultSolution -> execute();
@@ -131,8 +114,7 @@
         
         $rowSolution = $resultSolution -> fetchAll(PDO::FETCH_OBJ);
 
-        /* run della query posta dallo studente, successivamente oggetto di confronto rispetto alla query risolutrice */
-        try {
+        try { // avviene l'execute della query data dallo studente
             $resultAnswer = $conn -> prepare($queryAnswer);
 
             $resultAnswer -> execute();
@@ -141,17 +123,15 @@
         }
         
         $rowAnswer = $resultAnswer -> fetchAll(PDO::FETCH_OBJ);
-
-        if ($rowAnswer == $rowSolution) {
+        if ($rowAnswer == $rowSolution) { // controllo ideato per accertarsi della validità della risposta dello studente
             return 1;
         } else {
             return 0;
         }
     }
     
-    /* inserimento di una nuova risposta all'interno della collezione Risposta */
     function insertAnswer($conn, $email, $idQuestion, $titleTest, $textAnswer, $outcome) {
-        if(checkState($conn, $email, $titleTest)) {
+        if(checkStateTest($conn, $email, $titleTest)) {
             $storedProcedure = "CALL Inserimento_Risposta(:emailStudente, :idQuesito, :titoloTest, :testoRisposta, :esito)";
             
             try {
@@ -169,29 +149,7 @@
         }
     }
 
-    function checkState($conn, $email, $titleTest) {
-        $sql = "SELECT STATO FROM Completamento WHERE (Completamento.EMAIL_STUDENTE=:email) AND (Completamento.TITOLO_TEST=:titoloTest);";
-
-        try {
-            $result = $conn -> prepare($sql);
-            $result -> bindValue(":email", $email);
-            $result -> bindValue(":titoloTest", $titleTest);
-
-            $result -> execute();
-        } catch(PDOException $e) {
-            echo "Eccezione ".$e -> getMessage()."<br>";
-        }
-
-        $row = $result -> fetch(PDO::FETCH_OBJ);
-        if(($row -> STATO) == "CONCLUSO") {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
-    /* check della singola domanda di codice */
-    function checkSketch($conn, $idQuestion, $titleTest, $queryAnswer) {
+    function checkSketch($conn, $idQuestion, $titleTest, $queryAnswer) { // funzione ideata per garantire la correzione di una singola risposta ad un quesito di codice
         $sql = "SELECT Sketch_Codice.TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (Sketch_Codice.SOLUZIONE=1);";
 
         try {
@@ -207,8 +165,7 @@
         $row = $result -> fetch(PDO::FETCH_OBJ);
         $querySolution = $row -> TESTO;
 
-        /* run della query risolutrice per ottenerne il risultato in righe e colonne, che possa essere confrontato rispetto alla risposta data */
-        try {
+        try { // run della query risolutrice
             $resultSolution = $conn -> prepare($querySolution);
 
             $resultSolution -> execute();
@@ -216,8 +173,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
         
-        /* run della query posta dallo studente, successivamente oggetto di confronto rispetto alla query risolutrice */
-        try {
+        try { // run della query data dallo studente
             $resultAnswer = $conn -> prepare($queryAnswer);
             
             $resultAnswer -> execute();
@@ -225,7 +181,7 @@
             return [null, $e -> getMessage()];
         }
 
-        [$arrayFieldAnswer, $arrayFieldSolution] = getFieldName($resultAnswer, $resultSolution);
+        [$arrayFieldAnswer, $arrayFieldSolution] = getFieldName($resultAnswer, $resultSolution); // funzione attuata per estrapolare i nomi dei field dalla query data dallo studente e dalla query presente nel database
         $_SESSION["fieldAnswer"] = $arrayFieldAnswer;
         $_SESSION["fieldSolution"] = $arrayFieldSolution;
 

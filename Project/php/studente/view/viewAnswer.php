@@ -15,16 +15,11 @@
     if(isset($_SERVER["REQUEST_METHOD"])) {
         if(isset($_POST["btnViewAnswer"])) {
             $_SESSION["titleTest"] = $_POST["btnViewAnswer"]; 
-
-            buildNavbar($conn);
-
-            /* visualizzazione delle risposte date dallo studente per il test selezionato */
-            buildFormAnswer($conn, $_SESSION["emailStudente"], $_SESSION["titleTest"]);
+            buildNavbar($conn); 
+            buildFormAnswer($conn, $_SESSION["emailStudente"], $_SESSION["titleTest"]); // metodo ideato per visualizzare le risposte date dallo studente
         } elseif(isset($_POST["btnUndo"])) {
             buildNavbar($conn);
-
-            /* rebuild del form, qualora lo studente dovesse navigare tra le differenti componenti */
-            buildFormAnswer($conn, $_SESSION["emailStudente"], $_SESSION["titleTest"]);
+            buildFormAnswer($conn, $_SESSION["emailStudente"], $_SESSION["titleTest"]); // rebuild del form di visualizzazione qualora lo studente dovesse navigare tra le pagine
         }
     }
 
@@ -54,22 +49,19 @@
     }
                 
     function buildFormAnswer($conn, $email, $titleTest) {
-        /* acquisizione di tutte le risposte date dallo studente rispetto ai quesiti appartenenti al test */
-        $result = getAnswerTest($conn, $email, $titleTest); 
+        $result = getAnswerTest($conn, $email, $titleTest); // funzione attuata per estrapolare tutte le risposte date dallo studente
 
         if(isset($result)) {
             while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                /* in base alla tipologia di quesito è diversificata la visualizzazione del form */
-                if(getTypeQuestion($conn, $row -> ID_QUESITO, $titleTest) == "CHIUSA") { 
-                    buildFormCheck($conn, $row -> ID_QUESITO, $titleTest, null, null, false, false);
+                if(getTypeQuestion($conn, $row -> ID_QUESITO, $titleTest) == "CHIUSA") { // diversificazione del form visualizzato a seconda della tipologia
+                    buildFormCheck($conn, $row -> ID_QUESITO, $titleTest, false, false);
                 } else {
                     buildFormQuery($conn, $row -> ID_QUESITO, $titleTest, null, null, false, false);
                 }
             }
         }
 
-        /* reindirizzamento alla pagina contenente le soluzioni del test */
-        buildButtonSolution($conn, $_SESSION["emailStudente"], $titleTest);
+        buildButtonSolution($conn, $_SESSION["emailStudente"], $titleTest); // metodo ideato per costruire il bottone che permette o meno la visualizzazione delle soluzioni
 
         echo '
                     </div>

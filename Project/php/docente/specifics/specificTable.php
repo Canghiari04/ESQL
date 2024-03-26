@@ -48,15 +48,12 @@
                         ';
                             
                         if(isset($result)) {
-                            while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                                /* metodo che restituisce se l'attributo visualizzato costituisca o meno la chiave primaria della tabella */
-                                $primaryKey = convertPrimaryKey($row -> CHIAVE_PRIMARIA);
-                                
+                            while($row = $result -> fetch(PDO::FETCH_OBJ)) {                                
                                 echo '
                                     <tr>  
                                         <th>'.$row -> NOME.'</th>
                                         <th>'.$row -> TIPO.'</th>
-                                        <th>'.$primaryKey.'</th>
+                                        <th>'.convertPrimaryKey($row -> CHIAVE_PRIMARIA).'</th>
                                     </tr>
                                 ';
                             }
@@ -69,11 +66,11 @@
                     }
                 }
 
-                function convertPrimaryKey($value) {
-                    if($value == 0) {
-                        return "NO";
-                    } else {
+                function convertPrimaryKey($value) { // conversione testuale del campo primary key, per visualizzazione grafica all'interno della tabella
+                    if($value) {
                         return "SI";
+                    } else {
+                        return "NO";
                     }
                 }
                 

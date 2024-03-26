@@ -40,19 +40,16 @@
         <?php 
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddData"])) {
-                    $sql = strtoupper($_POST["txtAddRow"]);
+                    $sql = stroupper($_POST["txtAddRow"]);
 
                     $tokens = explode('(', trim($sql));
-                    $tokensHeader = explode(' ', $tokens[0]);
+                    $tokensHeader = explode(' ', $tokens[0]); // acquisiti i token di intestazione
 
-                    /* controllo riferito a query di inserimento */
-                    if($tokensHeader[0] == "INSERT") {
-                        /* controllo di uguaglianza tra la tabella riferita da query rispetto alla collezione selezionata */
-                        if(trim($tokensHeader[2]) == getTableName($conn)) {
+                    if($tokensHeader[0] == "INSERT") { // controllo che la query sia DDL e di nessun altro tipo
+                        if($tokensHeader[2] == getTableName($conn)) { // controllo di equivalenza nominativa tra la tabella definita da query rispetto alle collezioni mantenute nel database
                             try {
                                 $result = $conn -> prepare($sql);
 
-                                /* inserimento effettivo dei dati all'interno della tabella */
                                 $result -> execute();
                             } catch(PDOException $e) {
                                 echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";    
@@ -60,10 +57,8 @@
                             }
 
                             $rowInserted = $result -> rowCount();
-
-                            for($i = 0; $i < $rowInserted ; $i++){ 
-                                /* inserimento fittizio all'interno della collezione Manipolazione_Riga, utilizzato per scatenare il trigger che modificherà il numero di righe della tabella in questione */
-                                $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
+                            for($i = 0; $i < ($rowInserted - 1); $i++){ 
+                                $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);"; // inserimento fittizio all'interno della tabella Manipolazione_Riga, attuato per innescare i trigger del database
                                     
                                 try {
                                     $stmt = $conn -> prepare($storedProcedure);

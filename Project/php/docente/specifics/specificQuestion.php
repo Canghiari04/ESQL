@@ -32,13 +32,13 @@
             <?php 
                 if($_SERVER["REQUEST_METHOD"] == "POST") {
                     if(isset($_POST["btnSpecificQuestion"])) {
-                        $tokens = explode("|?|", $_POST["btnSpecificQuestion"]);
+                        $tokens = explode("|?|", $_POST["btnSpecificQuestion"]); // acquisiti i token del quesito visualizzato
 
                         $_SESSION["idCurrentQuestion"] = $tokens[0];
                         $_SESSION["descriptionCurrentQuestion"] = $tokens[2];
 
-                        setTypeQuestion($conn, $tokens[0], $tokens[1]);   
-                        buildSpecificQuestion($conn, $_SESSION["typeQuestion"], $tokens[0], $tokens[1]);     
+                        setTypeQuestion($conn, $tokens[0], $tokens[1]); // definizione a sessione del tipo del quesito visualizzato 
+                        buildSpecificQuestion($conn, $_SESSION["typeQuestion"], $tokens[0], $tokens[1]); // costruzione del form del quesito 
                     } elseif(isset($_POST["btnUndo"])) {
                         buildSpecificQuestion($conn, $_SESSION["typeQuestion"], $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);     
                     }
@@ -47,7 +47,7 @@
                 }
 
                 function buildSpecificQuestion($conn, $type, $idQuestion, $titleTest) {
-                    if($type == "CHIUSA") {
+                    if($type == "CHIUSA") { // diversificazione della query a seconda della tipologia di quesito
                         $sql = "SELECT ID, TESTO FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito) AND (Opzione_Risposta.TITOLO_TEST=:titoloTest);";
                     } else {
                         $sql = "SELECT ID, TESTO FROM Sketch_Codice  WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest);";
@@ -87,7 +87,6 @@
                     }
                 }
 
-                /* metodo che definisce da sessione il tipo del quesito, attuato per visualizzare correttamente le proprie caratteristiche */
                 function setTypeQuestion($conn, $idQuestion, $titleTest) {
                     $sql = "SELECT * FROM Domanda_Chiusa WHERE (Domanda_Chiusa.ID_DOMANDA_CHIUSA=:idQuesito) AND (Domanda_Chiusa.TITOLO_TEST=:titoloTest);";
 

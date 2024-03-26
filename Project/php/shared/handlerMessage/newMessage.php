@@ -11,7 +11,6 @@
     
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnNewMessage"])) {
-            /* metodo acquisisce tramite il post la tipologia dell'utente, compiendo in questo modo il corretto reindirizzamento */
             buildPage($conn, $_POST["btnNewMessage"]);
          } elseif(isset($_POST["btnAddMessage"])) {
             insertNewMessage($conn, $_POST["btnAddMessage"], strtoupper($_POST["txtText"]), strtoupper($_POST["txtTitle"]), $_POST["sltTest"], date("Y-m-d"));
@@ -58,13 +57,10 @@
         ';
     }
 
-    /* metodo che permette di acquisire tutti i test presenti dal database */
-    function getOptions($conn, $typeUser){
-        /* variabile contenente al suo interno tutte le options della select */
+    function getOptions($conn, $typeUser) { // funzione attuata per acquisire tutti test disponibili 
         $var = "";
         
-        /* se si dovesse trattare di un docente, sono restituiti solamente i test creati dallo stesso */
-        if($typeUser == "Teacher") {
+        if($typeUser == "Teacher") { // diversificazione della query in base alla tipologia dell'utente
             $sql = "SELECT TITOLO FROM Test WHERE (Test.EMAIL_DOCENTE=:emailDocente);";
 
             try {
@@ -96,9 +92,7 @@
         return $var;
     }
 
-    /* inserimento di un nuovo messaggio all'interno del database */
     function insertNewMessage($conn, $typeUser, $textMessage, $titleMessage, $titleTest, $date) {
-        /* costrutto che diversifica le stored procedure in base alla tipologia di utente che abbia creato il messaggio */
         if($typeUser == "Teacher") {
             $storedProcedure = "CALL Inserimento_Messaggio_Docente(:emailDocente, :testo, :titolo, :titoloTest, :dataInserimento)";
 
@@ -115,7 +109,6 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }                
         } else {
-            /* nel caso dello studente è inserito il messaggio sia all'interno della collezione Messaggio e sia all'interno della tabella Messaggio_Studente, attuata per differenziarne l'autore */
             $storedProcedureTeacher = "CALL Inserimento_Messaggio_Docente(:emailDocente, :testo, :titolo, :titoloTest, :dataInserimento)";
 
             try {
@@ -131,7 +124,7 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            $sql = "SELECT MAX(ID) AS CURRENT_ID FROM Messaggio";
+            $sql = "SELECT MAX(ID) AS CURRENT_ID FROM Messaggio"; // query adottata per acquisire l'ultimo numero progressivo all'interno della tabella Messaggio
 
             try {
                 $result = $conn -> prepare($sql);
@@ -158,7 +151,7 @@
         }
     }        
 
-    function getEmailTeacher($conn, $titleTest) {
+    function getEmailTeacher($conn, $titleTest) { // funzione adottata per estrapolare l'email del docente riferita al test
         $sql = "SELECT Test.EMAIL_DOCENTE FROM Test WHERE (Test.TITOLO=:titoloTest)";
 
         try {

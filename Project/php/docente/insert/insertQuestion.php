@@ -45,7 +45,7 @@
     <?php 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if($_POST["btnInsertQuestion"]) {
-                $_SESSION["typeQuestion"] = $_POST["btnInsertQuestion"];
+                $_SESSION["typeQuestion"] = $_POST["btnInsertQuestion"]; // inizializzazione del campo della sessione sulla tipologia del quesito in evidenza 
             } elseif(isset($_POST["btnAddQuestion"])) {
                 if(checkTable($conn, $_SESSION["emailDocente"])) {
                     if(checkNumberRows($conn, $_SESSION["emailDocente"])) {

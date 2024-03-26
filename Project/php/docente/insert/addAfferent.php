@@ -1,5 +1,5 @@
 <?php
-    function insertAfferent($conn, $idQuestion, $titleTest, $arrayIdTable) {
+    function insertAfferent($conn, $idQuestion, $titleTest, $arrayIdTable) { // inserimento del quesito, test e tabella esercizio all'interno della collezione Afferenza
         $storedProcedure = "CALL Inserimento_Afferenza(:idDomanda, :titoloTest, :idTabella);";
 
         try {

@@ -1,20 +1,16 @@
 <?php
-    /* metodo che permette di creare i tag input necessari per l'inserimento di dati all'interno della collezione */
     function identifyAttributes($conn) {
         $nameTable = getTableName($conn);
         $attributes = getAttributes($conn);
-        $notNullAttributes = getNotNull($conn, $nameTable);
-        $checkAutoInc = getAutoIncrement($conn, $nameTable);
+        $notNullAttributes = getNotNull($conn, $nameTable); // acquisiti i field che abbiano come vincolo NOT NULL 
+        $checkAutoInc = getAutoIncrement($conn, $nameTable); // acquisiti i field che abbiano come vincolo AUTO_INCREMENT
  
-        /* scrittura intestazione della query */
-        $valuesQuery = "INSERT INTO ".$nameTable." (";
+        $valuesQuery = "INSERT INTO ".$nameTable." ("; // scrittura dinamica della query adattiva rispetto alle caratteristiche della tabella
         
         echo '<table>';
 
         foreach($attributes as $value){
-            /* tramite la condizione non sono stampati tutti i domini della collezione che risultino auto_increment */
-            if(!in_array($value, $checkAutoInc)) {
-                /* sono creati i tag input necessari per l'inserimento di dati all'interno della collezione, attraverso la concatenazione dell'intestazione scritta prima */
+            if(!in_array($value, $checkAutoInc)) { // controllo che il field appartenga all'insieme dei domini sottoposti ad AUTO_INCREMENT
                 $valuesQuery = $valuesQuery.''.$value.'';
                 $valuesQuery = $valuesQuery.", ";
                 
@@ -30,16 +26,12 @@
         echo '</table>';
 
         $valuesQuery = trim($valuesQuery);
-
-        /* si elimina la virgola finale per concatenare la parentesi tonda chiusa, come da sintassi di mysql --> ')' */
         $valuesQuery = substr($valuesQuery, 0, -1);
         $valuesQuery = $valuesQuery.')';
 
-        /* salvataggio tramite la sessione dell'intestazione della query, da cui verranno inseriti i dati */
-        $_SESSION["headingInsert"] = $valuesQuery;
+        $_SESSION["headingInsert"] = $valuesQuery; // inizializzazione del campo della sessione ad intestazione della query in modo tale da garantire l'inserimento dei dati all'interno del database
     }
 
-    /* funzione che restituisce il nome della tabella in base al suo id contenuto nella collezione Tabella_Esercizio */
     function getTableName($conn) {
         $sql= "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabella);";
 
@@ -56,9 +48,9 @@
         return $row -> NOME;
     }
 
-    /* metodo che garantisce l'acquisizione degli attributi della tabella interessata */
     function getAttributes($conn) { 
         $attributes = array();
+
         $sql = "SELECT * FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabella);";
         
         try {
@@ -79,13 +71,10 @@
         return $attributes;
     }
 
-    /* funzione che restituisce l'array contenente gli attributi not null */
     function getNotNull($conn, $nameTable) {
-        /* vettore contenitore di tutte le colonne legate al vincolo not null */
         $columns = array();
         
-        /* query che restituisce tutte le colonne della tabella in questione che siano not null */
-        $sql = "SHOW COLUMNS FROM ".$nameTable." WHERE `Null` = 'NO';";
+        $sql = "SHOW COLUMNS FROM ".$nameTable." WHERE `Null` = 'NO';"; // query attuata per estrapolare l'insieme dei domini sottoposti al vincolo NOT NULL
 
         try {
             $result = $conn -> prepare($sql);
@@ -96,7 +85,6 @@
         }
         
         $rows = $result -> fetchAll(PDO::FETCH_ASSOC); 
-        
         foreach($rows as $row) {
             $column = $row["Field"];
             array_push($columns, $column);
@@ -106,11 +94,9 @@
     }
 
     function getAutoIncrement($conn, $nameTable) {
-        /* vettore contenitore di tutte le colonne legate al vincolo auto_increment */
         $columns = array();
         
-        /* query che restituisce tutte le colonne della tabella  auto_increment */
-        $sql = "SHOW COLUMNS FROM ".$nameTable." WHERE (Extra LIKE '%auto_increment%');";
+        $sql = "SHOW COLUMNS FROM ".$nameTable." WHERE (Extra LIKE '%auto_increment%');"; // query attuata per estrapolare l'insieme dei domini sottoposti al vincolo AUTO_INCREMENT
 
         try {
             $result = $conn -> prepare($sql);
@@ -129,8 +115,7 @@
         return $columns;
     }
 
-    /* funzione che permette di controllare se l'attributo per cui si vuole stampare un campo di testo sia foreign key */
-    function checkTypeInsert($conn, $nameAttribute, $notNullAttributes) {
+    function checkTypeInsert($conn, $nameAttribute, $notNullAttributes) { // controllo definito per accertarsi se l'attributo sia una foreign key o meno
         if(checkReferences($conn, getAttributeId($conn, $nameAttribute))) {
             return getReferencesOptions($conn, getAttributeId($conn, $nameAttribute), $nameAttribute);           
         } else {
@@ -138,7 +123,6 @@
         }
     }
 
-    /* funzione che permette di controllare la presenza di referenze da parte di un attributo */
     function checkReferences($conn, $idAttributeReferencing) {
         $sql = "SELECT * FROM Vincolo_Integrita WHERE (Vincolo_Integrita.REFERENTE=:idAttributo);";
 
@@ -157,7 +141,6 @@
         }
     }
 
-    /* funzione che restituisce il  tipo dell'attributo in base al nome contenuto nella collezione Attributo */
     function getAttributeId($conn, $attributeName) {
         $sql = "SELECT * FROM Attributo WHERE (Attributo.NOME=:nomeTabella) AND (Attributo.ID_TABELLA=:idTabella);"; 
 
@@ -175,8 +158,7 @@
         return $row -> ID;
     }
 
-    /* funzione che restituisce i valori presenti all'interno dell'attributo a cui si fa riferimento attraverso foreign key */
-    function getReferencesOptions($conn, $idAttributeReferencing, $nameAttribute) {
+    function getReferencesOptions($conn, $idAttributeReferencing, $nameAttribute) { // funzione capace di stabilire l'insieme dei values che contraddistinguono una foreign key
         $sql = "SELECT * FROM Vincolo_Integrita WHERE (Vincolo_Integrita.REFERENTE=:idAttributo);";
 
         try {
@@ -193,8 +175,7 @@
             $row = $result -> fetch(PDO::FETCH_OBJ);
             $idAttributeReferenced = $row -> REFERENZIATO;
 
-            /* query che restituisce i meta-dati necessari dell'attributo a cui si fa riferimento attraverso foreign key */
-            $sql = "SELECT NOME, ID_TABELLA FROM Attributo WHERE (Attributo.ID=:idAttributoReferenziato);";
+            $sql = "SELECT NOME, ID_TABELLA FROM Attributo WHERE (Attributo.ID=:idAttributoReferenziato);"; // query in grado di estrapolare i meta-dati dell'attributo 
 
             try {
                 $result = $conn -> prepare($sql);
@@ -209,8 +190,7 @@
             $nameAttributeReferenced = $row -> NOME;
             $idTableReferenced = $row -> ID_TABELLA;
 
-            /* query che restituisce il nome della tabella contenente l'attributo a cui si fa riferimento attraverso foreign key */
-            $sql = "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabellaReferenziata)";
+            $sql = "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabellaReferenziata)"; // query attuata per individuare la tabella contenente l'attributo in evidenza
 
             try {
                 $result = $conn -> prepare($sql);
@@ -224,8 +204,7 @@
             $row = $result -> fetch(PDO::FETCH_OBJ);
             $nameTableReferenced = $row -> NOME;
 
-            /* query che restituisce i possibili valori dell'attributo all'interno della tabella referenziata */
-            $sql = "SELECT DISTINCT ".$nameAttributeReferenced." FROM ".$nameTableReferenced."";
+            $sql = "SELECT DISTINCT ".$nameAttributeReferenced." FROM ".$nameTableReferenced.""; // query adottata per estrapolare tutti i valori che contiene l'attributo
 
             try {
                 $result = $conn -> prepare($sql);
@@ -235,7 +214,7 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            $string = '<select name="txt'.$nameAttribute.'" required>';
+            $string = '<select name="txt'.$nameAttribute.'" required>'; // costruzione della select dinamicamente, adattiva rispetto alle caratteristiche del'attributo
 
             $numRows = $result -> rowCount();
             if($numRows > 0) {
@@ -248,7 +227,6 @@
         } 
     }
 
-    /* permette di settare l'input type in base al tipo di attributo */
     function setTypeInput($type){
         switch ($type) {
             case "DATE":
@@ -269,7 +247,6 @@
         }
     }
 
-    /* funzione che restituisce il tipo dell'attributo in base al nome contenuto nella collezione Attributo */
     function getAttributeType($conn, $attributeName) {
         $sql = "SELECT * FROM Attributo WHERE (Attributo.NOME=:nomeTabella) AND (Attributo.ID_TABELLA=:idTabella);"; 
 
@@ -287,37 +264,30 @@
         return $row -> TIPO;
     }
 
-    /* funzione che controlla la presenza dell'attributo nell'array contenente gli attributi not null */
-    function checkNotNull($nameAttribute, $notNullAttributes) {
+    function checkNotNull($nameAttribute, $notNullAttributes) { // controllo che l'attributo appartenga all'insieme dei domini sottoposti al vincolo NOT_NULL
         if(in_array($nameAttribute, $notNullAttributes)) {
-            /* viene restituto un required per il tag di input */
             return "required";
         }
     }
 
-    /* funzione che permette l'inserimento dei dati acquisiti da input all'interno della collezione di riferimento */
     function insertData($conn) {
         $attributesText = array();
+
         $nameTable = getTableName($conn);
-        
         $attributesInsert = getAttributes($conn);
         $attributesAutoIncrement = getAutoIncrement($conn, $nameTable);
 
         foreach($attributesInsert as $value) {
-            /* tramite la condizione non sono stampati tutti i domini della collezione che risultino auto_increment */
             if(!in_array($value, $attributesAutoIncrement)) {                     
                 $str = "txt".$value."";
                 array_push($attributesText, $str);
             }
         }
 
-        /* controllo per assicurarsi che la query abbia almeno un valore */
-        if(strstr($_SESSION["headingInsert"], '(')) {
-            /* sovrascrittura della stringa di intestazione  */
+        if(strstr($_SESSION["headingInsert"], '(')) { // controllo attuato per accertarsi che la query abbia almeno un valore
             $stringDatas = ''.$_SESSION["headingInsert"]." VALUES (";
 
-            /* realizzazione dell'inserimento con protezione da sql injection dinamica */
-            foreach($attributesText as $value) {
+            foreach($attributesText as $value) { // ciclo definito per ricreare l'inserimento di dati ovviando a dipendency injection
                 $stringDatas = $stringDatas. '?' ;
                 $stringDatas = $stringDatas. ", " ;
             }
@@ -328,8 +298,7 @@
             $stringDatas = $stringDatas.");";
             $index = 0;
         } 
-        /* caso in cui la query non abbia nessun valore oltre agli attributi auto_increment */
-        else {
+        else { // ramo del costrutto attuato qualora tutti gli attributi della tabella siano sottoposti al vincolo AUTO_INCREMENT
             $stringDatas = "INSERT INTO ".getTableName($conn)." () VALUES ()";
         }
 
@@ -342,10 +311,10 @@
             }
         
             $result -> execute(); 
-            echo "<script>document.querySelector('.input-tips').value='INSERIMENTO AVVENUTO';</script>";
 
-            /* se e solo se l'inserimento del record va a buon fine è possibile variare il numero di righe relative alla collezione in questione */
-            $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);";
+            echo "<script>document.querySelector('.input-tips').value='INSERIMENTO DATI AVVENUTO CON SUCCESSO';</script>";
+
+            $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);"; // modifica del numero di righe della tabella solamente se l'inserimento va a buon fine
         
             try {
                 $storedProcedure = $conn -> prepare($storedProcedure);

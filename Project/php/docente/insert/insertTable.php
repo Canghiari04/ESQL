@@ -40,32 +40,23 @@
                 if(isset($_POST["btnAddTable"])) {
                     $sql = strtoupper($_POST["txtAddTable"]);
 
-                    /* suddivisione della query nei token principali, per ottenere il nome della tabella di riferimento */
-                    $tokens = explode(' ', $sql);
-
-                    if($tokens[0] == "CREATE") {
-                        /* controllo della presenza della key PRIMARY all'interno della query di creazione della tabella */
-                        if(str_contains($sql, "PRIMARY")) {
+                    $tokens = explode(' ', $sql); // acquisiti i token per compiere i controlli del caso
+                    if($tokens[0] == "CREATE") { // controllo che sia una query DDL e di nessun altro tipo
+                        if(str_contains($sql, "PRIMARY")) { // controllo presenza di un dominio unique dato che mysql potrebbe permettere la creazione della tabella anche in sua assenza
                                 $tokenName = explode('(', $tokens[2]);
                                 
                                 try {
                                     $result = $conn -> prepare($sql);
                                     
-                                    /* creazione della tabella effettiva contenuta nello stesso DB, ESQLDB */
-                                    $result -> execute();
+                                    $result -> execute(); // creazione della tabella effettiva solamente se rispettata la sintassi sql
                                     
-                                    /* creazione della Tabella_Esercizio, contenente tutti i meta-dati */
-                                    insertTableExercise($conn, $tokenName[0], $_SESSION["emailDocente"]);
-                                    
-                                    /* inserimento dei record che compogono la tabella effettiva nelle corrispettive tabelle meta-dati, Attributo e Vincolo_Integrita*/
-                                    insertRecord($conn, $sql, $tokenName[0]);
+                                    insertTableExercise($conn, $tokenName[0], $_SESSION["emailDocente"]); // inserimento nella tabella Tabella_Esercizio della nuova collezione
+                                    insertRecord($conn, $sql, $tokenName[0]); // inserimento dei meta-dati che caratterizzano la tabella 
 
-                                    /* scrittura log inserimento di una tabella all'interno della Tabella_Esercizio */
                                     $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento tabella: '.$tokenName[0].'. Creata dal docentes: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
-                                    writeLog($manager, $document);
-                                } catch(PDOException $e) {
-                                    /* funzioni che rendono compatibili caratteri speciali rispetto agli script delle textarea, dovuto principalmente ad un uso spropositato di spaziature */
-                                    echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>";
+                                    writeLog($manager, $document); // scrittura log inserimento di una tabella
+                                } catch(PDOException $e) { // in caso di eccezioni della query CREATE sono visualizzate a schermo tramite la textarea
+                                    echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>"; // metodo in grado di rendere compatibile caratteri speciali con la visualizzazione a schermo dell'eccezione
                                     echo "<script>document.querySelector('.input-textbox').value=".json_encode($sql).";</script>";                                
                                 }
                             } else {

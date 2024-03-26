@@ -27,11 +27,11 @@
         </form>
         <div>
             <?php                 
-                $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:emailDocente);";
+                $sql = "SELECT * FROM Tabella_Esercizio WHERE (EMAIL_DOCENTE=:email);";
                 
                 try {
                     $result = $conn -> prepare($sql);
-                    $result -> bindValue(":emailDocente", $_SESSION["emailDocente"]);
+                    $result -> bindValue(":email", $_SESSION["emailDocente"]);
 
                     $result -> execute();
                 } catch (PDOException $e) {

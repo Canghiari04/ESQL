@@ -26,11 +26,11 @@
             </div>
         </form>
         <?php
-            $sql = "SELECT * FROM Test WHERE (EMAIL_DOCENTE=:emailDocente);";
+            $sql = "SELECT * FROM Test WHERE (EMAIL_DOCENTE=:email);";
 
             try {
                 $result = $conn -> prepare($sql);
-                $result -> bindValue(":emailDocente", $_SESSION["emailDocente"]);
+                $result -> bindValue(":email", $_SESSION["emailDocente"]);
 
                 $result -> execute();
             } catch(PDOException $e) {
@@ -52,15 +52,13 @@
                 ';
 
                 while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                    $viewAnswers = convertToString($row -> VISUALIZZA_RISPOSTE);
-
                     echo '
                         <div class="div-td">
                             <table class="table-list">
                                 <tr>
                                     <th>'.$row -> TITOLO.'</th>
                                     <th>'.$row -> DATA_CREAZIONE.'</th>
-                                    <th>'.$viewAnswers.'</th>
+                                    <th>'.convertToString($row -> VISUALIZZA_RISPOSTE).'</th>
                                     <form action="question.php" method="POST">
                                         <th><button class="table-button" type="submit" name="btnQuestionTest" value="'.$row -> TITOLO.'">Questions</button></th>
                                     </form>

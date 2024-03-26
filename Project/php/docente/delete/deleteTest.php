@@ -14,10 +14,9 @@
         }
 
         header("Location: ../test.php");
-        exit; 
+        exit(); 
     }
 
-    /* metodo in grado di eliminare test appartenenti al database */
     function deleteTest($conn, $manager, $titleTest) {
         $storedProcedure = "CALL Eliminazione_Test(:titolo);";
         
@@ -30,9 +29,8 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        /* scrittura log --> eliminazione di un test dalla collezione Test */
         $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        writeLog($manager, $document); // scrittura log eliminazione di un test
     }
 
     function updateTest($conn, $manager, $titleTest) {
@@ -47,13 +45,12 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        /* scrittura log --> eliminazione di una tabella appartenente a Tabella_Esercizio */
         $document = ['Tipo log' => 'Aggiornamento', 'Log' => 'Aggiornamento visualizza risposta test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        writeLog($manager, $document); // scrittura log aggiornamento dello stato di un test
     }
 
     function deleteQuestion($conn, $manager, $varQuestion) {
-        $valuesQuestion = explode('?', $varQuestion);
+        $valuesQuestion = explode("|?|", $varQuestion); // acquisiti i token necessari per l'eliminazione di un quesito dal test
         
         $storedProcedure = "CALL Eliminazione_Composizione(:titolo, :idQuesito);";
             
@@ -67,9 +64,8 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        /* scrittura log --> eliminazione di una tabella appartenente a Tabella_Esercizio */
         $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$valuesQuestion[1].' Referenziato tabella id: '.$valuesQuestion[0].'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        writeLog($manager, $document); // scrittura log eliminazione di un quesito referenziato ad un test
     }
 
     closeConnection($conn);

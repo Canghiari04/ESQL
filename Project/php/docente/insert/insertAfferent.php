@@ -25,7 +25,7 @@
         <form action="" method="POST">
             <div class="container">
                 <?php
-                    buildForm($conn, $_SESSION["emailDocente"]);
+                    buildForm($conn, $_SESSION["emailDocente"]); // costruzione del form per inserimento di nuove afferenza all'interno del database
                 ?>
             </div>
             <div class="div-button">
@@ -36,8 +36,8 @@
     <?php
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["btnAddAfferent"])) {
-                if (isset($_POST["checkbox"]) && !empty($_POST["checkbox"])) {
-                    insertAfferent($conn, $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], $_POST["checkbox"]);
+                if (isset($_POST["checkbox"]) && !empty($_POST["checkbox"])) { // controllo che siano checkate delle tabelle
+                    insertAfferent($conn, $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], $_POST["checkbox"]); // inserimento della nuova afferenza tra quesito, test e tabella all'interno della collezione Afferenza
                 } else {
                     echo "<script type='text/javascript'>alert(".json_encode("Seleziona una tabelle presenti.").");</script>";
                 } 
@@ -45,7 +45,7 @@
         }
     
         function buildForm($conn, $email) {
-            $sql = "SELECT * FROM Tabella_Esercizio WHERE (Tabella_Esercizio.EMAIL_DOCENTE=:email) AND (Tabella_Esercizio.NUM_RIGHE>0);";
+            $sql = "SELECT * FROM Tabella_Esercizio WHERE (Tabella_Esercizio.EMAIL_DOCENTE=:email) AND (Tabella_Esercizio.NUM_RIGHE>0);"; // query che estrapola solamente le tabelle che abbiano record al loro interno
             
             try {
                 $result = $conn -> prepare($sql);

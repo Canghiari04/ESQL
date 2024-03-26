@@ -22,11 +22,11 @@
 
             buildPage($conn, $tokens[1], $tokens[0]);
         } elseif(isset($_POST["btnUndo"])) {
-            buildPage($conn, $_SESSION["namePageSolution"], $_SESSION["titleTestSolution"]);
+            buildPage($conn, $_SESSION["namePageSolution"], $_SESSION["titleTestSolution"]); // rebuild della pagina qualora dovesse accadere l'evento undo
         }
     }
 
-    function buildPage($conn, $namePage, $titleTest) {
+    function buildPage($conn, $namePage, $titleTest) { // costruzione pagina html dovuta al reindirizzamento tra pagine
         echo '  
             <!DOCTYPE html>
             <html>
@@ -60,13 +60,11 @@
     }    
 
     function buildFormSolution($conn, $titleTest) {
-        /* acquisizione di tutti i quesiti appartenenti al test */
         $arrayIdQuestion = getQuestionTest($conn, $titleTest);
 
-        foreach($arrayIdQuestion as $i) {
-            /* stampa del form del quesito a seconda della tipologia */
+        foreach($arrayIdQuestion as $i) { // diversificazione del form visualizzato a seconda della tipologia
             if(getTypeQuestion($conn, $i, $titleTest) == "CHIUSA") { 
-                buildFormCheck($conn, $i, $titleTest, null, null, false, true);
+                buildFormCheck($conn, $i, $titleTest, false, true);
             } else {
                 buildFormQuery($conn, $i, $titleTest, null, null, false, true);
             }

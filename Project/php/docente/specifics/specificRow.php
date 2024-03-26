@@ -32,16 +32,12 @@
             <?php 
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if(isset($_POST["btnViewRow"])) {
-                        /* campo della sessione utilizzato per visualizzare correttamente le specifiche qualora l'evento undo sia elaborato */
-                        $_SESSION["idCurrentTable"] = $_POST["btnViewRow"];   
-
-                        buildSpecificsTable($conn, $_POST["btnViewRow"]);
+                        $_SESSION["idCurrentTable"] = $_POST["btnViewRow"]; // inizializzazione del campo della sessione per compiere reindirizzamento corretto tra pagine
+                        buildSpecificsTable($conn, $_POST["btnViewRow"]); // costruzione della visualizzazione grafica della tabella
                     } elseif(isset($_POST["btnUndo"])) {
                         buildSpecificsTable($conn, $_SESSION["idCurrentTable"]);
                     }
-                } 
-                /* stampa delle specifiche dopo eliminazione di record, per permettere la visualizzazione della navbar */
-                elseif(isset($_SESSION["recordDeleted"])) {    
+                } elseif(isset($_SESSION["recordDeleted"])) { // ramo del costrutto attuato per visualizzare interamente la pagina html
                     unset($_SESSION["recordDeleted"]);
                     buildSpecificsTable($conn, $_SESSION["idCurrentTable"]);
                 }
@@ -53,24 +49,22 @@
     <?php
         function buildSpecificsTable($conn, $idTable) {
             $nameAttributes = array();   
-            $nameTable = getTableName($conn, $idTable);
 
-            $arrayNamePrimaryKey = getNamePrimaryKey($conn, $nameTable);
-            $resultNames = getAttributesNames($conn, $idTable);
-            $resultValues = getValues($conn, $nameTable);
+            $nameTable = getTableName($conn, $idTable);
+            $arrayNamePrimaryKey = getNamePrimaryKey($conn, $nameTable); // acquisiti i field che compongono la chiave primaria della tabella
+            $resultNames = getAttributesNames($conn, $idTable); // acquisiti i nomi di tutti gli attributi che costituiscono la tabella
+            $resultValues = getValues($conn, $nameTable); // acquisiti tutti i record della tabella 
 
             echo '
                 <div class="container">
-                    <div class="div-table"> 
+                    <div class="div-table">
                         <table>   
                             <tr>
             ';  
 
             while($rowNames = $resultNames -> fetch(PDO::FETCH_OBJ)) {
                 echo '<th>'.$rowNames -> NOME.'</th>';
-
-                /* nel vettore sono memorizzati i nomi degli attributi */
-                array_push($nameAttributes, $rowNames -> NOME);
+                array_push($nameAttributes, $rowNames -> NOME); // memorizzati i nomi degli attributi 
             }
 
             echo '
@@ -83,14 +77,13 @@
                 while($rowValues = $resultValues -> fetch(PDO::FETCH_OBJ)) {
                     echo '<tr>';
 
-                    /* ciclo attuato sui nomi degli attributi, in maniera tale da concordare l'estrapolazione dei dati rispetto all'oggetto PDO contenente i record della tabella */
                     foreach($nameAttributes as $name) {
                         echo '<th>'.$rowValues -> $name.'</th>';                                                            
                     }
 
                     echo '<th>';
 
-                    $valuePrimaryKey = "";
+                    $valuePrimaryKey = ""; // ciclo adottato per compiere correttamente la concatenazione dei values immessi all'interno del tag button 
                     foreach($arrayNamePrimaryKey as $namePrimaryKey) {
                         $valuePrimaryKey = $valuePrimaryKey."".$rowValues -> $namePrimaryKey."|?|";
                     }
@@ -117,7 +110,6 @@
             ';
         }
 
-        /* funzione utilizzata per acquisire il nome della tabella esercizio */
         function getTableName($conn, $idTable){
             $sql= "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabella);";
 
@@ -134,11 +126,10 @@
             return $row -> NOME;
         }
 
-        /* funzione contenitrice i field che compongono la chiave primaria della tabella */
         function getNamePrimaryKey($conn, $nameTable) {
             $arrayNamePrimaryKey = array();
 
-            $sql = "SHOW KEYS FROM ".$nameTable.";";
+            $sql = "SHOW KEYS FROM ".$nameTable.";"; // query attuata per estrapolare i field che compongano la chiave primaria
 
             try {
                 $result = $conn -> prepare($sql);
@@ -158,7 +149,6 @@
             return $arrayNamePrimaryKey;
         }
 
-        /* funzione attuata per estrapolare i nomi di tutti i field che compongono la tabella */
         function getAttributesNames($conn, $idTable){
             $sql = "SELECT NOME FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabella);";  
                         
@@ -174,7 +164,6 @@
             return $result;
         }
 
-        /* ottenuto il nome della tabella, sono estrapolati tutti i dati che contiene */
         function getValues($conn, $nameTable) {
             $sql = "SELECT * FROM ".$nameTable.";";
                 

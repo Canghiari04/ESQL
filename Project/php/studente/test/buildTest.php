@@ -33,40 +33,27 @@
                         if ($_SERVER["REQUEST_METHOD"] == "POST") {   
                             if(isset($_POST["btnStartTest"])) {
                                 $_SESSION["titleTestTested"] = $_POST["btnStartTest"];
-
-                                /* metodo che richiama la stored procedure per l'inserimento dello studente all'interno della tabella Completamento, in cui verrà impostato lo stato di avanzamento ad APERTO  */
-                                openTest($conn, $_SESSION["emailStudente"], $_POST["btnStartTest"]);
-
-                                /* innescata la costruzione del form contenente tutti i quesiti del test selezionato */
-                                buildForm($conn, $_POST["btnStartTest"], null, null);                        
-                            } elseif(isset($_POST["btnRestartTest"])){
+                                openTest($conn, $_SESSION["emailStudente"], $_POST["btnStartTest"]); // metodo ideato per inserire il tentativo di risoluzione dello studente all'interno della tabella Completamento
+                                buildForm($conn, $_POST["btnStartTest"], null, null); // innescata la costruzione del form                        
+                            } elseif(isset($_POST["btnRestartTest"])) {
                                 $_SESSION["titleTestTested"] = $_POST["btnRestartTest"]; 
-                                
                                 buildForm($conn, $_POST["btnRestartTest"], null, null);
                             } elseif(isset($_POST["btnSendExitTest"])) {
-                                /* vettore contenente l'insieme dei numeri progressivi dei quesiti che compongano il test designato */
-                                $arrayIdQuestion = getQuestionTest($conn, $_SESSION["titleTestTested"]);
-                                                
-                                /* metodi restituenti di mappe, le quali contengono rispettivamente le risposte dello studente ai quesiti e le soluzioni dei quesiti */
-                                $mapArrayAnswer = setValueSentMap($arrayIdQuestion);
+                                $arrayIdQuestion = getQuestionTest($conn, $_SESSION["titleTestTested"]); // array contenente l'insieme degli id dei quesiti a cui lo studente ha risposto
+                                $mapArrayAnswer = setValueSentMap($arrayIdQuestion); // funzioni ideate per restituire strutture dati che contengano le risposte date dallo studente e le soluzioni dei quesiti
                                 $mapArraySolution = setValueSolutionMap($conn, $arrayIdQuestion, $_SESSION["titleTestTested"]); 
                                                 
-                                /* correzione delle risposte date dallo studente */
-                                checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution);
+                                checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution); // metodo attuato per stabilire la correttezza del tentativo risolutivo fornito dallo studente
                                 header("Location: ../view/viewTest.php");
                                 exit();
-                            } elseif(isset($_POST["btnCheckSketch"])) {
-                                /* ramo del costrutto condizionale, definito per simulare la correzione di una singola domanda di codice  */
-                                $_SESSION["checkedQuestion"] = $_POST["btnCheckSketch"];
-
+                            } elseif(isset($_POST["btnCheckSketch"])) { // ramo del costrutto definito per consentire la correzione di un unico quesito di codice 
+                                $_SESSION["checkedQuestion"] = $_POST["btnCheckSketch"]; 
                                 $textArea = "txtAnswerSketch";
                                 $textArea = $textArea."".$_POST["btnCheckSketch"];
 
-                                /* valutazione della query scritta dallo studente, rispetto alla soluzione mantenuta nel database */
-                                if(strlen($_POST[$textArea]) > 0) {
-                                    /* risultati ottenuti */
+                                if(strlen($_POST[$textArea]) > 0) { // controllo ideato per accertarsi che al textarea non sia vuota
                                     [$rowSolution, $rowAnswer] = checkSketch($conn, $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea]);
-                                    
+
                                     if($rowSolution == 0) {
                                         echo "<script type='text/javascript'>alert(".json_encode($rowAnswer).");</script>";
                                         insertAnswer($conn, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
@@ -85,19 +72,17 @@
                                     buildForm($conn, $_SESSION["titleTestTested"], null, null);  
                                 }
 
-                                unset($_SESSION["checkedQuestion"]);
+                                unset($_SESSION["checkedQuestion"]); // unset dei campi della sessione necessario per fronteggiare ad altre richieste di correzione
                                 unset($_SESSION["fieldAnswer"]);
                                 unset($_SESSION["fieldSolution"]);
                             }
                         }
 
                         function buildForm($conn, $titleTest, $rowAnswer, $rowSolution) {
-                            /* funzione restituente l'insieme degli id dei quesiti che compongono il test selezionato */
                             $arrayIdQuestion = getQuestionTest($conn, $titleTest);
             
                             foreach($arrayIdQuestion as $i) {
-                                /* condizione necessaria per differenziare la visualizzazione dei quesiti, qualora si tratti di una domanda chiusa piuttosto che aperta */
-                                if(getTypeQuestion($conn, $i, $titleTest) == "CHIUSA"){
+                                if(getTypeQuestion($conn, $i, $titleTest) == "CHIUSA") { // diversificazione del form visualizzato a seconda della tipologia del quesito 
                                     buildFormCheck($conn, $i, $titleTest, true, false);
                                 } else {
                                     buildFormQuery($conn, $i, $titleTest, $rowAnswer, $rowSolution, true, false);

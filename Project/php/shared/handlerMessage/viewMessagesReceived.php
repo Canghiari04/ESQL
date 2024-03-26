@@ -24,19 +24,18 @@
         <div class="navbar">
             <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
             <?php 
-                buildButtonUndo($_POST["btnViewMessages"]);
+                buildButtonUndo($_POST["btnViewMessages"]); // definizine del bottone undo, dinamico a seconda della pagina chiamante
             ?>
         </div>
         <div class="container">
             <?php 
                 
-                        buildFormMessages($conn, $_POST["btnViewMessages"]);
+                        buildFormMessages($conn, $_POST["btnViewMessages"]); // costruzione del form contenente tutti i messaggi 
                     }
                 }
 
-                /* funzione che permette la visualizzazione di tutti i messaggi inviati */
                 function buildFormMessages($conn, $typeUser) {
-                    if($typeUser == "Teacher") {
+                    if($typeUser == "Teacher") { // diversificazione della query a seconda della tipologia dell'utente
                         $sql = "SELECT * FROM Messaggio, Messaggio_Studente WHERE (Messaggio.ID=Messaggio_Studente.ID_MESSAGGIO_STUDENTE);";
 
                         try {
@@ -47,7 +46,7 @@
                             echo "Eccezione ".$e -> getMessage()."<br>";
                         }
 
-                        while($row = $result -> fetch(PDO::FETCH_OBJ)) {
+                        while($row = $result -> fetch(PDO::FETCH_OBJ)) { // ciclo iterativo definito per visualizzare tutti messaggi inviati
                             deployMessage($conn, $row -> EMAIL_STUDENTE, $row -> TESTO, $row -> TITOLO, $row -> TITOLO_TEST, $row -> DATA_INSERIMENTO);
                         }
                     } else {

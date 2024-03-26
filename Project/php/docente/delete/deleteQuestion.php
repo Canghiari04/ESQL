@@ -16,10 +16,8 @@
         }
     }
         
-    /* metodo in grado di eliminare un quesito di un test */
     function deleteQuestion($conn, $manager, $varQuestion) {
-        /* explode attuato per acquisire tutti i token del quesito necessari per richiamare la procedure di eliminazione */
-        $valuesQuestion = explode("|?|", $varQuestion);
+        $valuesQuestion = explode("|?|", $varQuestion); // acquisiti tutti i token necessari per la cancellazione del quesito
         
         $storedProcedure = "CALL Eliminazione_Quesito(:idQuesito, :titoloTest);";
             
@@ -33,18 +31,14 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        /* scrittura log --> eliminazione di un record relativo alla tabella Quesito */
-        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$valuesQuestion[0].'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$valuesQuestion[0].'', 'Timestamp' => date('Y-m-d H:i:s')]; 
+        writeLog($manager, $document); // scrittura log eliminazione di un quesito
     }
 
-    /* metodo che permette l'eliminazione di una risposta di uno specifico quesito */
     function deleteOption($conn, $manager, $varAnswer) {
-        /* explode attuato per acquisire tutti i token della risposta necessari per richiamare la procedure */
-        $valuesOption = explode("|?|", $varAnswer);
+        $valuesOption = explode("|?|", $varAnswer); // acquisiti tutti i token necessari per eliminare un'opzione di risposta del quesito
 
-        /* diversificazione della procedure a seconda della tipologia */
-        if($valuesOption[0] == "CHIUSA") {
+        if($valuesOption[0] == "CHIUSA") { // diversificazione della procedure a seconda della tipologia
             $storedProcedure = "CALL Eliminazione_Opzione_Risposta(:idRisposta, :idQuesito, :titoloTest);";
         } else {
             $storedProcedure = "CALL Eliminazione_Sketch_Codice(:idRisposta, :idQuesito, :titoloTest);";
@@ -61,9 +55,8 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        /* scrittura log --> eliminazione di una risposta riferita ad un quesito */
         $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione risposta id: '.$valuesOption[1].'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        writeLog($manager, $document); // scrittura log eliminazione di una risposta
     }
 
     closeConnection($conn);

@@ -51,18 +51,15 @@
                 ';
 
                 while($row = $result -> fetch(PDO::FETCH_OBJ)) {
-                    /* controllo che il test possieda quesiti e che gli stessi abbiano almeno una soluzione */
-                    if(checkCompletedTest($conn, $row -> TITOLO)) {
-                        /* acquisizione dello stato di completamento del Test, da cui sarà diversificata la visualizzazione dei bottoni */
-                        $stateTest = checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO);
+                    if(checkCompletedTest($conn, $row -> TITOLO)) { // controllo attuato per accertarsi che il test possiede dei quesiti e che abbiano almeno una soluzione
                         echo '
                             <div class="div-td">
                                 <table class="table-list">
                                     <tr>
                                         <th>'.$row -> TITOLO.'</th>
                                         <th>'.$row -> DATA_CREAZIONE.'</th>
-                                        <th>'.$stateTest.'</th>
-                                        '.buildButtonForm($conn, $_SESSION["emailStudente"], $row -> TITOLO, $stateTest).'
+                                        <th>'.checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO).'</th>
+                                        '.buildButtonForm($conn, $_SESSION["emailStudente"], $row -> TITOLO, checkStateTest($conn, $_SESSION["emailStudente"], $row -> TITOLO)).'
                                     </tr>
                                 </table>
                             </div>

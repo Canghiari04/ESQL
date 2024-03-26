@@ -1,12 +1,12 @@
 <?php
-    function insertTest($conn, $email, $viewAnswers, $uploadFile, $titleTest) {
-        if($uploadFile != null) {
+    function insertTest($conn, $email, $viewAnswers, $uploadFile, $titleTest) { // inserimento di un nuovo test all'interno della tabella Test
+        if($uploadFile != null) { // controllo della presenza o meno di un file multimediale
             $fileTest = file_get_contents($uploadFile);
         } else {
             $fileTest = null;
         }
 
-        $viewAnswers = convertToBoolean($viewAnswers);
+        $viewAnswers = convertToBoolean($viewAnswers); // conversione del booleano in value accettabili da mysql
 
         $storedProcedure = "CALL Inserimento_Test(:titolo, :email, :foto, :dataCreazione, :visualizzaRisposte);";
 

@@ -34,14 +34,10 @@
                     <?php              
                         if($_SERVER["REQUEST_METHOD"] == "POST") {
                             if(isset($_POST["btnInsertForm"])) {
-                                /* build del form di inserimento */
-                                identifyAttributes($conn);
+                                identifyAttributes($conn); // costruzionen del form contenente tutti gli attributi della tabella
                             } elseif(isset($_POST["btnInsertData"])) {
-                                /* inserimento dei dati ottenuti da input all'interno della tabella */
-                                insertData($conn);
-
-                                /* rebuild del form per nuovi inserimenti all'interno della collezione */
-                                identifyAttributes($conn);
+                                insertData($conn); // inserimento dei dati ottenuti dal form precedentemente costruito
+                                identifyAttributes($conn); // rebuild del form, in attesa di nuovi inserimenti
                             }
                         }
 

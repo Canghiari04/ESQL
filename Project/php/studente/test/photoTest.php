@@ -26,7 +26,7 @@
             <div class="navbar">
                 <a><img class="zoom-on-img" width="112" height="48" src="../../style/img/ESQL.png"></a>
                 <?php
-                            buildButtonUndo($_POST["btnPhotoTest"]);
+                            buildButtonUndo($_POST["btnPhotoTest"]); // funzione attuata per garantire la costruzione dinamica del bottone undo rispetto alla pagina chiamante
                         }
                     }
                 ?>
@@ -39,9 +39,8 @@
         </div>
     </body>
     <?php 
-        /* funzione che restituisce il file dell'immagine del test */   
-        function getPhoto($conn){
-            $sql = "SELECT FOTO FROM Test WHERE (TITOLO=:titoloTest);";
+        function getPhoto($conn) { 
+            $sql = "SELECT FOTO FROM Test WHERE (TITOLO=:titoloTest);"; // query attuata per estrapolare l'immagine del test
 
             try {
                 $result = $conn -> prepare($sql);
@@ -58,8 +57,7 @@
             return $filePhoto;
         }
 
-        /* funzione che permette la visualizzazione dell'immagine del test */  
-        function printPhoto($filePhoto){
+        function printPhoto($filePhoto) { // metodo definito per la visualizzazione della foto 
             echo '<img class="image-test" src="data:image/jpeg;base64,'.base64_encode($filePhoto).'" alt="FOTO NON DISPONIBILE">';
         }
     ?>

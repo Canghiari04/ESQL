@@ -1,15 +1,12 @@
 <?php
-    /* funzione attuata per osservare se il test possiede quesiti che abbiano almeno una soluzione */
-    function checkCompletedTest($conn, $titleTest) {
-        /* array contenente tutti gli id dei quesiti del test */
+    function checkCompletedTest($conn, $titleTest) { // funzione attuata per accertarsi che i test visualizzati abbiano quesiti caratterizzati ognuno di essi da una soluzione
         $arrayIdQuestion = getQuestionTest($conn, $titleTest);
 
-        /* nel caso in cui il test non abbia quesiti sarà restituito false */
-        if(sizeof($arrayIdQuestion) > 0) {    
+        if(sizeof($arrayIdQuestion) > 0) { // controllo definito per accertarsi che il test abbia dei quesiti associati ad esso
             for($i = 0; $i <= sizeof($arrayIdQuestion) - 1; $i++) {
                 $type = getTypeQuestion($conn, $arrayIdQuestion[$i], $titleTest);
                 
-                if($type == "CHIUSA") {
+                if($type == "CHIUSA") { // diversificazione della query a seconda della tipologia 
                     $sql = "SELECT ID FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito) AND (Opzione_Risposta.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
                 } else {
                     $sql = "SELECT TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
@@ -25,9 +22,8 @@
                     echo "Eccezione ".$e -> getMessage()."<br>";
                 }
                 
-                /* controllo attuato per osservare se i quesiti del test abbiano almeno una soluzione */
                 $numRows = $result -> rowCount();
-                if($numRows == 0) {
+                if($numRows == 0) { // controllo ideato per accertarsi se il quesito abbia almeno una soluzione
                     return false;
                 }
             }
@@ -38,7 +34,6 @@
         return true;
     }
 
-    /* funzione che restituisce lo stato attuale di completamento del Test per lo specifico studente */
     function checkStateTest($conn, $email, $titleTest) {
         $sql = "SELECT STATO FROM Completamento WHERE (Completamento.EMAIL_STUDENTE=:emailStudente) AND (Completamento.TITOLO_TEST=:titoloTest);";
 
@@ -53,7 +48,7 @@
         }
     
         $numRows = $result -> rowCount();
-        if($numRows > 0) {
+        if($numRows > 0) { // controllo definito per ovviare la possibilità di visualizzare a schermo warning built-in di php
             $row = $result -> fetch(PDO::FETCH_OBJ);
             return $row -> STATO;
         } else {
@@ -61,7 +56,6 @@
         }
     }
 
-    /* metodo utilizzato per stabilire se sia possibile visualizzare le soluzioni del test */
     function checkViewAnswer($conn, $titleTest) {           
         $sql = "SELECT VISUALIZZA_RISPOSTE FROM Test WHERE (Test.TITOLO=:titoloTest);";
     
@@ -75,7 +69,6 @@
         }
     
         $row = $result -> fetch(PDO::FETCH_OBJ);
-
         if(($row -> VISUALIZZA_RISPOSTE) == 1) {
             return true;
         } else {
@@ -83,8 +76,7 @@
         }
     }
 
-    /* acquisizione del numero totale di risposte date da uno studente per uno specifico test */
-    function checkNumAnswer($conn, $email, $titleTest) {
+    function checkNumAnswer($conn, $email, $titleTest) { // funzione attuata per estrapolare il numero di risposte immesse dallo studente
         $sql = "SELECT * FROM Risposta WHERE (Risposta.EMAIL_STUDENTE=:emailStudente) AND (Risposta.TITOLO_TEST=:titoloTest);";           
     
         try {
@@ -101,8 +93,7 @@
         return ($numRows > 0);
     }
 
-    /* individuazione delle opzioni di risposta date in tentavi precedenti, da cui verrà visualizzata o meno la checkbox demarcata */
-    function checkChecked($conn, $email, $idQuestion, $titleTest){
+    function checkChecked($conn, $email, $idQuestion, $titleTest) { // funzione definita per individuare tutti quei quesiti a cui lo studente abbia già risposto in tentativi precedenti
         $sql = "SELECT TESTO FROM Risposta WHERE (EMAIL_STUDENTE=:emailStudente) AND (ID_QUESITO=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
 
         try {
@@ -116,20 +107,18 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $questionSolutions = array();
+        $questionSolutions = array(); // array che conterrà l'insieme delle opzioni di risposta immesse per quesiti a domanda chiusa
 
-        /* in presenza di un oggetto PDO non nullo, verranno salvati all'interno dell'array gli id delle opzioni di risposta */
         $numRows = $result -> rowCount();
-        if($numRows > 0){
+        if($numRows > 0) { 
             $row = $result -> fetch(PDO::FETCH_OBJ);
-            $questionSolutions =  explode('|?|', $row -> TESTO);
+            $questionSolutions =  explode('|?|', $row -> TESTO); // estrapolazione degli id mediante lo split del carattere speciale ideato
         }
         
         return $questionSolutions;
     }
 
-    /* metodo attuato per stampare all'interno della textarea la risposta data dallo studente */
-    function checkAnswered($conn, $email, $idQuestion, $titleTest){
+    function checkAnswered($conn, $email, $idQuestion, $titleTest) { // funzione ideata per visualizzare o meno risposte a quesiti di codice immesse dallo studente
         $sql = "SELECT TESTO FROM Risposta WHERE (EMAIL_STUDENTE=:emailStudente) AND (ID_QUESITO=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
 
         try {
@@ -143,16 +132,14 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        /* controllo per definire se lo studente abbia o meno risposto al quesito */
         $numRows = $result -> rowCount();
         if($numRows > 0){      
             $row = $result -> fetch(PDO::FETCH_OBJ); 
-            echo "<script>document.querySelector('textarea[name=\"txtAnswerSketch".$idQuestion."\"]').value='".$row -> TESTO."';</script>";
+            echo "<script>document.querySelector('textarea[name=\"txtAnswerSketch".$idQuestion."\"]').value='".$row -> TESTO."';</script>"; // script ideato per sovrascrivere il contenuto della textarea con la risposta immessa dallo studente
         }
     }
 
-    /* funzione definita per stampare all'interno delle textarea le soluzioni di ogni Domanda_Codice */
-    function checkSolution($conn, $idQuestion, $titleTest) {
+    function checkSolution($conn, $idQuestion, $titleTest) { // funzione simile alla precedente, ma orientata per la sola visualizzazione delle soluzioni del test
         $sql = "SELECT TESTO FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (Sketch_Codice.SOLUZIONE=1);";
 
         try {
