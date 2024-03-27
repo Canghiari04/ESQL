@@ -27,9 +27,7 @@ HTML the standard markup language used to diplay the pages that composed the sta
 
 ## Setup [Ubuntu Users]
 To use the ESQL project you have to install:
-- PHP
-  
-  To install PHP
+- PHP  
   ```bash
   sudo apt-get install php
   ```
