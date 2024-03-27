@@ -14,18 +14,22 @@ Project for the University of Bologna Database course (70155), Accademic Year (2
 It makes use of different tecnologies to ensure the develop of the platform. The tecnology stack include:
 
 **PHP**
+
 PHP the general purpose scripting language, used to develop the stand-alone platform of the project.
 
 **SQL**
+
 SQL is a domain-specific language used to manage data, in a relational database management system.
 
 **HTML**
+
 HTML the standard markup language used to diplay the pages that composed the stand-alone platform.
 
 ## Setup [Ubuntu Users]
 To use the ESQL project you have to install:
 - PHP
-  To install PHP you need to run the command below
+  
+  To install PHP
   ```bash
   sudo apt-get install php
   ```
@@ -42,7 +46,7 @@ Finally, when you installed all the requirements you have to enable the PDO modu
   sudo phpenmod pdo_mysql
   ```
 ## Deploy [Ubuntu Users]
-To deploy the WEB interface you have to know you file system. So there are three command that you must run, divided in:
+To deploy the WEB interface you have to know your file system. So there are three command that you must run, divided in:
 - From the command line interface run
   ```bash
   sudo systemctl start mysql
