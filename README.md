@@ -54,5 +54,5 @@ To deploy the WEB interface you have to know your file system. So there are thre
   ```
 - Finally, where did you clone the repository run the following command and go to your localhost
    ```bash
-  php -S localhost:your_socket
+  php -S localhost:port_number
   ```
