@@ -49,7 +49,6 @@ To deploy the WEB interface you have to know your file system. So there are thre
   ```bash
   sudo systemctl start mysql
   ```
-- Then run the below command
   ```bash
   sudo systemctl start apache2
   ```
