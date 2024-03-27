@@ -41,14 +41,14 @@
                     break;
                 }
             }
-        }   
+        }    
     }
 
     function getIdTableExercise($conn, $nameTable) { 
         $sql = "SELECT ID FROM Tabella_Esercizio WHERE NOME=:nomeTabella;";
     
         try {
-            $result = $conn->prepare($sql);
+            $result = $conn -> prepare($sql);
             $result -> bindValue(":nomeTabella", $nameTable);
             
             $result -> execute();
