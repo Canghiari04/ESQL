@@ -1,4 +1,5 @@
 \documentclass{article}
+
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lipsum}
@@ -13,6 +14,36 @@
 \usepackage{fixltx2e}
 \usepackage{booktabs}
 \usepackage{float}  
+\usepackage{graphicx}
+\usepackage{floatflt,epsfig}
+\usepackage[margin=1in]{geometry} 
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{language=SQL,
+  basicstyle={\small\ttfamily},
+  belowskip=3mm,
+  breakatwhitespace=true,
+  breaklines=true,
+  classoffset=0,
+  columns=flexible,
+  commentstyle=\color{dkgreen},
+  framexleftmargin=0.25em,
+  frameshape={}{yy}{}{},
+  keywordstyle=\color{blue},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  showstringspaces=false,
+  stringstyle=\color{mauve},
+  tabsize=3,
+  xleftmargin =1em
+}
 
 \titleformat{\section}[block]
 {\large\bfseries}{\thesection}{1em}{}
@@ -120,18 +151,68 @@ Come da titolo, sono riportate l'insieme delle possibili operazioni sui dati ind
 \end{itemize}
 
 \subsection{Tavola media dei volumi}
-\large
+In questa sezione è specificato il numero stimato di istanze per ogni entità e relazione dello schema. I valori sono necessariamente approssimati, ma oltre tutto indicativi. Si prende come riferimento una realtà universitaria.
 \begin{table}[h]
     \centering
     \begin{tabularx}{\textwidth}{|X|X|X|X|}
         \hline
-        . & . \\
+        \bf Concetto & \bf Tipo & \bf Volume \\
         \hline
-        . & . \\
+        Utente & Entità & 305 \\
+        \hline
+        Studente & Entità & 300 \\
+        \hline
+        Docente & Entità & 5 \\
+        \hline
+        Tabella\_Esercizio & Entità & 50 \\
+        \hline
+        Attributo & Entità & 200 \\
+        \hline
+        Test & Entità & 10 \\
+        \hline
+        Quesito & Entità & 100 \\
+        \hline
+        Domanda\_Chiusa & Entità & 50 \\
+        \hline
+        Opzione\_Risposta & Entità & 150 \\
+        \hline
+        Domanda\_Codice & Entità & 50 \\
+        \hline
+        Sketch\_Codice & Entità & 50 \\
+        \hline
+        Messaggio & Entità & 610 \\
+        \hline
+        Messaggio\_Studente & Entità & 600 \\
+        \hline
+        Creazione & Relazione & 50 \\
+        \hline
+        Completamento & Relazione & 3000 \\
+        \hline
+        Invio & Relazione & 18000 \\
+        \hline
+        Ricezione & Relazione & 10 \\
+        \hline
+        Pubblicazione & Relazione & 6100 \\
+        \hline
+        Risposta & Relazione & 30000 \\
+        \hline
+        Composizione & Relazione & 1000 \\
+        \hline
+        Afferenza & Relazione & 5000 \\
+        \hline
+        Combinazione & Relazione & 10000 \\
+        \hline
+        Vincolo Integrità & Relazione & 40000 \\
+        \hline
+        Disposizione & Relazione & 7500 \\
+        \hline
+        Soluzione & Relazione & 2500 \\
+        \hline
     \end{tabularx}
-    \caption{heading}
+    \caption{Stima della tavola media dei volumi riferita al progetto svolto.}
 \end{table}
 
+\newpage
 \subsection{Glossario dei termini}
 \large
 Grazie alla sezione riferita alla decomposizione delle frasi secondo caratteristiche comuni, è possibile realizzare un glossario dei termini, capace di favorire una panoramica delle nozioni principali. Il glossario, rispetto a quanto svolto, si compone di:
@@ -235,11 +316,9 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
         \hline
         Invio & Invio di messaggi da parte di studenti & Studente, Messaggio\_Studente & . \\
         \hline
-        Smistamento & Invio e ricezione di comunicazioni dal docente del corso & Docente, Messaggio & . \\
+        Ricezione & Invio e ricezione di comunicazioni dal docente del corso & Docente, Messaggio & . \\
         \hline 
         Pubblicazione & Pubblicazione di comunicazioni afferenti ad uno specifico test & Messaggio, Test & . \\
-        \hline
-        Ricezione & Ricezione di messaggi emessi da studenti oppure da docenti & Docente, Messaggio & . \\
         \hline
         Risposta & Risposta formulata dagli studenti in relazione ad uno specifico quesito & Studente, Quesito & Email\_Studente, Id\_Quesito, Titolo\_Test, Testo, Esito \\
         \hline
@@ -331,28 +410,28 @@ Sono specificate un totale di quattro operazioni, relative al campo \textit{Num\
 Successivamente si calcolano i costi operazionali dello schema E-R con ridondanza, esplicitando tutti gli elementi necessari, suddivisi in:
 \begin{itemize}[label={ }]
     \itemsep0em 
-    \item {\small\textbf{TAVOLA ACCESSI.} \\ 1 per RISPOSTA, 1 per QUESITO, 1 per DOMANDA\_CHIUSA, 1 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP1) = 10 * 1 * (2 * 4 + 0) = 80 \vspace*{2pt} 
-    \item {\small\textbf{TAVOLA ACCESSI.} \\ 10 per RISPOSTA, 1 per QUESITO, 1 per DOMANDA\_CHIUSA, 1 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP2) = 2 * 0.5 * (2 * 13 + 0) = 26 \vspace*{2pt}
-    \item {\small\textbf{TAVOLA ACCESSI.} \\ 50 per UTENTE, 50 per STUDENTE, 50 per DOCENTI} \vspace*{2pt}\\ C(OP3) = 1 * 0.5 * (0 + 150) = 75
-    \item {\small\textbf{TAVOLA ACCESSI.} \\ 20 per QUESITO, 20 per DOMANDA\_CHIUSA, 20 DOMANDA\_CODICE } \vspace*{1pt}\\ C(OP4) = 2 * 1 * (0 + 60) = 120
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 1 per RISPOSTA, 1 per QUESITO} \vspace*{2pt}\\ C(OP1) = 10 * 1 * (2 * 2 + 0) = 40 \vspace*{2pt} 
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 10 per RISPOSTA, 1 per QUESITO, 1 per DOMANDA\_CHIUSA o 1 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP2) = 2 * 0.5 * (2 * 12 + 0) = 24 \vspace*{2pt}
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 50 per UTENTE, 50 per STUDENTE o 50 per DOCENTI} \vspace*{2pt}\\ C(OP3) = 1 * 0.5 * (0 + 100) = 50
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 20 per QUESITO, 20 per DOMANDA\_CHIUSA o 20 DOMANDA\_CODICE } \vspace*{1pt}\\ C(OP4) = 2 * 1 * (0 + 40) = 80
 \end{itemize}
-\hspace*{15pt}C(S$_r$) = 80 + 26 + 75 + 120 = 301 \vspace*{7pt}\\
+\hspace*{15pt}C(S$_r$) = 40 + 24 + 50 + 80 = 194 \vspace*{7pt}\\
 Si calcolano i costi operazionali dello schema E-R senza ridondanza, suddivisi in:
 \begin{itemize}[label={ }]
     \itemsep0em 
     \item {\small\textbf{TAVOLA ACCESSI.} \\ 1 per RISPOSTA} \vspace*{2pt}\\ C(OP1) = 10 * 1 * (2 * 1 + 0) = 20 \vspace*{2pt} 
-    \item {\small\textbf{TAVOLA ACCESSI.} \\ 10 per RISPOSTA, 1 per QUESITO, 1 per DOMANDA\_CHIUSA, 1 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP2) = 2 * 0.5 * (2 * 13 + 0) = 26 \vspace*{2pt}
-    \item {\small\textbf{TAVOLA ACCESSI.} \\ 50 per UTENTE, 50 per STUDENTE, 50 per DOCENTI} \vspace*{2pt}\\ C(OP3) = 1 * 0.5 * (0 + 150) = 75
-    \item {\small\textbf{TAVOLA ACCESSI.} \\ 200 per RISPOSTA, 20 per QUESITO, 20 per DOMANDA\_CHIUSA, 20 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP4) = 2 * 1 * (0 + 260) = 520
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 10 per RISPOSTA, 1 per QUESITO, 1 per DOMANDA\_CHIUSA o 1 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP2) = 2 * 0.5 * (2 * 12 + 0) = 24 \vspace*{2pt}
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 50 per UTENTE, 50 per STUDENTE o 50 per DOCENTI} \vspace*{2pt}\\ C(OP3) = 1 * 0.5 * (0 + 100) = 50
+    \item {\small\textbf{TAVOLA ACCESSI.} \\ 200 per RISPOSTA, 20 per QUESITO, 20 per DOMANDA\_CHIUSA o 20 per DOMANDA\_CODICE} \vspace*{2pt}\\ C(OP4) = 2 * 1 * (0 + 240) = 480
 \end{itemize}
-\hspace*{15pt}C(S) = 20 + 26 + 75 + 520 = 641 \vspace*{7pt} \vspace*{7pt}\\
+\hspace*{15pt}C(S) = 20 + 24 + 50 + 480 = 564 \vspace*{7pt} \vspace*{7pt}\\
 Si osserva ora l'occupazione di memoria di entrambi i diagrammi, in cui si manifesta:
 \begin{itemize}[label={-}]
     \itemsep0em
     \item M(S$_r$) = X + 20 * 4 = X + 80 byte
     \item M(S) = \hspace*{1pt}X byte
 \end{itemize}
-Terminate tutte le operazioni riferite all'analisi delle ridondanze, si osserva come il mantenimento comporti a vantaggi significativi, piuttosto che l'eliminazione. Infatti il rapporto $C(S) \div C(S_r)$ restituisce un valore che si aggira attorno a 2, in questo caso è conveniente mantenere l'attributo \textit{Num\_Risposte}, dettata anche dall'irrisorio overhead introdotto, pari a 80 byte.
+Terminate tutte le operazioni riferite all'analisi delle ridondanze, si osserva come il mantenimento comporti a vantaggi significativi, piuttosto che l'eliminazione. Infatti il rapporto $C(S) \div C(S_r)$ restituisce un valore che si aggira attorno a 3, in questo caso è conveniente mantenere l'attributo \textit{Num\_Risposte}, dettata anche dall'irrisorio overhead introdotto, pari a 80 byte.
 
 \subsection{Lista delle tabelle con i vincoli di chiave}
 \large
@@ -412,23 +491,191 @@ Quest'ultima parte del capitolo, riporta in maniera esplicita tutti i vincoli in
     \item Messaggio\_Studente.ID\_MESSAGGIO\_STUDENTE \textbf{-->} Messaggio.ID
     \item Messaggio\_Studente.TITOLO\_TEST \textbf{-->} Studente.EMAIL\_STUDENTE
 \end{itemize}
-
+       
+\section{Descrizione delle funzionalità}
+\large
+\textbf{Registrazione}\\
+Studenti e docenti hanno l'opportunità di registrarsi alla piattaforma, affinchè possano usufruire delle funzionalità implementate.\vspace*{7pt}\\
+\textbf{Accedi}\\
+Nuovamente, studenti e docenti, dopo essersi registrati, devono accedere alla piattaforma pur di poter utilizzare le funzionalità implementate.\vspace*{7pt}\\
+\textbf{Logout}\\
+L'utente qualora abbia terminato di utilizzare la piattaforma, detiene la possibilità di disconnetersi, visualizzando la schermata home.\vspace*{7pt}\\
+\textbf{Creazione}\\
+In relazione alla funzionalità proposta, occorre suddividere le azioni che uno studente oppure un docente potrebbe eseguire. Pertanto di seguito è definita una breve suddivisione, in cui: 
+\begin{itemize}[label={-}]
+    \itemsep0em
+    \item Docente, effettuato l'accesso può creare una nuova tabella, un nuovo test, un nuovo quesito ed infine inviare messaggi a tutti gli studenti
+    \item Studente, effettuato l'accesso può inviare messaggi allo specifico docente titolare del test
+\end{itemize}    
+\textbf{Eliminazione}\\
+L'eliminazione riguarda solo la figura del docente, pertanto esso è in grado di eliminare una tabella, se non possiede vincoli di integrità referenziale, un quesito e un test.\vspace*{7pt}\\
+\textbf{Svolgi test}\\
+In questo caso si tratta di una funzionalità circoscritta agli studenti, per cui, visualizzando i test disponibili, uno studente ha la possibilità di svolgere un tentativo risolutivo del test di riferimento; ciò può avvennire più volte anche per lo stesso test.\vspace*{7pt}\\
+\textbf{Visualizza}\\
+Come avviene per la creazione, occorre distinguere le azioni che possano essere conseguite a seconda della tipologia dell'utente, suddivise in:
+\begin{itemize}[label={-}]
+    \itemsep0em
+    \item Docente, può visualizzare le specifiche di una tabella, di un quesito, di un test, dei messaggi inviati e ricevuti
+    \item Studente, può visualizzare le risposte, le soluzioni e il file multimediale connessi ad un test, i messaggi inviati e ricevuti
+\end{itemize}
 
 \newpage
-\section{Normalizzazione}
-\large
-\dots
-
-\section{Riflessioni}
-\large
-\dots
-
-\subsection{Sviluppo alternativo}
-\large
-\dots
-
 \section{SQL}
-\large 
-\dots
+\begin{lstlisting}[language=SQL, title=Codice SQL completo dello schema della base di dati.]
+DROP DATABASE IF EXISTS ESQLDB;
+CREATE DATABASE IF NOT EXISTS ESQLDB;
+
+USE ESQLDB;
+
+CREATE TABLE Utente(
+    EMAIL VARCHAR(255) PRIMARY KEY,
+    PSWD VARCHAR(255),
+    NOME VARCHAR(255) NOT NULL,
+    COGNOME VARCHAR(255) NOT NULL,
+    TELEFONO INT(10)
+)ENGINE=INNODB ;
+
+CREATE TABLE Studente(
+    EMAIL_STUDENTE VARCHAR(255) PRIMARY KEY,
+    ANNO_IMMATRICOLAZIONE INT(4) NOT NULL,
+    CODICE VARCHAR(16) NOT NULL,
+    FOREIGN KEY (EMAIL_STUDENTE) REFERENCES Utente(EMAIL) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Docente(
+    EMAIL_DOCENTE VARCHAR(255) PRIMARY KEY,
+    NOME_DIPARTIMENTO VARCHAR(255) NOT NULL,
+    NOME_CORSO VARCHAR(255) NOT NULL,
+    FOREIGN KEY (EMAIL_DOCENTE) REFERENCES Utente(EMAIL) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Tabella_Esercizio(
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    NOME VARCHAR(255) NOT NULL,
+    DATA_CREAZIONE DATETIME NOT NULL,
+    NUM_RIGHE INT NOT NULL,
+    EMAIL_DOCENTE VARCHAR(255) NOT NULL,
+    FOREIGN KEY(EMAIL_DOCENTE) REFERENCES Docente(EMAIL_DOCENTE) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Attributo(
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    ID_TABELLA INT,
+    TIPO VARCHAR(255) NOT NULL,
+    NOME VARCHAR(255) NOT NULL,
+    CHIAVE_PRIMARIA BOOLEAN NOT NULL,
+    FOREIGN KEY(ID_TABELLA) REFERENCES Tabella_Esercizio(ID) ON DELETE CASCADE 
+)ENGINE=INNODB ;
+
+CREATE TABLE Vincolo_Integrita(
+    REFERENTE INT,
+    REFERENZIATO INT,
+    PRIMARY KEY(REFERENTE, REFERENZIATO),
+    FOREIGN KEY(REFERENTE) REFERENCES Attributo(ID) ON DELETE CASCADE,
+    FOREIGN KEY(REFERENZIATO) REFERENCES Attributo(ID) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Test(
+    TITOLO VARCHAR(255) PRIMARY KEY,
+    EMAIL_DOCENTE VARCHAR(255) NOT NULL,
+    FOTO LONGBLOB,
+    DATA_CREAZIONE DATE NOT NULL,
+    VISUALIZZA_RISPOSTE BOOLEAN NOT NULL,
+    FOREIGN KEY (EMAIL_DOCENTE) REFERENCES Docente(EMAIL_DOCENTE) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Quesito(
+    ID INT,
+    TITOLO_TEST VARCHAR(255),
+    DIFFICOLTA ENUM('BASSO', 'MEDIO', 'ALTO') NOT NULL,
+    NUM_RISPOSTE INT NOT NULL,
+    DESCRIZIONE VARCHAR(255) NOT NULL,
+    PRIMARY KEY(ID, TITOLO_TEST),
+    FOREIGN KEY(TITOLO_TEST) REFERENCES Test(TITOLO) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Afferenza(
+    ID_QUESITO INT,
+    TITOLO_TEST VARCHAR(255),
+    ID_TABELLA INT,
+    PRIMARY KEY(ID_QUESITO, TITOLO_TEST, ID_TABELLA),
+    FOREIGN KEY(ID_QUESITO, TITOLO_TEST) REFERENCES Quesito(ID, TITOLO_TEST) ON DELETE CASCADE,
+    FOREIGN KEY(ID_TABELLA) REFERENCES Tabella_Esercizio(ID) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Domanda_Chiusa(
+    ID_DOMANDA_CHIUSA INT,
+    TITOLO_TEST VARCHAR(255),
+    PRIMARY KEY (ID_DOMANDA_CHIUSA, TITOLO_TEST),
+    FOREIGN KEY(ID_DOMANDA_CHIUSA, TITOLO_TEST) REFERENCES Quesito(ID, TITOLO_TEST) ON DELETE CASCADE 
+)ENGINE=INNODB ;
+
+CREATE TABLE Opzione_Risposta(
+    ID INT,
+    ID_DOMANDA_CHIUSA INT,
+    TITOLO_TEST VARCHAR(255),
+    TESTO TEXT NOT NULL,
+    SOLUZIONE BOOLEAN NOT NULL,
+    PRIMARY KEY(ID, ID_DOMANDA_CHIUSA, TITOLO_TEST),
+    FOREIGN KEY(ID_DOMANDA_CHIUSA, TITOLO_TEST) REFERENCES Domanda_Chiusa(ID_DOMANDA_CHIUSA, TITOLO_TEST) ON DELETE CASCADE    
+)ENGINE=INNODB ;
+
+CREATE TABLE Domanda_Codice(
+    ID_DOMANDA_CODICE INT,
+    TITOLO_TEST VARCHAR(255),
+    PRIMARY KEY(ID_DOMANDA_CODICE, TITOLO_TEST),
+    FOREIGN KEY(ID_DOMANDA_CODICE, TITOLO_TEST) REFERENCES Quesito(ID, TITOLO_TEST) ON DELETE CASCADE    
+)ENGINE=INNODB ;
+
+CREATE TABLE Sketch_Codice(
+    ID INT,
+    ID_DOMANDA_CODICE INT,
+    TITOLO_TEST VARCHAR(255),
+    TESTO TEXT NOT NULL,
+    SOLUZIONE BOOLEAN NOT NULL,
+    PRIMARY KEY(ID, ID_DOMANDA_CODICE, TITOLO_TEST),
+    FOREIGN KEY(ID_DOMANDA_CODICE, TITOLO_TEST) REFERENCES Domanda_Codice(ID_DOMANDA_CODICE, TITOLO_TEST) ON DELETE CASCADE    
+)ENGINE=INNODB ;
+
+CREATE TABLE Completamento(
+    TITOLO_TEST VARCHAR(255), 
+    EMAIL_STUDENTE VARCHAR(255),
+    STATO ENUM('APERTO', 'INCOMPLETAMENTO', 'CONCLUSO') NOT NULL, 
+    DATA_ULTIMARISPOSTA DATETIME,
+    DATA_PRIMARISPOSTA DATETIME,
+    PRIMARY KEY(TITOLO_TEST, EMAIL_STUDENTE),
+    FOREIGN KEY(TITOLO_TEST) REFERENCES Test(TITOLO) ON DELETE CASCADE,
+    FOREIGN KEY(EMAIL_STUDENTE) REFERENCES Studente(EMAIL_STUDENTE) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Risposta(
+    EMAIL_STUDENTE VARCHAR(255),
+    ID_QUESITO INT,
+    TITOLO_TEST VARCHAR(255),
+    TESTO TEXT NOT NULL,
+    ESITO BOOLEAN NOT NULL,
+    PRIMARY KEY(EMAIL_STUDENTE, ID_QUESITO, TITOLO_TEST),
+    FOREIGN KEY(EMAIL_STUDENTE) REFERENCES Studente(EMAIL_STUDENTE) ON DELETE CASCADE,
+    FOREIGN KEY(ID_QUESITO, TITOLO_TEST) REFERENCES Quesito(ID, TITOLO_TEST) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Messaggio(
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    EMAIL_DOCENTE VARCHAR(255) NOT NULL,
+    TESTO TEXT NOT NULL,
+    TITOLO VARCHAR(255) NOT NULL,
+    TITOLO_TEST VARCHAR(255) NOT NULL,
+    DATA_INSERIMENTO DATE NOT NULL,
+    FOREIGN KEY(TITOLO_TEST) REFERENCES Test(TITOLO) ON DELETE CASCADE,
+    FOREIGN KEY(EMAIL_DOCENTE) REFERENCES Docente(EMAIL_DOCENTE) ON DELETE CASCADE
+)ENGINE=INNODB ;
+
+CREATE TABLE Messaggio_Studente(
+    ID_MESSAGGIO_STUDENTE INT PRIMARY KEY,
+    EMAIL_STUDENTE VARCHAR(255) NOT NULL,
+    FOREIGN KEY(ID_MESSAGGIO_STUDENTE) REFERENCES Messaggio(ID) ON DELETE CASCADE,
+    FOREIGN KEY(EMAIL_STUDENTE) REFERENCES Studente(EMAIL_STUDENTE) ON DELETE CASCADE
+)ENGINE=INNODB ;
+\end{lstlisting}
 
 \end{document}
