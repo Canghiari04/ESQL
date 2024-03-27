@@ -52,7 +52,7 @@ To deploy the WEB interface you have to know your file system. So there are thre
   ```bash
   sudo systemctl start apache2
   ```
-- Finally, where you had clone the repository run the following command and go to your localhost
+- Finally, where did you clone the repository run the following command and go to your localhost
    ```bash
   php -S localhost:your_socket
   ```
