@@ -74,9 +74,9 @@
 
                                 $cont++;
                             }
-
-                            echo '</table>';
                         }
+
+                        echo '</table>';
 
                         closeConnection($conn);
                     ?>
@@ -126,9 +126,9 @@
 
                                 $cont++;
                             }
-
-                            echo '</table>';
                         }
+                        
+                        echo '</table>';
                         
                         closeConnection($conn);
                     ?>
@@ -141,7 +141,7 @@
                             $result = $conn -> prepare($sql);
 
                             $result -> execute();
-                        } catch(PDOException $e) {
+                        } catch (PDOException $e) {
                             echo "Eccezione: ".$e -> getMessage()."<br>"; 
                         }
                                     
@@ -170,10 +170,10 @@
 
                                 $cont++;
                             }
-
-                            echo '</table>';
                         }
-
+                        
+                        echo '</table>';
+                        
                         closeConnection($conn);
                     ?>
                 </div>

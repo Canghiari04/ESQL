@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://fonts.googleapis.com/css?family=Public Sans" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Public San" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../../style/css/log_error.css">
     </head>
 </html>
@@ -44,7 +44,7 @@
                             exit();
                         }
                     } else {
-                        echo 'cia000';
+                        loginError();
                     } 
                 } elseif(isset($_POST["txtEmailSignupStudente"])) {
                     $sql = "SELECT Utente.EMAIL FROM Utente WHERE (Utente.EMAIL=:email);";
