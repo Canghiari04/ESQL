@@ -229,7 +229,7 @@
         } 
     }
 
-    function checkEnums($attributeType){
+    function checkEnums($attributeType) { // controllo attuato per accertarsi della presenza o meno di enum all'interno della query
         if(substr_count($attributeType, "ENUM")){   
             return true;
         } else {
@@ -238,7 +238,7 @@
 
     }
 
-    function getEnumOptions($nameAttribute, $attributeType){ // funzione capace di stabilire l'insieme dei values che contraddistinguono l'enum in question
+    function getEnumOptions($nameAttribute, $attributeType){ // funzione definita per stabilire l'insieme dei valori che contraddistinguono l'attributo enum
         $attributeType = substr($attributeType, 0, -1);
         $tokens = explode('(', $attributeType); //explode che permettono di separare i valori tra di loro        
         $tokensOptions = explode(',',$tokens[1]);
