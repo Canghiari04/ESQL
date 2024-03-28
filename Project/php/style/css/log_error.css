@@ -15,12 +15,12 @@ div {
     text-align: center;
     border-radius: 2.60vh;
     background-color: rgba(255,255,255,0.70);
+    border: 2.5px solid rgb(218, 205, 205);
 }
 
 div:hover {
-    transition: transform .7s;
-    transform: scale(1.03);
-    border: 2.5px solid rgb(218, 205, 205);
+    transition: border .4s;
+    border-color: #ff3131;
 }
 
 button {
