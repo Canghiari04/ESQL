@@ -18,6 +18,8 @@
     function insertRecord($conn, $sql, $nameTable) {
         $flagPrimaryKey = false; // flag utilizzato per ovviare ad inserimenti errati nelle tabelle contenenti meta-dati
 
+        [$sql, $enums] = checkEnum($conn, $sql, $nameTable);
+
         $tokens = explode('(', $sql, 2); // explode necessari per estrapolare tutti i token utili per l'inserimento all'interno delle tabell
         $tokens = substr($tokens[1], 0, -2);
         $tokensQuery = explode(',', trim($tokens));
@@ -29,7 +31,7 @@
 
             if($token[0] == "PRIMARY") {
                 $flagPrimaryKey = true;
-                
+
                 updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql)); // metodo attuato per modificare il vincolo di chiave primaria degli attributi già inseriti
             } elseif($token[0] == "FOREIGN") {
                 insertForeignKey($conn, $sql, $numRows, $idTableReferential);
@@ -41,7 +43,71 @@
                     break;
                 }
             }
-        }    
+        }     
+        
+        if(sizeof($enums) > 0){
+            insertEnums($conn, $enums, $nameTable);//inserimento dei valori di tipo enum, se presenti  
+        }
+    }
+
+    function checkEnum($conn, $sql, $nameTable){//funzione che permette di controllare la presenza di enum alll'interno della queri
+        $numberEnum = substr_count($sql, "ENUM");
+        $enums = array();//array dove verranno inseriti i dati relativi agli enum
+
+        for($i=0;$i<$numberEnum; $i++){
+            $positionEnum = strpos($sql, "ENUM");//individuando la presenza dell'enum, vengono calcolate le posizioni dei due caratteri che delimitano il nome dell'attributo
+            $spaceBeforeEnum = strrpos(substr($sql, 0, $positionEnum), ' ');
+            $spaceBeforeAttribute = strrpos(substr($sql, 0, $spaceBeforeEnum - 1), ',');  
+
+            if($spaceBeforeAttribute == ""){//nel caso in cui il nome non sia preceduto da una virgola, esso sarà il primo attributo della lista
+                $spaceBeforeAttribute = strpos($sql, '(');
+            }
+            
+            $startPosition = strpos($sql, "(", $positionEnum);//individuazione della prima parentesi aperta  in seguito ad enum
+            $endPosition = strpos($sql, ")", $startPosition);//individuazione della prima parentesi chiusa in seguito ad enum
+            $finalPosition = strpos($sql, ",", $endPosition);//individuazione della virgola in seguito alla parentesi di chiusura, necessaria nel caso ci siano attributi in seguito
+
+            if($finalPosition==null){
+                $finalPosition = $endPosition;//sovrascrizione del carattere finale nel caso l'attributo contenente l'enum sia l'ultimo dell'elenco
+                $commaBeforeAttribute = strrpos(substr($sql, 0, $spaceBeforeAttribute + 1), ',');
+                $sql = substr_replace($sql, " ", $commaBeforeAttribute, 1);//rimozione della virgola precedente all'ultimo attributo 
+            }
+
+            $enumData = substr($sql, $spaceBeforeAttribute + 1, $finalPosition - ($spaceBeforeAttribute + 1) + 1);//i dati relativi all'enum vengono inseriti in una stringa
+            $sql = substr_replace($sql, "", $spaceBeforeAttribute + 1, $finalPosition - ($spaceBeforeAttribute + 1) + 1);//i dati relativi all'enum vengono rimossi dalla query originale
+
+            array_push($enums, $enumData);
+        }
+
+        return [$sql, $enums];//viene restituita la query originale senza gli enum e un array contenente questi ultimi
+    }
+
+    function insertEnums($conn, $enums, $nameTable){//metodo che permette di inserire gli enum
+        [$numRows, $idTable] = getIdTableExercise($conn, $nameTable);
+
+        foreach($enums as $value){
+            $value = trim($value);
+
+            if(substr($value, -1) == ',') { 
+                $value = substr($value, 0, -1);//rimozione della virgola finale nel caso sia presente 
+            }  
+
+            $tokens = explode(' ',$value, 2);// separazione tra nome attributo e tipologia contente i possibili valori
+            $storedProcedure = "CALL Inserimento_Attributo(:id, :tipo, :nome, :chiavePrimaria);";
+            
+            try {
+                $stmt = $conn -> prepare($storedProcedure);
+                $stmt -> bindValue(":id", $idTable);
+                $stmt -> bindValue(":tipo", $tokens[1]);
+                $stmt -> bindValue(":nome", $tokens[0]);
+                $stmt -> bindValue(":chiavePrimaria", 0);
+
+                $stmt -> execute();
+            } catch (PDOException $e) {
+                echo "Eccezione ".$e -> getMessage()."<br>";
+            }
+
+        }
     }
 
     function getIdTableExercise($conn, $nameTable) { 
