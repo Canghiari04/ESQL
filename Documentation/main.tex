@@ -150,6 +150,7 @@ Come da titolo, sono riportate l'insieme delle possibili operazioni sui dati ind
     \item {\small\bf{OPERAZIONE 13.}} Visualizzare le conversazioni effettuate
 \end{itemize}
 
+\newpage
 \subsection{Tavola media dei volumi}
 In questa sezione è specificato il numero stimato di istanze per ogni entità e relazione dello schema. I valori sono necessariamente approssimati, ma oltre tutto indicativi. Si prende come riferimento una realtà universitaria.
 \begin{table}[h]
@@ -212,7 +213,7 @@ In questa sezione è specificato il numero stimato di istanze per ogni entità e
     \caption{Stima della tavola media dei volumi riferita al progetto svolto.}
 \end{table}
 
-\newpage
+\clearpage
 \subsection{Glossario dei termini}
 \large
 Grazie alla sezione riferita alla decomposizione delle frasi secondo caratteristiche comuni, è possibile realizzare un glossario dei termini, capace di favorire una panoramica delle nozioni principali. Il glossario, rispetto a quanto svolto, si compone di:
@@ -338,6 +339,7 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
     \caption{Descrizione delle relazioni del modello E-R.}
 \end{table}
 
+\newpage
 \subsection{Tavola delle business rules}
 \large
 \begin{table}[h]
@@ -376,7 +378,6 @@ Definito il primo step, inerente all'analisi dei concetti e termini di maggior s
     \caption{Descrizione delle regole di vincolo e di derivazione non attuabili tramite il modello concettuale}
 \end{table}
 
-\newpage
 \section{Progettazione logica}
 \large
 L'obiettivo di tale sezione promuove la realizzazione del modello logico a partire dalle informazioni del modello E-R. Tuttavia è bene attuare un insieme di possibili passaggi che possano favorire la traduzione, adeguando tematiche di efficienza e correttezza. Pertanto, come da capitolo seguente, è definita la ristrutturazione del diagramma E-R, affinchè sia agevolata la traduzione secondo il modello logico, ottimizzando il processo nella sua interezza.
@@ -415,7 +416,9 @@ Successivamente si calcolano i costi operazionali dello schema E-R con ridondanz
     \item {\small\textbf{TAVOLA ACCESSI.} \\ 50 per UTENTE, 50 per STUDENTE o 50 per DOCENTI} \vspace*{2pt}\\ C(OP3) = 1 * 0.5 * (0 + 100) = 50
     \item {\small\textbf{TAVOLA ACCESSI.} \\ 20 per QUESITO, 20 per DOMANDA\_CHIUSA o 20 DOMANDA\_CODICE } \vspace*{1pt}\\ C(OP4) = 2 * 1 * (0 + 40) = 80
 \end{itemize}
-\hspace*{15pt}C(S$_r$) = 40 + 24 + 50 + 80 = 194 \vspace*{7pt}\\
+\hspace*{15pt}C(S$_r$) = 40 + 24 + 50 + 80 = 194
+
+\newpage
 Si calcolano i costi operazionali dello schema E-R senza ridondanza, suddivisi in:
 \begin{itemize}[label={ }]
     \itemsep0em 
@@ -676,6 +679,434 @@ CREATE TABLE Messaggio_Studente(
     FOREIGN KEY(ID_MESSAGGIO_STUDENTE) REFERENCES Messaggio(ID) ON DELETE CASCADE,
     FOREIGN KEY(EMAIL_STUDENTE) REFERENCES Studente(EMAIL_STUDENTE) ON DELETE CASCADE
 )ENGINE=INNODB ;
+\end{lstlisting}
+
+\begin{lstlisting}[language=SQL, title=Codice SQL completo delle stored procedure dello schema della basi di dati.]
+USE ESQLDB;
+
+DROP PROCEDURE IF EXISTS Inserimento_Studente;
+DROP PROCEDURE IF EXISTS Inserimento_Docente;
+DROP PROCEDURE IF EXISTS Inserimento_Tabella_Esercizio;
+DROP PROCEDURE IF EXISTS Inserimento_Manipolazione_Riga;
+DROP PROCEDURE IF EXISTS Inserimento_Attributo;
+DROP PROCEDURE IF EXISTS Inserimento_Quesito;
+DROP PROCEDURE IF EXISTS Inserimento_Domanda_Chiusa;
+DROP PROCEDURE IF EXISTS Inserimento_Domanda_Codice;
+DROP PROCEDURE IF EXISTS Inserimento_Opzione_Risposta;
+DROP PROCEDURE IF EXISTS Inserimento_Sketch_Codice;
+DROP PROCEDURE IF EXISTS Inserimento_Risposta;
+DROP PROCEDURE IF EXISTS Inserimento_Afferenza;
+DROP PROCEDURE IF EXISTS Inserimento_Test;
+DROP PROCEDURE IF EXISTS Inserimento_Vincolo_Integrita;
+DROP PROCEDURE IF EXISTS Inserimento_Completamento;
+DROP PROCEDURE IF EXISTS Inserimento_Messaggio_Docente;
+DROP PROCEDURE IF EXISTS Inserimento_Messaggio_Studente;
+DROP PROCEDURE IF EXISTS Aggiornamento_Chiave;
+DROP PROCEDURE IF EXISTS Aggiornamento_Test;
+DROP PROCEDURE IF EXISTS Eliminazione_Tabella_Esercizio;
+DROP PROCEDURE IF EXISTS Eliminazione_Manipolazione_Riga;
+DROP PROCEDURE IF EXISTS Eliminazione_Quesito;
+DROP PROCEDURE IF EXISTS Eliminazione_Test;
+DROP PROCEDURE IF EXISTS Eliminazione_Opzione_Risposta;
+DROP PROCEDURE IF EXISTS Eliminazione_Sketch_Codice;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Studente(IN EMAIL VARCHAR(255), IN PSWD VARCHAR(255), IN NOME VARCHAR(255), IN COGNOME VARCHAR(255), IN TELEFONO INT(10), IN ANNO_IMMATRICOLAZIONE INT(4), IN CODICE VARCHAR(16))
+BEGIN
+	DECLARE countStudente INT DEFAULT 0;
+	SET countStudente=(SELECT COUNT(*) FROM Utente JOIN Studente ON (EMAIL=EMAIL_STUDENTE) WHERE (Utente.EMAIL=EMAIL));
+	IF (countStudente=0) THEN 
+		INSERT INTO Utente(EMAIL, PSWD, NOME, COGNOME, TELEFONO) VALUES (EMAIL, PSWD, NOME, COGNOME, TELEFONO);
+		INSERT INTO Studente(EMAIL_STUDENTE, ANNO_IMMATRICOLAZIONE, CODICE) VALUES (EMAIL, ANNO_IMMATRICOLAZIONE, CODICE);
+	END IF;   
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Docente(IN EMAIL VARCHAR(255), IN PSWD VARCHAR(255), IN NOME VARCHAR(255), IN COGNOME VARCHAR(255), IN TELEFONO INT(10), IN NOME_DIPARTIMENTO VARCHAR(255), IN NOME_CORSO VARCHAR(16))
+BEGIN
+	DECLARE countDocente INT DEFAULT 0;
+	SET countDocente=(SELECT COUNT(*) FROM Utente JOIN Docente ON (EMAIL=EMAIL_DOCENTE) WHERE (Utente.EMAIL=EMAIL));
+	IF (countDocente=0) THEN
+		INSERT INTO Utente(EMAIL, PSWD, NOME, COGNOME, TELEFONO) VALUES (EMAIL, PSWD, NOME, COGNOME, TELEFONO);
+		INSERT INTO Docente(EMAIL_DOCENTE, NOME_DIPARTIMENTO, NOME_CORSO) VALUES (EMAIL, NOME_DIPARTIMENTO, NOME_CORSO);
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Tabella_Esercizio(IN NOME VARCHAR(255), IN DATA_CREAZIONE DATETIME, IN NUM_RIGHE INT, IN EMAIL_DOCENTE VARCHAR(255))
+BEGIN
+	DECLARE countTabella INT DEFAULT 0;
+	SET countTabella=(SELECT COUNT(*) FROM Tabella_Esercizio WHERE (Tabella_Esercizio.NOME=NOME));
+	IF (countTabella=0) THEN 
+		INSERT INTO Tabella_Esercizio(NOME, DATA_CREAZIONE, NUM_RIGHE, EMAIL_DOCENTE) VALUES (NOME, DATA_CREAZIONE, NUM_RIGHE, EMAIL_DOCENTE);
+	END IF;   
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Manipolazione_Riga(IN ID_TABELLA INT)
+BEGIN
+	DECLARE countTabella INT DEFAULT 0;
+	SET countTabella=(SELECT COUNT(*) FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA));
+	IF (countTabella>0) THEN 
+		INSERT INTO Manipolazione_Riga(ID_TABELLA) VALUES (ID_TABELLA);
+	END IF;   
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Attributo(IN ID_TABELLA INT, IN TIPO VARCHAR(255), IN NOME VARCHAR(255), IN CHIAVE_PRIMARIA BOOLEAN) 
+BEGIN
+	INSERT INTO Attributo(ID, ID_TABELLA, TIPO, NOME, CHIAVE_PRIMARIA) VALUES (NULL, ID_TABELLA, TIPO, NOME, CHIAVE_PRIMARIA);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Quesito(IN ID INT, IN TITOLO_TEST VARCHAR(255), IN DIFFICOLTA ENUM('BASSO', 'MEDIO', 'ALTO'), IN NUM_RISPOSTE INT, IN DESCRIZIONE VARCHAR(255))
+BEGIN
+	INSERT INTO Quesito(ID,TITOLO_TEST, DIFFICOLTA, NUM_RISPOSTE, DESCRIZIONE) VALUES (ID,TITOLO_TEST, DIFFICOLTA, NUM_RISPOSTE, DESCRIZIONE);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Domanda_Chiusa(IN ID_QUESITO INT, IN TITOLO_TEST VARCHAR(255)) 
+BEGIN
+	INSERT INTO Domanda_Chiusa(ID_DOMANDA_CHIUSA, TITOLO_TEST) VALUES (ID_QUESITO, TITOLO_TEST);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Domanda_Codice(IN ID_QUESITO INT, IN TITOLO_TEST VARCHAR(255)) 
+BEGIN
+	INSERT INTO Domanda_Codice(ID_DOMANDA_CODICE, TITOLO_TEST) VALUES (ID_QUESITO, TITOLO_TEST);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Opzione_Risposta(IN ID INT, IN ID_DOMANDA_CHIUSA INT, IN TITOLO_TEST VARCHAR(255), IN TESTO TEXT, IN SOLUZIONE BOOLEAN) 
+BEGIN
+	INSERT INTO Opzione_Risposta(ID, ID_DOMANDA_CHIUSA, TITOLO_TEST, TESTO, SOLUZIONE) VALUES (ID, ID_DOMANDA_CHIUSA, TITOLO_TEST, TESTO, SOLUZIONE);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Sketch_Codice(IN ID INT, IN ID_DOMANDA_CODICE INT, IN TITOLO_TEST VARCHAR(255), IN TESTO TEXT, IN SOLUZIONE BOOLEAN) 
+BEGIN
+	INSERT INTO Sketch_Codice(ID, ID_DOMANDA_CODICE, TITOLO_TEST, TESTO, SOLUZIONE) VALUES (ID, ID_DOMANDA_CODICE, TITOLO_TEST, TESTO, SOLUZIONE);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Risposta(IN EMAIL_STUDENTE VARCHAR(255), IN ID_QUESITO INT, IN TITOLO_TEST VARCHAR(255), IN TESTO TEXT, IN ESITO BOOLEAN) 
+BEGIN
+	DECLARE countRisposta INT DEFAULT 0;
+	SET countRisposta=(SELECT COUNT(*) FROM Risposta WHERE (Risposta.EMAIL_STUDENTE=EMAIL_STUDENTE) AND (Risposta.ID_QUESITO=ID_QUESITO) AND (Risposta.TITOLO_TEST=TITOLO_TEST));
+	IF (countRisposta=0) THEN
+		INSERT INTO Risposta(EMAIL_STUDENTE, ID_QUESITO, TITOLO_TEST, TESTO, ESITO) VALUES (EMAIL_STUDENTE, ID_QUESITO, TITOLO_TEST, TESTO, ESITO);
+	ELSE 
+		UPDATE Risposta SET Risposta.TESTO=TESTO, Risposta.ESITO=ESITO WHERE (Risposta.EMAIL_STUDENTE=EMAIL_STUDENTE) AND (Risposta.ID_QUESITO=ID_QUESITO) AND (Risposta.TITOLO_TEST=TITOLO_TEST);
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Afferenza(IN ID_QUESITO INT, IN TITOLO_TEST VARCHAR(255), IN ID_TABELLA INT) 
+BEGIN
+	INSERT INTO Afferenza(ID_QUESITO, TITOLO_TEST, ID_TABELLA) VALUES (ID_QUESITO, TITOLO_TEST, ID_TABELLA);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Test(IN TITOLO VARCHAR(255), IN EMAIL_DOCENTE VARCHAR(255), IN FOTO LONGBLOB, IN DATA_CREAZIONE DATE, IN VISUALIZZA_RISPOSTE BOOLEAN) 
+BEGIN
+	INSERT INTO Test(TITOLO, EMAIL_DOCENTE, FOTO, DATA_CREAZIONE, VISUALIZZA_RISPOSTE) VALUES (TITOLO, EMAIL_DOCENTE, FOTO, DATA_CREAZIONE, VISUALIZZA_RISPOSTE); 
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Completamento(IN TITOLO_TEST VARCHAR(255), IN EMAIL_STUDENTE VARCHAR(255)) 
+BEGIN
+	DECLARE countInsert INT DEFAULT 0;
+	SET countInsert=(SELECT COUNT(*) FROM Completamento WHERE (Completamento.TITOLO_TEST=TITOLO_TEST) AND (Completamento.EMAIL_STUDENTE=EMAIL_STUDENTE));      
+	IF (countInsert=0) THEN
+		INSERT INTO Completamento(TITOLO_TEST, EMAIL_STUDENTE, STATO) VALUES (TITOLO_TEST, EMAIL_STUDENTE, 'APERTO'); 
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Vincolo_Integrita(IN ID_ATTRIBUTO_REFERENZIANTE INT, IN ID_ATTRIBUTO_REFERENZIATO INT)
+BEGIN
+	INSERT INTO Vincolo_Integrita(REFERENTE, REFERENZIATO) VALUES(ID_ATTRIBUTO_REFERENZIANTE, ID_ATTRIBUTO_REFERENZIATO);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Messaggio_Docente(IN EMAIL_DOCENTE VARCHAR(255), IN TESTO TEXT, IN TITOLO VARCHAR(255), IN TITOLO_TEST VARCHAR(255), IN DATA_INSERIMENTO DATE)
+BEGIN
+	INSERT INTO Messaggio(EMAIL_DOCENTE, TESTO, TITOLO, TITOLO_TEST, DATA_INSERIMENTO) VALUES(EMAIL_DOCENTE, TESTO, TITOLO, TITOLO_TEST, DATA_INSERIMENTO);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Inserimento_Messaggio_Studente(IN ID_MESSAGGIO_STUDENTE INT, IN EMAIL_STUDENTE VARCHAR(255))
+BEGIN
+	INSERT INTO Messaggio_Studente(ID_MESSAGGIO_STUDENTE, EMAIL_STUDENTE) VALUES(ID_MESSAGGIO_STUDENTE, EMAIL_STUDENTE);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Aggiornamento_Chiave(IN ID_TABELLA INT, IN NOME VARCHAR(255))
+BEGIN
+	UPDATE Attributo SET CHIAVE_PRIMARIA=1 WHERE (Attributo.ID_TABELLA=ID_TABELLA) AND (Attributo.NOME=NOME);
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Aggiornamento_Test(IN TITOLO VARCHAR(255))
+BEGIN
+	DECLARE countTest INT DEFAULT 0;
+    DECLARE oldValue INT DEFAULT 0;
+	SET countTest=(SELECT COUNT(*) FROM Test WHERE (Test.TITOLO=TITOLO));
+	IF (countTest>0) THEN
+		SET oldValue = (SELECT VISUALIZZA_RISPOSTE FROM Test WHERE (Test.TITOLO=TITOLO));
+    	UPDATE Test SET VISUALIZZA_RISPOSTE=((oldValue+1)%2) WHERE (Test.TITOLO=TITOLO);
+	END IF;
+END;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Tabella_Esercizio(IN ID_TABELLA INT)
+BEGIN
+	DECLARE countTabella INT DEFAULT 0;
+	SET countTabella=(SELECT COUNT(*) FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA));
+	IF (countTabella>0) THEN
+		DELETE FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA);
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Manipolazione_Riga(IN ID_TABELLA INT)
+BEGIN
+	DECLARE countTabella INT DEFAULT 0;
+	SET countTabella=(SELECT COUNT(*) FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=ID_TABELLA));
+	IF (countTabella>0) THEN
+		DELETE FROM Manipolazione_Riga WHERE (Manipolazione_Riga.ID_TABELLA=ID_TABELLA) LIMIT 1;
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Quesito(IN ID_QUESITO INT, IN TITOLO_TEST VARCHAR(255))
+BEGIN
+	DECLARE countQuestion INT DEFAULT 0;
+	SET countQuestion=(SELECT COUNT(*) FROM Quesito WHERE (Quesito.ID=ID_QUESITO) AND (Quesito.TITOLO_TEST=TITOLO_TEST));
+	IF (countQuestion>0) THEN
+		DELETE FROM Quesito WHERE (Quesito.ID=ID_QUESITO) AND (Quesito.TITOLO_TEST=TITOLO_TEST);
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Test(IN TITOLO VARCHAR(255))
+BEGIN
+	DECLARE countTest INT DEFAULT 0;
+	SET countTest=(SELECT COUNT(*) FROM Test WHERE (Test.TITOLO=TITOLO));
+	IF (countTest>0) THEN
+		DELETE FROM Test WHERE (Test.TITOLO=TITOLO);
+	END IF;
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Opzione_Risposta(IN ID INT, IN ID_QUESITO INT, IN TITOLO_TEST VARCHAR(255))
+BEGIN
+	DELETE FROM Opzione_Risposta WHERE ((Opzione_Risposta.ID=ID) AND (Opzione_Risposta.ID_DOMANDA_CHIUSA=ID_QUESITO) AND (Opzione_Risposta.TITOLO_TEST=TITOLO_TEST));
+END ;
+| 
+DELIMITER ;
+
+DELIMITER |
+CREATE PROCEDURE Eliminazione_Sketch_Codice(IN ID INT, IN ID_QUESITO INT, IN TITOLO_TEST VARCHAR(255))
+BEGIN
+	DELETE FROM Sketch_Codice WHERE ((Sketch_Codice.ID=ID) AND (Sketch_Codice.ID_DOMANDA_CODICE=ID_QUESITO) AND (Sketch_Codice.TITOLO_TEST=TITOLO_TEST));
+END ;
+| 
+DELIMITER ;
+\end{lstlisting}
+
+\begin{lstlisting}[language=SQL, title=Codice SQL completo dei trigger dello schema della basi di dati.]
+USE ESQLDB;
+
+DROP TRIGGER IF EXISTS Inserimento_Record;
+DROP TRIGGER IF EXISTS Inserimento_Opzione_Risposta;
+DROP TRIGGER IF EXISTS Inserimento_Sketch_Codice;
+DROP TRIGGER IF EXISTS Inserimento_Test_Concluso;
+DROP TRIGGER IF EXISTS Aggiornamento_Stato_Test;
+DROP TRIGGER IF EXISTS Aggiornamento_Test_Concluso;
+DROP TRIGGER IF EXISTS Aggiornamento_Visualizza_Risposte;
+DROP TRIGGER IF EXISTS Cancellazione_Record;
+DROP TRIGGER IF EXISTS Cancellazione_Opzione_Risposta;
+DROP TRIGGER IF EXISTS Cancellazione_Sketch_Codice;
+
+DELIMITER |
+CREATE TRIGGER Inserimento_Record
+AFTER INSERT ON Manipolazione_Riga
+FOR EACH ROW
+    UPDATE Tabella_Esercizio SET NUM_RIGHE=NUM_RIGHE+1 WHERE (ID=NEW.ID_TABELLA);
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Inserimento_Opzione_Risposta
+AFTER INSERT ON Opzione_Risposta
+FOR EACH ROW
+    UPDATE Quesito SET NUM_RISPOSTE=NUM_RISPOSTE+1 WHERE (ID=NEW.ID_DOMANDA_CHIUSA);
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Inserimento_Sketch_Codice
+AFTER INSERT ON Sketch_Codice
+FOR EACH ROW
+    UPDATE Quesito SET NUM_RISPOSTE=NUM_RISPOSTE+1 WHERE (ID=NEW.ID_DOMANDA_CODICE);
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Aggiornamento_Stato_Test
+AFTER INSERT ON Risposta
+FOR EACH ROW
+BEGIN
+    DECLARE countQuesiti INT DEFAULT 0;
+    DECLARE countRisposteCorrette INT DEFAULT 0;
+    DECLARE statoTest VARCHAR(255) DEFAULT NULL;
+    SET countQuesiti=(SELECT COUNT(*) FROM Quesito WHERE (Quesito.TITOLO_TEST=NEW.TITOLO_TEST));
+    SET countRisposteCorrette=(SELECT COUNT(*) FROM Risposta WHERE (Risposta.TITOLO_TEST=NEW.TITOLO_TEST) AND (Risposta.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE) AND (Risposta.ESITO=1));
+    IF (countQuesiti=countRisposteCorrette) THEN 
+        UPDATE Completamento SET Completamento.STATO='CONCLUSO', Completamento.DATA_ULTIMARISPOSTA=NOW() WHERE (Completamento.TITOLO_TEST=NEW.TITOLO_TEST) AND (Completamento.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE);
+    ELSE 
+        SET statoTest=(SELECT STATO FROM Completamento WHERE (Completamento.TITOLO_TEST=NEW.TITOLO_TEST));
+        IF (statoTest="APERTO") THEN
+            UPDATE Completamento SET Completamento.STATO='INCOMPLETAMENTO', Completamento.DATA_PRIMARISPOSTA=NOW() WHERE (Completamento.TITOLO_TEST=NEW.TITOLO_TEST) AND (Completamento.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE);
+        END IF;
+    END IF; 
+END
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Aggiornamento_Test_Concluso
+AFTER UPDATE ON Risposta
+FOR EACH ROW
+BEGIN
+    DECLARE countQuesiti INT DEFAULT 0;
+    DECLARE countRisposteCorrette INT DEFAULT 0;
+    SET countQuesiti=(SELECT COUNT(*) FROM Quesito WHERE (Quesito.TITOLO_TEST=NEW.TITOLO_TEST));
+    SET countRisposteCorrette=(SELECT COUNT(*) FROM Risposta WHERE (Risposta.TITOLO_TEST=NEW.TITOLO_TEST) AND (Risposta.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE) AND (Risposta.ESITO=1));
+    IF (countQuesiti=countRisposteCorrette) THEN 
+        UPDATE Completamento SET Completamento.STATO='CONCLUSO', Completamento.DATA_ULTIMARISPOSTA=NOW() WHERE (Completamento.TITOLO_TEST=NEW.TITOLO_TEST) AND (Completamento.EMAIL_STUDENTE=NEW.EMAIL_STUDENTE);
+    END IF; 
+END
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Aggiornamento_Visualizza_Risposte
+AFTER UPDATE ON Test
+FOR EACH ROW
+BEGIN
+    DECLARE viewAnswer BOOLEAN DEFAULT 0;
+    SET viewAnswer=(SELECT VISUALIZZA_RISPOSTE FROM Test WHERE (Test.TITOLO=NEW.TITOLO));
+    IF (viewAnswer=1) THEN 
+        UPDATE Completamento SET Completamento.STATO='CONCLUSO' WHERE (Completamento.TITOLO_TEST=NEW.TITOLO);
+    END IF; 
+END
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Cancellazione_Record
+AFTER DELETE ON Manipolazione_Riga
+FOR EACH ROW
+    UPDATE Tabella_Esercizio SET NUM_RIGHE=NUM_RIGHE-1 WHERE (ID=OLD.ID_TABELLA);
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Cancellazione_Opzione_Risposta
+AFTER DELETE ON Opzione_Risposta
+FOR EACH ROW
+    UPDATE Quesito SET NUM_RISPOSTE=NUM_RISPOSTE-1 WHERE (ID=OLD.ID_DOMANDA_CHIUSA);
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Cancellazione_Sketch_Codice
+AFTER DELETE ON Sketch_Codice
+FOR EACH ROW
+    UPDATE Quesito SET NUM_RISPOSTE=NUM_RISPOSTE-1 WHERE (ID=OLD.ID_DOMANDA_CODICE);
+|
+DELIMITER ;    
+\end{lstlisting}
+
+\begin{lstlisting}[language=SQL, title=Codice SQL completo delle view dello schema della basi di dati.]
+USE ESQLDB;
+
+DROP VIEW IF EXISTS Test_Completati;
+DROP VIEW IF EXISTS Risposte_Corrette;
+DROP VIEW IF EXISTS Risposte_Inserite;
+
+CREATE VIEW Test_Completati (CODICE, NUMERO) AS
+    SELECT CODICE, COUNT(*) AS NUMERO
+    FROM Studente, Completamento
+    WHERE (Studente.EMAIL_STUDENTE=Completamento.EMAIL_STUDENTE) 
+		AND (Completamento.STATO='CONCLUSO')
+	GROUP BY CODICE
+    ORDER BY NUMERO DESC;
+   
+CREATE VIEW Risposte_Corrette (CODICE, NUMEROCORR, NUMERORIS, PERC) AS
+    SELECT CODICE, 
+    SUM(CASE WHEN ESITO=TRUE THEN 1 ELSE 0 END) AS NUMEROCORR,
+    COUNT(*) AS NUMERORIS,
+    (SUM(CASE WHEN ESITO=TRUE THEN 1 ELSE 0 END) / COUNT(*)) AS PERC
+    FROM Studente, Risposta
+    WHERE (Studente.EMAIL_STUDENTE = Risposta.EMAIL_STUDENTE)
+    GROUP BY CODICE
+    ORDER BY PERC DESC;
+
+CREATE VIEW Risposte_Inserite (ID_QUESITO, NUMERO) AS
+    SELECT ID_QUESITO, COUNT(*) AS NUMERO
+    FROM Risposta
+    GROUP BY ID_QUESITO
+    ORDER BY NUMERO DESC;
 \end{lstlisting}
 
 \end{document}
