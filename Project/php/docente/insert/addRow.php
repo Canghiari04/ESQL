@@ -118,6 +118,8 @@
     function checkTypeInsert($conn, $nameAttribute, $notNullAttributes) { // controllo definito per accertarsi se l'attributo sia una foreign key o meno
         if(checkReferences($conn, getAttributeId($conn, $nameAttribute))) {
             return getReferencesOptions($conn, getAttributeId($conn, $nameAttribute), $nameAttribute);           
+        } else if(checkEnums(getAttributeType($conn, $nameAttribute))) { // controllo definito per accertarsi se l'attributo sia un enum o meno
+            return getEnumOptions($nameAttribute, getAttributeType($conn, $nameAttribute));    
         } else {
             return '<input class="input" type="'.setTypeInput(getAttributeType($conn, $nameAttribute)).'"  name="txt'.$nameAttribute.'" '.checkNotNull($nameAttribute, $notNullAttributes).' >';
         }
@@ -225,6 +227,33 @@
 
             return $string."</select>";
         } 
+    }
+
+    function checkEnums($attributeType){
+        if(substr_count($attributeType, "ENUM")){   
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    function getEnumOptions($nameAttribute, $attributeType){ // funzione capace di stabilire l'insieme dei values che contraddistinguono l'enum in question
+        $attributeType = substr($attributeType, 0, -1);
+        $tokens = explode('(', $attributeType); //explode che permettono di separare i valori tra di loro        
+        $tokensOptions = explode(',',$tokens[1]);
+
+        $string = '<select name="txt'.$nameAttribute.'" required>'; // costruzione della select dinamicamente, adattiva rispetto alle caratteristiche del'attributo
+
+        foreach($tokensOptions as $value){
+            $value = trim($value);//rimozione di spazi e degli apici che contraddistinguono ogni carattere
+            $value = substr($value, 1);
+            $value = substr($value, 0, -1);
+        
+            $string = $string. "<option value=\"" . $value . "\">" . $value . "</option><br>";
+        }
+
+        return $string."</select>";
     }
 
     function setTypeInput($type){
