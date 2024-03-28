@@ -25,7 +25,7 @@
     }
 
     function convertToBoolean($viewAnswers) {
-        if ($viewAnswers == "false") {
+        if($viewAnswers == "false") {
             return 0;
         } else {
             return 1;

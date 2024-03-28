@@ -46,7 +46,7 @@
             $result -> bindValue(":titoloTest", $titleTest);
             
             $result -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
         

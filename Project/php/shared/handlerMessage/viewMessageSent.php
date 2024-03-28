@@ -5,7 +5,7 @@
     session_start();
     $conn = openConnection();
 
-    if ((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
+    if((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: ../login/login.php");
     } 
         
@@ -38,12 +38,12 @@
                     if($typeUser == "Teacher") { // diversificazione della query a seconda della tipologia
                         $sql = "SELECT * FROM Messaggio WHERE (Messaggio.ID=:idMessaggio);";
                         
-                        try{
+                        try {
                             $result = $conn -> prepare($sql);
                             $result -> bindValue(":idMessaggio", $idMessage);
                             
                             $result -> execute();
-                        }catch(PDOException $e) {
+                        } catch(PDOException $e) {
                             echo "Eccezione ".$e -> getMessage()."<br>";
                         }
                     
@@ -52,12 +52,12 @@
                     } else {
                         $sql = "SELECT * FROM Messaggio, Messaggio_Studente WHERE (Messaggio.ID=Messaggio_Studente.ID_MESSAGGIO_STUDENTE) AND (Messaggio.ID=:idMessaggio);";
                     
-                        try{
+                        try {
                             $result = $conn -> prepare($sql);
                             $result -> bindValue(":idMessaggio", $idMessage);
                             
                             $result -> execute();
-                        }catch(PDOException $e) {
+                        } catch(PDOException $e) {
                             echo "Eccezione ".$e -> getMessage()."<br>";
                         }
                         

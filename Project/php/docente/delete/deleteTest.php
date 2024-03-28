@@ -4,7 +4,7 @@
     $conn = openConnection();
     $manager = openConnectionMongoDB();
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnDropTest"])) {
             deleteTest($conn, $manager, $_POST["btnDropTest"]);
         } elseif(isset($_POST["btnUpdateTest"])) {
@@ -25,7 +25,7 @@
             $stmt -> bindValue(":titolo", $titleTest);
 
             $stmt -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
@@ -41,7 +41,7 @@
             $stmt -> bindValue(":titolo", $titleTest);
 
             $stmt -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
@@ -60,7 +60,7 @@
             $stmt -> bindValue(":idQuesito", $valuesQuestion[1]);
 
             $stmt -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 

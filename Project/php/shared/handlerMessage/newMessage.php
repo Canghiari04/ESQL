@@ -5,7 +5,7 @@
     session_start();
     $conn = openConnection();
 
-    if ((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
+    if((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: ../login/login.php");
     } 
     
@@ -68,7 +68,7 @@
                 $result -> bindValue(":emailDocente", $_SESSION["emailDocente"]);
 
                 $result -> execute();
-            }catch(PDOException $e) {
+            } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
         } else {

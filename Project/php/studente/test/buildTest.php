@@ -30,7 +30,7 @@
             <form action="" method="POST">
                 <div class="container">
                     <?php
-                        if ($_SERVER["REQUEST_METHOD"] == "POST") {   
+                        if($_SERVER["REQUEST_METHOD"] == "POST") {   
                             if(isset($_POST["btnStartTest"])) {
                                 $_SESSION["titleTestTested"] = $_POST["btnStartTest"];
                                 openTest($conn, $_SESSION["emailStudente"], $_POST["btnStartTest"]); // metodo ideato per inserire il tentativo di risoluzione dello studente all'interno della tabella Completamento

@@ -5,8 +5,7 @@
             $pdo -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             return $pdo;
-        }
-        catch(PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
             return null;
         }
@@ -23,20 +22,19 @@
         $mongoPort = 27017;
 
         $manager = new MongoDB\Driver\Manager("mongodb://$mongoHost:$mongoPort");
-
         return $manager;
     }
 
     function writeLog($manager, $document) {
-        $mongoDatabase = "ESQL";
+        $mongoDatabase = "ESQLDB";
         $mongoCollection = "logs";
 
         $bulkWrite = new MongoDB\Driver\BulkWrite;
         $bulkWrite -> insert($document);
 
-        try{
+        try {
             $manager -> executeBulkWrite("$mongoDatabase.$mongoCollection", $bulkWrite);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
     }

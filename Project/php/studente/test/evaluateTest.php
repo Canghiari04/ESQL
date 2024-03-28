@@ -123,7 +123,7 @@
         }
         
         $rowAnswer = $resultAnswer -> fetchAll(PDO::FETCH_OBJ);
-        if ($rowAnswer == $rowSolution) { // controllo ideato per accertarsi della validità della risposta dello studente
+        if($rowAnswer == $rowSolution) { // controllo ideato per accertarsi della validità della risposta dello studente
             return 1;
         } else {
             return 0;

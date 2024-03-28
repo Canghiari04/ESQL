@@ -4,7 +4,7 @@
     $conn = openConnection();
     $manager = openConnectionMongoDB();
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnDropQuestion"])) {
             deleteQuestion($conn, $manager, $_POST["btnDropQuestion"]);
             header("Location: ../question.php");
@@ -51,7 +51,7 @@
             $stmt -> bindValue(":titoloTest", $valuesOption[3]);
 
             $stmt -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 

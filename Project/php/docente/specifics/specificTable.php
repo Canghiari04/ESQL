@@ -24,7 +24,7 @@
         </div>
         <div class="container">
             <?php 
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {   
+                if($_SERVER["REQUEST_METHOD"] == "POST") {   
                     if(isset($_POST["btnSpecificTable"])) {
                         $sql = "SELECT Attributo.TIPO, Attributo.NOME, Attributo.CHIAVE_PRIMARIA FROM Tabella_Esercizio JOIN Attributo ON (Tabella_Esercizio.ID=Attributo.ID_TABELLA) WHERE (Tabella_Esercizio.ID=:idTable);";
                         

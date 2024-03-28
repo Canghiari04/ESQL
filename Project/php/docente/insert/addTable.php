@@ -31,7 +31,7 @@
                 $flagPrimaryKey = true;
                 
                 updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql)); // metodo attuato per modificare il vincolo di chiave primaria degli attributi già inseriti
-            } elseif ($token[0] == "FOREIGN") {
+            } elseif($token[0] == "FOREIGN") {
                 insertForeignKey($conn, $sql, $numRows, $idTableReferential);
                 break; // break necessario per interrompere il ciclo
             } elseif($flagPrimaryKey == false) { // controllo ideato per inserire gli attributi precedenti al vincolo PRIMARY KEY
@@ -54,7 +54,7 @@
             $result -> execute();
 
             $numRows = $result -> rowCount();
-            if ($numRows > 0) {
+            if($numRows > 0) {
                 $row = $result -> fetch(PDO::FETCH_OBJ);
                 $idTableReferential = $row -> ID;
             } else {

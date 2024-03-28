@@ -9,7 +9,7 @@
             $result -> bindValue(":titoloTest", $titleTest);
 
             $result -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>"; 
         }
 
@@ -50,7 +50,6 @@
         }
 
         $numRows = $result -> rowCount();
-
         if($numRows > 0) {
             return "CHIUSA";
         } else {
@@ -67,7 +66,7 @@
             $result -> bindValue(':titoloTest', $titleTest);
 
             $result -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo 'Eccezione '.$e -> getMessage().'<br>'; 
         }
 
@@ -83,7 +82,7 @@
             $result -> bindValue(":nomeTabella", $nameTable);
 
             $result -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo 'Eccezione '.$e -> getMessage().'<br>'; 
         }
 

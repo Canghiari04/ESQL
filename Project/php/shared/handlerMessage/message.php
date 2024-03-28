@@ -5,7 +5,7 @@
     session_start();    
     $conn = openConnection();
 
-    if ((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
+    if((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: ../login/login.php");
     } 
 ?>

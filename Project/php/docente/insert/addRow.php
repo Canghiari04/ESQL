@@ -35,12 +35,12 @@
     function getTableName($conn) {
         $sql= "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabella);";
 
-        try{
+        try {
             $result = $conn -> prepare($sql);        
             $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
 
             $result -> execute();
-        }catch(PDOException $e){
+        } catch(PDOException $e){
             echo "Eccezione ".$e -> getMessage()."<br>";
         }  
         
@@ -63,7 +63,7 @@
         }
         
         $rows = $result -> fetchAll(PDO::FETCH_ASSOC);
-        foreach ($rows as $row) {
+        foreach($rows as $row) {
             $attribute = $row["NOME"];
             array_push($attributes,$attribute);
         }
@@ -144,7 +144,7 @@
     function getAttributeId($conn, $attributeName) {
         $sql = "SELECT * FROM Attributo WHERE (Attributo.NOME=:nomeTabella) AND (Attributo.ID_TABELLA=:idTabella);"; 
 
-        try{
+        try {
             $result = $conn -> prepare($sql);
             $result -> bindValue(":nomeTabella", $attributeName);
             $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
@@ -228,7 +228,7 @@
     }
 
     function setTypeInput($type){
-        switch ($type) {
+        switch($type) {
             case "DATE":
                 return "date";
             break;
@@ -250,7 +250,7 @@
     function getAttributeType($conn, $attributeName) {
         $sql = "SELECT * FROM Attributo WHERE (Attributo.NOME=:nomeTabella) AND (Attributo.ID_TABELLA=:idTabella);"; 
 
-        try{
+        try {
             $result = $conn -> prepare($sql);
             $result -> bindValue(":nomeTabella", $attributeName);
             $result -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);

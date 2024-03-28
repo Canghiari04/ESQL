@@ -38,7 +38,7 @@
             <button class="button-insert" type="submit" name="btnAddData">Add</button>
         </form>
         <?php 
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddData"])) {
                     $sql = stroupper($_POST["txtAddRow"]);
 

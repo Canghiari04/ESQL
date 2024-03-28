@@ -36,7 +36,7 @@
             <button class="button-insert" type="submit" name="btnAddTable">Add</button>
         </form>
         <?php 
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddTable"])) {
                     $sql = strtoupper($_POST["txtAddTable"]);
 

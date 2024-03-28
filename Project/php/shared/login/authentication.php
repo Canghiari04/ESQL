@@ -99,7 +99,6 @@
                 $sql = "SELECT Utente.EMAIL FROM Utente JOIN Studente ON (Utente.EMAIL=Studente.EMAIL_STUDENTE) WHERE (Utente.EMAIL=:labelEmail);";
                 
                 try {
-
                     $result = $conn -> prepare($sql);
                     $result -> bindValue(":labelEmail", $email);
                     

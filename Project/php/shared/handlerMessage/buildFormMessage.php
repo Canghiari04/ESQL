@@ -24,7 +24,7 @@
         if($typeUser == "Teacher") { // diversificazione della query a seconda della tipoligia
             $sql = "SELECT * FROM Messaggio WHERE (ID NOT IN (SELECT Messaggio_Studente.ID_MESSAGGIO_STUDENTE FROM Messaggio_Studente)) AND (Messaggio.EMAIL_DOCENTE=:email);";
             
-            try{
+            try {
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":email", $_SESSION["emailDocente"]);
                 
@@ -41,7 +41,7 @@
         } else {
             $sql = "SELECT * FROM Messaggio, Messaggio_Studente WHERE (Messaggio.ID=Messaggio_Studente.ID_MESSAGGIO_STUDENTE) AND (Messaggio_Studente.EMAIL_STUDENTE=:email);";
             
-            try{
+            try {
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":email", $_SESSION["emailStudente"]);
                 

@@ -30,7 +30,7 @@
         </div>
         <div>
             <?php 
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                if($_SERVER["REQUEST_METHOD"] == "POST") {
                     if(isset($_POST["btnViewRow"])) {
                         $_SESSION["idCurrentTable"] = $_POST["btnViewRow"]; // inizializzazione del campo della sessione per compiere reindirizzamento corretto tra pagine
                         buildSpecificsTable($conn, $_POST["btnViewRow"]); // costruzione della visualizzazione grafica della tabella
@@ -113,12 +113,12 @@
         function getTableName($conn, $idTable){
             $sql= "SELECT NOME FROM Tabella_Esercizio WHERE (Tabella_Esercizio.ID=:idTabella);";
 
-            try{
+            try {
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":idTabella", $idTable);
                 
                 $result -> execute();
-            }catch(PDOException $e){
+            } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
             
@@ -152,12 +152,12 @@
         function getAttributesNames($conn, $idTable){
             $sql = "SELECT NOME FROM Attributo WHERE (Attributo.ID_TABELLA=:idTabella);";  
                         
-            try{
+            try {
                 $result = $conn -> prepare($sql);
                 $result -> bindValue(":idTabella", $idTable);
                 
                 $result -> execute(); 
-            } catch(PDOException $e){
+            } catch(PDOException $e) {
                 echo "Eccezione: ".$e -> getMessage()."<br>"; 
             }
 

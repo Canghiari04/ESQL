@@ -5,7 +5,7 @@
     $conn = openConnection();
     $manager = openConnectionMongoDB();
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnDropTable"])) {
             deleteTable($conn, $manager, $_POST["btnDropTable"]);
             header("Location: ../table_exercise.php");
@@ -30,7 +30,7 @@
             $result -> bindValue(":idTabella", $idTable);
 
             $result -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
@@ -44,9 +44,10 @@
             
             $result -> execute();
             deleteTableExercise($conn, $manager, $idTable); // eliminazione dalla collezione Tabella_Esercizio solamente se non violati vincoli di integrità
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+
 
     }
 
@@ -60,7 +61,7 @@
             $stmt -> bindValue(":idTabella", $idTable);
 
             $stmt -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
@@ -76,7 +77,7 @@
             $result -> bindValue(":idTabella", $idTable);
 
             $result -> execute();
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
@@ -93,7 +94,7 @@
                     $resultQuestion -> bindValue(":titoloTest", $titleTest);
         
                     $resultQuestion -> execute();
-                } catch (PDOException $e) {
+                } catch(PDOException $e) {
                     echo "Eccezione ".$e -> getMessage()."<br>";
                 }
 

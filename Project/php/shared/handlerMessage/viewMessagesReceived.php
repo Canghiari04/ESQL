@@ -5,11 +5,11 @@
     session_start();
     $conn = openConnection();
 
-    if ((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
+    if((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: ../login/login.php");
     }
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnViewMessages"])) {
 ?>
 <!DOCTYPE html>
@@ -56,7 +56,7 @@
                             $result = $conn -> prepare($sql);
 
                             $result -> execute();
-                        } catch (PDOException $e) {
+                        } catch(PDOException $e) {
                             echo "Eccezione ".$e -> getMessage()."<br>";
                         }
 
