@@ -1,4 +1,5 @@
 <?php
+    error_reporting(E_ALL ^ E_WARNING); 
     session_destroy(); // metodo attuato per eliminare i campi immessi precedentemente all'interno della sessione  
 ?>
 <!DOCTYPE html>

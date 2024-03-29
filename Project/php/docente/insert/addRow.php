@@ -299,7 +299,7 @@
         }
     }
 
-    function insertData($conn) {
+    function insertData($conn, $manager) {
         $attributesText = array();
 
         $nameTable = getTableName($conn);
@@ -340,6 +340,9 @@
             }
         
             $result -> execute(); 
+
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento nella collezione: '.getTableName($conn), 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document);
 
             echo "<script>document.querySelector('.input-tips').value='INSERIMENTO DATI AVVENUTO CON SUCCESSO';</script>";
 

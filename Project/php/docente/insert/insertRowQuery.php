@@ -40,7 +40,7 @@
         <?php 
             if($_SERVER["REQUEST_METHOD"] == "POST") {
                 if(isset($_POST["btnAddData"])) {
-                    $sql = stroupper($_POST["txtAddRow"]);
+                    $sql = strtoupper($_POST["txtAddRow"]);
 
                     $tokens = explode('(', trim($sql));
                     $tokensHeader = explode(' ', $tokens[0]); // acquisiti i token di intestazione
@@ -57,7 +57,7 @@
                             }
 
                             $rowInserted = $result -> rowCount();
-                            for($i = 0; $i < ($rowInserted - 1); $i++){ 
+                            for($i = 0; $i < ($rowInserted); $i++){ 
                                 $storedProcedure = "CALL Inserimento_Manipolazione_Riga(:idTabella);"; // inserimento fittizio all'interno della tabella Manipolazione_Riga, attuato per innescare i trigger del database
                                     
                                 try {
@@ -65,6 +65,8 @@
                                     $stmt -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
                                     
                                     $stmt -> execute();
+                                    $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento nella collezione: '.getTableName($conn), 'Timestamp' => date('Y-m-d H:i:s')];
+                                    writeLog($manager, $document);
                                 } catch(PDOException $e) {
                                     echo "Eccezione ".$e -> getMessage()."<br>";
                                 }

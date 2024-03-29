@@ -4,6 +4,7 @@
     
     session_start();
     $conn = openConnection();
+    $manager = openConnectionMongoDB();
     
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -13,7 +14,7 @@
     if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["btnAddTest"])) {
             $_SESSION["titleTest"] = $_POST["txtTitle"]; // inizializzato il campo della sessione per compiere correttamente il reindirizzamento tra le pagine successive
-            insertTest($conn, $_SESSION["emailDocente"],  $_POST["sltViewAnswers"], $_FILES["txtPhoto"]["tmp_name"], $_POST["txtTitle"]);
+            insertTest($conn, $manager, $_SESSION["emailDocente"],  $_POST["sltViewAnswers"], $_FILES["txtPhoto"]["tmp_name"], $_POST["txtTitle"]);
         }
     }
 

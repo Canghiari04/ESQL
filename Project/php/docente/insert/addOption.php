@@ -20,15 +20,15 @@
         }
     }
 
-    function addOption($conn, $type, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution) {
+    function addOption($conn, $manager, $type, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution) {
         if($type == "CHIUSA") { // diversificazione della procedure a seconda della tipologia del quesito
             $storedProcedure = "CALL Inserimento_Opzione_Risposta(:id, :idQuesito, :titoloTest, :testo, :soluzione);";            
-            insertOption($conn, $storedProcedure, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution);
+            insertOption($conn, $manager, $storedProcedure, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution);
         } else { 
             $storedProcedure = "CALL Inserimento_Sketch_Codice(:id, :idQuesito, :titoloTest, :testo, :soluzione);";
             
             if(checkQuery($conn, $textAnswer)) {
-                insertOption($conn, $storedProcedure, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution);
+                insertOption($conn, $manager, $storedProcedure, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution);
             }
         }
     }
@@ -54,7 +54,7 @@
         return ($row -> MAX_ID_ANSWER + 1);
     }
 
-    function insertOption($conn, $storedProcedure, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution) {
+    function insertOption($conn, $manager, $storedProcedure, $id, $idQuestion, $titleTest, $textAnswer, $sltSolution) {
         try {
             $stmt = $conn -> prepare($storedProcedure);
             $stmt -> bindValue(":id", $id);
@@ -67,6 +67,9 @@
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+        
+        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento opzione di risposta id: '.$id.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document);
     }
 
     function checkQuery($conn, $textAnswer) { // controllo della correttezza sintattica della query

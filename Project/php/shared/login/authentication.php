@@ -64,7 +64,7 @@
                     } else {
                         insertStudente($conn, $_POST["txtEmailSignupStudente"], $_POST["txtPasswordSignupStudente"], $_POST["txtNomeSignupStudente"], $_POST["txtCognomeSignupStudente"], checkTelephone($_POST["txtTelefonoSignupStudente"]), $_POST["txtAnnoImmatricolazione"], $_POST["txtCodice"]);
 
-                        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento studente: '.$email.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento studente: '.$_POST["txtEmailSignupStudente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
                         writeLog($manager, $document); // scrittura log inserimento di un nuovo studente
                         header("Location: login.php");
                         exit();
@@ -87,7 +87,7 @@
                     } else {
                         insertDocente($conn, $_POST["txtEmailSignupDocente"], $_POST["txtPasswordSignupDocente"], $_POST["txtNomeSignupDocente"], $_POST["txtCognomeSignupDocente"], checkTelephone($_POST["txtTelefonoSignupDocente"]), $_POST["txtDipartimento"], $_POST["txtCorso"]);
 
-                        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento docente: '.$email.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento docente: '.$_POST["txtEmailSignupDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
                         writeLog($manager, $document); // scrittura log inserimento di un nuovo docente
                         header("Location: login.php");
                         exit();

@@ -1,5 +1,5 @@
 <?php 
-    function insertTableExercise($conn, $nameTable, $email) {
+    function insertTableExercise($conn, $manager, $nameTable, $email) {
         $storedProcedure = "CALL Inserimento_Tabella_Esercizio(:nome, :dataCreazione, :numRighe, :emailDocente);";
 
         try {
@@ -13,16 +13,19 @@
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+
+        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Tabella_Esercizio nome: '.$nameTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document);
     }
 
-    function insertRecord($conn, $sql, $nameTable) {
+    function insertRecord($conn, $manager, $sql, $nameTable) {
         $flagPrimaryKey = false; // flag utilizzato per ovviare ad inserimenti errati nelle tabelle contenenti meta-dati
+        [$sql, $enums] = checkEnum($conn, $sql, $nameTable); // funzione attuata per accertarsi della presenza di enum all'interno della query 
         
         $tokens = explode('(', $sql, 2); // explode necessari per estrapolare tutti i token utili per l'inserimento all'interno delle tabell
         $tokens = substr($tokens[1], 0, -2);
         $tokensQuery = explode(',', trim($tokens));
         
-        [$sql, $enums] = checkEnum($conn, $sql, $nameTable); // funzione attuata per accertarsi della presenza di enum all'interno della query 
         [$numRows, $idTableReferential] = getIdTableExercise($conn, $nameTable); // funzione attuata per restituire l'id della tabella esercizio da poco inserita nella collezione Tabella_Esercizio
 
         foreach($tokensQuery as $value) {  
@@ -34,10 +37,10 @@
                 $flagPrimaryKey = true;
                 updatePrimaryKey($conn, $numRows, $idTableReferential, splitPrimaryKey($sql)); // metodo attuato per modificare il vincolo di chiave primaria degli attributi già inseriti
             } elseif($token[0] == "FOREIGN") {
-                insertForeignKey($conn, $sql, $numRows, $idTableReferential);
+                insertForeignKey($conn, $manager, $sql, $numRows, $idTableReferential);
                 break; // break necessario per interrompere il ciclo
             } elseif($flagPrimaryKey == false) { // controllo ideato per inserire gli attributi precedenti al vincolo PRIMARY KEY
-                $deleteTableBool = insertAttribute($conn, $numRows, $idTableReferential, $token);
+                $deleteTableBool = insertAttribute($conn, $manager, $numRows, $idTableReferential, $token);
 
                 if($deleteTableBool == 0){
                     break;
@@ -46,7 +49,7 @@
         }     
         
         if(sizeof($enums) > 0) { // controllo attuato per accertarsi della presenza di domini di tipologia enum
-            insertEnums($conn, $enums, $nameTable);  
+            insertEnums($conn, $manager, $enums, $nameTable);  
         }
     }
 
@@ -70,11 +73,11 @@
             if($finalPosition == null) { 
                 $finalPosition = $endPosition; // sovrascrittura della posizione finale del dominio qualora si tratti dell'ultimo attributo dell'elenco
                 $commaBeforeAttribute = strrpos(substr($sql, 0, $spaceBeforeAttribute + 1), ',');
-                $sql = substr_replace($sql, " ", $commaBeforeAttribute, 1); // rimozione del dominio enum dalla query originaria
+                $sql = substr_replace($sql, " ", $commaBeforeAttribute, 1); 
             }
 
             $enumData = substr($sql, $spaceBeforeAttribute + 1, $finalPosition - ($spaceBeforeAttribute + 1) + 1); // stringa contenente i token dell'attributo enum
-            $sql = substr_replace($sql, "", $spaceBeforeAttribute + 1, $finalPosition - ($spaceBeforeAttribute + 1) + 1);
+            $sql = substr_replace($sql, "", $spaceBeforeAttribute + 1, $finalPosition - ($spaceBeforeAttribute + 1) + 1); // rimozione del dominio enum dalla query originaria
 
             array_push($arrayEnums, $enumData);
         }
@@ -146,12 +149,12 @@
         return $tokensPrimaryKey;
     }
 
-    function insertForeignKey($conn, $sql, $numRows, $idTableReferential) {
+    function insertForeignKey($conn, $manager, $sql, $numRows, $idTableReferential) {
         $tokensQuery = explode("FOREIGN KEY", substr($sql, 0, -2));
 
         for($i = 1; $i < sizeof($tokensQuery); $i++) {
             [$arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced] = splitForeignKey(trim($tokensQuery[$i]));
-            updateForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
+            updateForeignKey($conn,$manager, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced);
         }
     }
 
@@ -194,7 +197,7 @@
         return $array;
     }
 
-    function updateForeignKey($conn, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced) { // metodo definito per aggiornare il vincolo di chiave esterna sugli attributi inseriti
+    function updateForeignKey($conn, $manager, $numRows, $idTableReferential, $arrayForeignKey, $nameTableReferenced, $arrayAttributeReferenced) { // metodo definito per aggiornare il vincolo di chiave esterna sugli attributi inseriti
         if($numRows > 0) {
             for($i = 0; $i <= sizeof($arrayForeignKey) - 1; $i++) {
                 $nameAttributeReferential = $arrayForeignKey[$i];
@@ -238,11 +241,14 @@
                 } catch(PDOException $e) {
                     echo "Eccezione ".$e -> getMessage()."<br>";
                 }
+
+                $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento vincolo integrità tra attributo id:'.$idAttributeReferential.' e attributo id: '.$idAttributeReferenced.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                writeLog($manager, $document);             
             }
         }
     }
 
-    function insertAttribute($conn, $numRows, $idTableReferential, $tokensAttribute) {
+    function insertAttribute($conn, $manager, $numRows, $idTableReferential, $tokensAttribute) {
         $primaryKey = 0;
 
         if(in_array("PRIMARY", $tokensAttribute)) { // controllo stabilito per accertarsi che un solo attributo componga la chiave primaria
@@ -272,6 +278,9 @@
             } catch (PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
+
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento attributo nome: '.$name.' relativo alla Tabella_Esercizio id: '.$idTableReferential.'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document);
         }
         
         $validity = 1; // variabile utilizzata come riscontro dell'inserimento
@@ -293,13 +302,13 @@
             $idAttributeReferential = $row["ID"];
         
         
-            $validity = insertReference($conn, $idAttributeReferential, $idTableReferential, $tokensAttribute[3]);
+            $validity = insertReference($conn, $manager, $idAttributeReferential, $idTableReferential, $tokensAttribute[3]);
         }
 
         return $validity;
     }
 
-    function insertReference($conn, $idAttributeReferential, $idTableReferential, $tokensAttributeReferenced) { // funzione attuata per inserire il vincolo di chiave esterna qualora sia composto da un solo attributo
+    function insertReference($conn, $manager, $idAttributeReferential, $idTableReferential, $tokensAttributeReferenced) { // funzione attuata per inserire il vincolo di chiave esterna qualora sia composto da un solo attributo
         $tokensTableReferenced = explode('(', $tokensAttributeReferenced);
 
         [$num, $idTableReferenced] = getIdTableExercise($conn, $tokensTableReferenced[0]);
@@ -346,6 +355,9 @@
                     echo "Eccezione ".$e -> getMessage()."<br>";
                 }
 
+                $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento vincolo integrità tra attributo id:'.$idAttributeReferential.' e attributo id: '.$idAttributeReferenced.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                writeLog($manager, $document);
+
                 return 1;
             }       
         }
@@ -390,7 +402,7 @@
         }
     }
 
-    function insertEnums($conn, $enums, $nameTable){
+    function insertEnums($conn, $manager, $enums, $nameTable){
         [$numRows, $idTable] = getIdTableExercise($conn, $nameTable);
 
         foreach($enums as $value){
@@ -412,6 +424,9 @@
             } catch (PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
+
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento attributo nome: '.$tokens[0].' relativo alla Tabella_Esercizio id: '.$idTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document);
         }
     }
 ?>

@@ -4,6 +4,7 @@
 
     session_start();
     $conn = openConnection();
+    $manager = openConnectionMongoDB();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -49,7 +50,7 @@
             } elseif(isset($_POST["btnAddQuestion"])) {
                 if(checkTable($conn, $_SESSION["emailDocente"])) {
                     if(checkNumberRows($conn, $_SESSION["emailDocente"])) {
-                        insertQuestion($conn, $_SESSION["typeQuestion"], getLastId($conn, $_SESSION["titleCurrentTest"]), $_SESSION["titleCurrentTest"], $_POST["sltDifficulty"], 0, $_POST["txtDescription"]);
+                        insertQuestion($conn, $manager, $_SESSION["typeQuestion"], getLastId($conn, $_SESSION["titleCurrentTest"]), $_SESSION["titleCurrentTest"], $_POST["sltDifficulty"], 0, $_POST["txtDescription"]);
                         header("Location: insertAfferent.php");
                         exit();
                     } else {

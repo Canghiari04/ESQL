@@ -47,7 +47,7 @@
         return ($row -> MAX_ID_QUESTION + 1);
     }
 
-    function insertQuestion($conn, $type, $idQuestion, $titleTest, $difficulty, $numAnswers, $description) {
+    function insertQuestion($conn, $manager, $type, $idQuestion, $titleTest, $difficulty, $numAnswers, $description) {
         $storedProcedure = "CALL Inserimento_Quesito(:idQuesito, :titoloTest, :difficolta, :numRisposte, :descrizione);";
 
         try {
@@ -62,6 +62,9 @@
         } catch(PDOException $e) {
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
+
+        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento quesito id: '.$idQuestion.' relativo al test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document);
 
         $_SESSION["idCurrentQuestion"] = $idQuestion; // inizializzazione del campo della sessione affinchè sia possibile risalire all'id del quesito per successivo inserimento all'interno della tabella Afferenza
         

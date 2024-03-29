@@ -4,6 +4,7 @@
 
     session_start();
     $conn = openConnection();
+    $manager = openConnectionMongoDB();
 
     if((!isset($_SESSION["emailStudente"])) AND (!isset($_SESSION["emailDocente"]))) {
         header("Location: ../login/login.php");
@@ -13,7 +14,7 @@
         if(isset($_POST["btnNewMessage"])) {
             buildPage($conn, $_POST["btnNewMessage"]);
          } elseif(isset($_POST["btnAddMessage"])) {
-            insertNewMessage($conn, $_POST["btnAddMessage"], strtoupper($_POST["txtText"]), strtoupper($_POST["txtTitle"]), $_POST["sltTest"], date("Y-m-d"));
+            insertNewMessage($conn, $manager, $_POST["btnAddMessage"], strtoupper($_POST["txtText"]), strtoupper($_POST["txtTitle"]), $_POST["sltTest"], date("Y-m-d"));
             buildPage($conn, $_POST["btnAddMessage"]);
         }
     }
@@ -92,7 +93,7 @@
         return $var;
     }
 
-    function insertNewMessage($conn, $typeUser, $textMessage, $titleMessage, $titleTest, $date) {
+    function insertNewMessage($conn, $manager, $typeUser, $textMessage, $titleMessage, $titleTest, $date) {
         if($typeUser == "Teacher") {
             $storedProcedure = "CALL Inserimento_Messaggio_Docente(:emailDocente, :testo, :titolo, :titoloTest, :dataInserimento)";
 
@@ -107,7 +108,10 @@
                 $stmt -> execute();
             } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
-            }                
+            } 
+
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento di un nuovo messaggio dal docente: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document);
         } else {
             $storedProcedureTeacher = "CALL Inserimento_Messaggio_Docente(:emailDocente, :testo, :titolo, :titoloTest, :dataInserimento)";
 
@@ -148,6 +152,9 @@
             } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }                
+
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento di un nuovo messaggio dallo studente: '.$_SESSION["emailStudente"].' verso il docente: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document);
         }
     }        
 

@@ -1,5 +1,5 @@
 <?php
-    function insertTest($conn, $email, $viewAnswers, $uploadFile, $titleTest) { // inserimento di un nuovo test all'interno della tabella Test
+    function insertTest($conn, $manager, $email, $viewAnswers, $uploadFile, $titleTest) { // inserimento di un nuovo test all'interno della tabella Test
         if($uploadFile != null) { // controllo della presenza o meno di un file multimediale
             $fileTest = file_get_contents($uploadFile);
         } else {
@@ -22,6 +22,9 @@
         } catch(PDOException $e) {
             echo '<script>alert("Si è verificato un errore. \r\rRitenta.");</script>';
         }
+  
+        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document);
     }
 
     function convertToBoolean($viewAnswers) {

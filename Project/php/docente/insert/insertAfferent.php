@@ -4,6 +4,7 @@
 
     session_start();
     $conn = openConnection();
+    $manager = openConnectionMongoDB();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -37,7 +38,7 @@
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["btnAddAfferent"])) {
                 if(isset($_POST["checkbox"]) && !empty($_POST["checkbox"])) { // controllo che siano checkate delle tabelle
-                    insertAfferent($conn, $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], $_POST["checkbox"]); // inserimento della nuova afferenza tra quesito, test e tabella all'interno della collezione Afferenza
+                    insertAfferent($conn, $manager, $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], $_POST["checkbox"]); // inserimento della nuova afferenza tra quesito, test e tabella all'interno della collezione Afferenza
                 } else {
                     echo "<script type='text/javascript'>alert(".json_encode("Seleziona una tabelle presenti.").");</script>";
                 } 

@@ -8,6 +8,7 @@
 
     session_start();
     $conn = openConnection();  
+    $manager = openConnectionMongoDB();
 
     if(!isset($_SESSION["emailStudente"])) {
         header("Location: ../../shared/login/login.php");
@@ -33,7 +34,7 @@
                         if($_SERVER["REQUEST_METHOD"] == "POST") {   
                             if(isset($_POST["btnStartTest"])) {
                                 $_SESSION["titleTestTested"] = $_POST["btnStartTest"];
-                                openTest($conn, $_SESSION["emailStudente"], $_POST["btnStartTest"]); // metodo ideato per inserire il tentativo di risoluzione dello studente all'interno della tabella Completamento
+                                openTest($conn, $manager, $_SESSION["emailStudente"], $_POST["btnStartTest"]); // metodo ideato per inserire il tentativo di risoluzione dello studente all'interno della tabella Completamento
                                 buildForm($conn, $_POST["btnStartTest"], null, null); // innescata la costruzione del form                        
                             } elseif(isset($_POST["btnRestartTest"])) {
                                 $_SESSION["titleTestTested"] = $_POST["btnRestartTest"]; 
@@ -43,7 +44,7 @@
                                 $mapArrayAnswer = setValueSentMap($arrayIdQuestion); // funzioni ideate per restituire strutture dati che contengano le risposte date dallo studente e le soluzioni dei quesiti
                                 $mapArraySolution = setValueSolutionMap($conn, $arrayIdQuestion, $_SESSION["titleTestTested"]); 
                                                 
-                                checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution); // metodo attuato per stabilire la correttezza del tentativo risolutivo fornito dallo studente
+                                checkAnswer($conn, $manager, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution); // metodo attuato per stabilire la correttezza del tentativo risolutivo fornito dallo studente
                                 header("Location: ../view/viewTest.php");
                                 exit();
                             } elseif(isset($_POST["btnCheckSketch"])) { // ramo del costrutto definito per consentire la correzione di un unico quesito di codice 
@@ -56,19 +57,19 @@
 
                                     if($rowSolution == 0) {
                                         echo "<script type='text/javascript'>alert(".json_encode($rowAnswer).");</script>";
-                                        insertAnswer($conn, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
+                                        insertAnswer($conn, $manager, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
                                     } elseif($rowSolution == $rowAnswer) {
                                         echo "<script type='text/javascript'>alert('Query corretta.');</script>";
-                                        insertAnswer($conn, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 1);
+                                        insertAnswer($conn, $manager, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 1);
                                     } else {
                                         echo "<script type='text/javascript'>alert('Query errata.');</script>";
-                                        insertAnswer($conn, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
+                                        insertAnswer($conn, $manager, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
                                     }
 
                                     buildForm($conn, $_SESSION["titleTestTested"], $rowAnswer, $rowSolution);  
                                 } else {
                                     echo "<script type='text/javascript'>alert('Inserire una query valida.');</script>";
-                                    insertAnswer($conn, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
+                                    insertAnswer($conn, $manager, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
                                     buildForm($conn, $_SESSION["titleTestTested"], null, null);  
                                 }
 

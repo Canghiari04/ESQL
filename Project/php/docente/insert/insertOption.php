@@ -4,6 +4,7 @@
     
     session_start();
     $conn = openConnection();
+    $manager = openConnectionMongoDB();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -31,7 +32,7 @@
                     buildForm($conn, $_SESSION["typeQuestion"], $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]); // costruzione del form per inserimento di risposte al quesito 
                     printQuestion($_SESSION["descriptionCurrentQuestion"]); // stampa all'interno della textarea dedicata del quesito in evidenza
                 } elseif(isset($_POST["btnAddAnswer"])) {
-                    addOption($conn, strtoupper($_SESSION["typeQuestion"]), getLastId($conn, strtoupper($_SESSION["typeQuestion"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], strtoupper($_POST["txtAnswer"]), $_POST["sltSolution"]); // inserimento della nuova risposta all'interno del database
+                    addOption($conn, $manager, strtoupper($_SESSION["typeQuestion"]), getLastId($conn, strtoupper($_SESSION["typeQuestion"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]), $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"], strtoupper($_POST["txtAnswer"]), $_POST["sltSolution"]); // inserimento della nuova risposta all'interno del database
                     buildForm($conn, $_SESSION["typeQuestion"], $_SESSION["idCurrentQuestion"], $_SESSION["titleCurrentTest"]);
                     printQuestion($_SESSION["descriptionCurrentQuestion"]);
                 } 

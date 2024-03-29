@@ -61,7 +61,7 @@
         return $mapArraySolution;
     }
 
-    function checkAnswer($conn, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution) { // metodo generale imposto come classificatore di funzioni
+    function checkAnswer($conn, $manager, $arrayIdQuestion, $mapArrayAnswer, $mapArraySolution) { // metodo generale imposto come classificatore di funzioni
         foreach($arrayIdQuestion as $i) {  
             if(!$mapArrayAnswer[$i] == NULL) {
                 $type = getTypeQuestion($conn, $i, $_SESSION["titleTestTested"]);
@@ -74,7 +74,7 @@
                     $textAnswer = $mapArrayAnswer[$i];
                 }
                 
-                insertAnswer($conn, $_SESSION["emailStudente"], $i, $_SESSION["titleTestTested"], $textAnswer, $outcome);
+                insertAnswer($conn, $manager, $_SESSION["emailStudente"], $i, $_SESSION["titleTestTested"], $textAnswer, $outcome);
             }
         }
     }
@@ -130,7 +130,7 @@
         }
     }
     
-    function insertAnswer($conn, $email, $idQuestion, $titleTest, $textAnswer, $outcome) {
+    function insertAnswer($conn, $manager, $email, $idQuestion, $titleTest, $textAnswer, $outcome) {
         if(checkStateTest($conn, $email, $titleTest)) {
             $storedProcedure = "CALL Inserimento_Risposta(:emailStudente, :idQuesito, :titoloTest, :testoRisposta, :esito)";
             
@@ -146,6 +146,9 @@
             } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
+
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento di una nuova risposta al quesito: '.$idQuestion.' dallo studente: '.$email.'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document);
         }
     }
 

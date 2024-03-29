@@ -50,8 +50,8 @@
                                     
                                     $result -> execute(); // creazione della tabella effettiva solamente se rispettata la sintassi sql
                                     
-                                    insertTableExercise($conn, $tokenName[0], $_SESSION["emailDocente"]); // inserimento nella tabella Tabella_Esercizio della nuova collezione
-                                    insertRecord($conn, $sql, $tokenName[0]); // inserimento dei meta-dati che caratterizzano la tabella 
+                                    insertTableExercise($conn, $manager, $tokenName[0], $_SESSION["emailDocente"]); // inserimento nella tabella Tabella_Esercizio della nuova collezione
+                                    insertRecord($conn, $manager, $sql, $tokenName[0]); // inserimento dei meta-dati che caratterizzano la tabella 
 
                                     $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento tabella: '.$tokenName[0].'. Creata dal docentes: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
                                     writeLog($manager, $document); // scrittura log inserimento di una tabella

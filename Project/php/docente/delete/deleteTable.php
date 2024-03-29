@@ -16,7 +16,7 @@
 
             $_SESSION["recordDeleted"] = "true"; // inizializzazione del campo della sessione per corretto reindirizzamento alla pagina chiamante
             
-            deleteRecord($conn, $arrayDeleteTokens);
+            deleteRecord($conn, $manager, $arrayDeleteTokens);
             header("Location: ../specifics/specificRow.php");
             exit;
         }
@@ -48,7 +48,8 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-
+        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione tabella: '.$nome.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document); // scrittura log eliminazione di una tabella 
     }
 
     function deleteTableExercise($conn, $manager, $idTable) {
@@ -65,7 +66,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione tabella id: '.$idTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione Tabella_Esercizio id: '.$idTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
         writeLog($manager, $document); // scrittura log eliminazione di una tabella 
     }
 
@@ -104,7 +105,7 @@
         }
     }
 
-    function deleteRecord($conn, $arrayDeleteTokens) {
+    function deleteRecord($conn, $manager, $arrayDeleteTokens) {
         $nameTable = $arrayDeleteTokens[0];
         $arrayNamePrimaryKey = getNamePrimaryKey($conn, $nameTable); // acquisiti i field che compongono la chiave primaria della tabella
         
@@ -129,6 +130,10 @@
                 $resultProcedure -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
         
                 $resultProcedure -> execute();
+
+                $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione dati dalla collezione: '.$nameTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                writeLog($manager, $document); // scrittura log eliminazione di un quesito referenziato ad una tabella
+            
             } catch(PDOException $e) {
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }

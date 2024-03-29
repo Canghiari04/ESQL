@@ -4,6 +4,7 @@
 
     session_start();
     $conn = openConnection();
+    $manager = openConnectionMongoDB();
 
     if(!isset($_SESSION["emailDocente"])) {
         header("Location: ../../shared/login/login.php");
@@ -36,7 +37,7 @@
                             if(isset($_POST["btnInsertForm"])) {
                                 identifyAttributes($conn); // costruzionen del form contenente tutti gli attributi della tabella
                             } elseif(isset($_POST["btnInsertData"])) {
-                                insertData($conn); // inserimento dei dati ottenuti dal form precedentemente costruito
+                                insertData($conn, $manager); // inserimento dei dati ottenuti dal form precedentemente costruito
                                 identifyAttributes($conn); // rebuild del form, in attesa di nuovi inserimenti
                             }
                         }
