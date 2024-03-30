@@ -110,8 +110,8 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             } 
 
-            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento di un nuovo messaggio dal docente: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
-            writeLog($manager, $document);
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Messaggio dal Docente email: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document); // scrittura log inserimento di un messaggio
         } else {
             $storedProcedureTeacher = "CALL Inserimento_Messaggio_Docente(:emailDocente, :testo, :titolo, :titoloTest, :dataInserimento)";
 
@@ -153,8 +153,8 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }                
 
-            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento di un nuovo messaggio dallo studente: '.$_SESSION["emailStudente"].' verso il docente: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
-            writeLog($manager, $document);
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Messaggio dallo Studente email: '.$_SESSION["emailStudente"].' a Docente email: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document); // scrittura log inserimento di un messaggio
         }
     }        
 

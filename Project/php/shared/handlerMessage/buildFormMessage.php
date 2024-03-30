@@ -35,8 +35,9 @@
 
             $numRows = $result -> rowCount();
             if($numRows > 0) {
-                $row = $result -> fetch(PDO::FETCH_OBJ);    
-                deployMessage($conn, $row -> EMAIL_DOCENTE, $row -> TESTO, $row -> TITOLO, $row -> TITOLO_TEST, $row -> DATA_INSERIMENTO);
+                while($row = $result -> fetch(PDO::FETCH_OBJ)) {
+                    deployMessage($conn, $row -> EMAIL_DOCENTE, $row -> TESTO, $row -> TITOLO, $row -> TITOLO_TEST, $row -> DATA_INSERIMENTO);
+                }    
             }
         } else {
             $sql = "SELECT * FROM Messaggio, Messaggio_Studente WHERE (Messaggio.ID=Messaggio_Studente.ID_MESSAGGIO_STUDENTE) AND (Messaggio_Studente.EMAIL_STUDENTE=:email);";
@@ -52,8 +53,9 @@
 
             $numRows = $result -> rowCount();
             if($numRows > 0) {  
-                $row = $result -> fetch(PDO::FETCH_OBJ);
-                deployMessage($conn, $row -> EMAIL_STUDENTE, $row -> TESTO, $row -> TITOLO, $row -> TITOLO_TEST, $row -> DATA_INSERIMENTO);
+                while($row = $result -> fetch(PDO::FETCH_OBJ)) {
+                    deployMessage($conn, $row -> EMAIL_STUDENTE, $row -> TESTO, $row -> TITOLO, $row -> TITOLO_TEST, $row -> DATA_INSERIMENTO);
+                }
             }   
         }
     }              

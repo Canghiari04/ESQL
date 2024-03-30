@@ -2,7 +2,6 @@
     include "../../connectionDB.php";
 
     session_start();
-
     $conn = openConnection();
     $manager = openConnectionMongoDB();
 ?>
