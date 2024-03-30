@@ -56,8 +56,7 @@
                                     [$rowSolution, $rowAnswer] = checkSketch($conn, $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea]);
 
                                     if($rowSolution == 0) {
-                                        echo "<script type='text/javascript'>alert(".json_encode($rowAnswer).");</script>";
-                                        insertAnswer($conn, $manager, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
+                                        echo "<script type='text/javascript'>alert('Inserire una query valida.');</script>";
                                     } elseif($rowSolution == $rowAnswer) {
                                         echo "<script type='text/javascript'>alert('Query corretta.');</script>";
                                         insertAnswer($conn, $manager, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 1);
@@ -69,7 +68,6 @@
                                     buildForm($conn, $_SESSION["titleTestTested"], $rowAnswer, $rowSolution);  
                                 } else {
                                     echo "<script type='text/javascript'>alert('Inserire una query valida.');</script>";
-                                    insertAnswer($conn, $manager, $_SESSION["emailStudente"], $_POST["btnCheckSketch"], $_SESSION["titleTestTested"], $_POST[$textArea], 0);
                                     buildForm($conn, $_SESSION["titleTestTested"], null, null);  
                                 }
 
