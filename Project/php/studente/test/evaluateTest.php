@@ -147,8 +147,8 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento di una nuova risposta al quesito: '.$idQuestion.' dallo studente: '.$email.'', 'Timestamp' => date('Y-m-d H:i:s')];
-            writeLog($manager, $document);
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Risposta del Quesito id: '.$idQuestion.', immessa Studente email: '.$email.'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document); // scrittura log inserimento di una risposta
         }
     }
 

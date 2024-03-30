@@ -12,7 +12,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Stato: APERTO, test: '.$titleTest.', studente: '.$emailStudent.'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Stato "APERTO" del Test titolo: '.$titleTest.'. Relativo Studente email: '.$emailStudent.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document); // scrittura log cambiamento dello stato di completamento
     }
 ?>

@@ -94,7 +94,7 @@
     }
 
     function checkChecked($conn, $email, $idQuestion, $titleTest) { // funzione definita per individuare tutti quei quesiti a cui lo studente abbia già risposto in tentativi precedenti
-        $sql = "SELECT TESTO FROM Risposta WHERE (EMAIL_STUDENTE=:emailStudente) AND (ID_QUESITO=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
+        $sql = "SELECT TESTO FROM Risposta WHERE (Risposta.EMAIL_STUDENTE=:emailStudente) AND (Risposta.ID_QUESITO=:idQuesito) AND (Risposta.TITOLO_TEST=:titoloTest);";
 
         try {
             $result = $conn -> prepare($sql);
@@ -119,7 +119,7 @@
     }
 
     function checkAnswered($conn, $email, $idQuestion, $titleTest) { // funzione ideata per visualizzare o meno risposte a quesiti di codice immesse dallo studente
-        $sql = "SELECT TESTO FROM Risposta WHERE (EMAIL_STUDENTE=:emailStudente) AND (ID_QUESITO=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
+        $sql = "SELECT TESTO FROM Risposta WHERE (Risposta.EMAIL_STUDENTE=:emailStudente) AND (Risposta.ID_QUESITO=:idQuesito) AND (Risposta.TITOLO_TEST=:titoloTest);";
 
         try {
             $result = $conn -> prepare($sql);
@@ -135,7 +135,7 @@
         $numRows = $result -> rowCount();
         if($numRows > 0){      
             $row = $result -> fetch(PDO::FETCH_OBJ); 
-            echo "<script>document.querySelector('textarea[name=\"txtAnswerSketch".$idQuestion."\"]').value='".$row -> TESTO."';</script>"; // script ideato per sovrascrivere il contenuto della textarea con la risposta immessa dallo studente
+            echo "<script>document.querySelector('textarea[name=\"txtAnswerSketch".$idQuestion."\"]').value=".json_encode($row -> TESTO).";</script>"; // script ideato per sovrascrivere il contenuto della textarea con la risposta immessa dallo studente
         }
     }
 
@@ -155,7 +155,7 @@
         $numRows = $result -> rowCount();
         if($numRows > 0){       
             $row = $result -> fetch(PDO::FETCH_OBJ); 
-            echo "<script>document.querySelector('textarea[name=\"txtAnswerSketch".$idQuestion."\"]').value='".$row -> TESTO."';</script>";
+            echo "<script>document.querySelector('textarea[name=\"txtAnswerSketch".$idQuestion."\"]').value=".json_encode($row -> TESTO).";</script>"; // script ideato per sovrascrivere il contenuto della textarea con la risposta immessa dallo studente
         }
     }
 ?>

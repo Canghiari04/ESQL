@@ -100,9 +100,9 @@
 
     function buildFormCheck($conn, $idQuestion, $titleTest, $enabled, $solution) {
         if($solution == true) { // diversificazione della query a seconda del valore attribuito al dominio VISUALIZZA_RISPOSTE
-            $sql = "SELECT * FROM Opzione_Risposta WHERE (ID_DOMANDA_CHIUSA=:idQuesito) AND (TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
+            $sql = "SELECT * FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito) AND (Opzione_Risposta.TITOLO_TEST=:titoloTest) AND (Opzione_Risposta.SOLUZIONE=1);";
         } else {
-            $sql = "SELECT * FROM Opzione_Risposta WHERE (ID_DOMANDA_CHIUSA=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
+            $sql = "SELECT * FROM Opzione_Risposta WHERE (Opzione_Risposta.ID_DOMANDA_CHIUSA=:idQuesito) AND (Opzione_Risposta.TITOLO_TEST=:titoloTest);";
         }
                 
         try {
@@ -174,9 +174,9 @@
 
     function buildFormQuery($conn, $idQuestion, $titleTest, $rowResult, $rowSolution, $enabled, $solution) {
         if($solution == true) { // diversificazione della query a seconda del valore attribuito al dominio VISUALIZZA_RISPOSTE
-            $sql = "SELECT * FROM Sketch_Codice WHERE (ID_DOMANDA_CODICE=:idQuesito) AND (TITOLO_TEST=:titoloTest) AND (SOLUZIONE=1);";
+            $sql = "SELECT * FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest) AND (Sketch_Codice.SOLUZIONE=1);";
         } else {
-            $sql = "SELECT * FROM Sketch_Codice WHERE (ID_DOMANDA_CODICE=:idQuesito) AND (TITOLO_TEST=:titoloTest);";
+            $sql = "SELECT * FROM Sketch_Codice WHERE (Sketch_Codice.ID_DOMANDA_CODICE=:idQuesito) AND (Sketch_Codice.TITOLO_TEST=:titoloTest);";
         }
 
         try {
@@ -270,7 +270,7 @@
         $arrayFieldAnswer = $_SESSION["fieldAnswer"]; // array contenenti i field della query risposta data dallo studente e la query soluzione già presente nel database
         $arrayFieldSolution = $_SESSION["fieldSolution"];
 
-        echo '
+        echo 'ANNO
             <div class="div-table">
         ';
 
