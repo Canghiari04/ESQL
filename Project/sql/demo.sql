@@ -53,6 +53,13 @@ INSERT INTO CIRCOLO VALUES("TennisClub", "Rimini", 4);
 INSERT INTO CIRCOLO VALUES("TennisWorld", "Modena", 6);
 INSERT INTO CIRCOLO VALUES("TennisLandia", "Piacenza", 2);
 
+INSERT INTO Manipolazione_Riga VALUES(1, 1);
+INSERT INTO Manipolazione_Riga VALUES(2, 1);
+INSERT INTO Manipolazione_Riga VALUES(3, 1);
+INSERT INTO Manipolazione_Riga VALUES(4, 1);
+INSERT INTO Manipolazione_Riga VALUES(5, 1);
+INSERT INTO Manipolazione_Riga VALUES(6, 1);
+
 INSERT INTO SOCIO VALUES("MR90", "Supertennis", "Mario", "Rossi", 1990);
 INSERT INTO SOCIO VALUES("MB95", "TennisWorld", "Michela", "Bianchi", 1995);
 INSERT INTO SOCIO VALUES("AN10", "Tennis 2000", "Andrea", "Neri", 2010);
@@ -61,6 +68,15 @@ INSERT INTO SOCIO VALUES("MA10", "TennisWorld", "Marco", "Arancio", 2010);
 INSERT INTO SOCIO VALUES("MR00", "Supertennis", "Maria", "Rosa", 2000);
 INSERT INTO SOCIO VALUES("MN98", "Supertennis", "Maria", "Nerone", 1990);
 INSERT INTO SOCIO VALUES("MR70", "GiardiniMargherita", "Mario", "Rossini", 1970);
+
+INSERT INTO Manipolazione_Riga VALUES(7, 2);
+INSERT INTO Manipolazione_Riga VALUES(8, 2);
+INSERT INTO Manipolazione_Riga VALUES(9, 2);
+INSERT INTO Manipolazione_Riga VALUES(10, 2);
+INSERT INTO Manipolazione_Riga VALUES(11, 2);
+INSERT INTO Manipolazione_Riga VALUES(12, 2);
+INSERT INTO Manipolazione_Riga VALUES(13, 2);
+INSERT INTO Manipolazione_Riga VALUES(14, 2);
 
 INSERT INTO TELEFONO VALUES("05112454", "MR90");
 INSERT INTO TELEFONO VALUES("05117453", "MR90");
@@ -73,6 +89,18 @@ INSERT INTO TELEFONO VALUES("05188881", "MA10");
 INSERT INTO TELEFONO VALUES("05115454", "MR00");
 INSERT INTO TELEFONO VALUES("05118954", "MN98");
 INSERT INTO TELEFONO VALUES("05119754", "MR70");
+
+INSERT INTO Manipolazione_Riga VALUES(15, 3);
+INSERT INTO Manipolazione_Riga VALUES(16, 3);
+INSERT INTO Manipolazione_Riga VALUES(17, 3);
+INSERT INTO Manipolazione_Riga VALUES(18, 3);
+INSERT INTO Manipolazione_Riga VALUES(19, 3);
+INSERT INTO Manipolazione_Riga VALUES(20, 3);
+INSERT INTO Manipolazione_Riga VALUES(21, 3);
+INSERT INTO Manipolazione_Riga VALUES(22, 3);
+INSERT INTO Manipolazione_Riga VALUES(23, 3);
+INSERT INTO Manipolazione_Riga VALUES(24, 3);
+INSERT INTO Manipolazione_Riga VALUES(25, 3);
 
 INSERT INTO Test VALUES("Test Completo", "luigi.bianchi@gmail.com", NULL, "2008-10-29 14:56:59", 0);
 
@@ -107,7 +135,7 @@ INSERT INTO Domanda_Codice VALUES(7, "Test Completo");
 INSERT INTO Domanda_Codice VALUES(8, "Test Completo");
 
 INSERT INTO Sketch_Codice VALUES(1, 1, "Test Completo", "SELECT CIRCOLO.NOME, CIRCOLO.CITTA FROM CIRCOLO, SOCIO WHERE (SOCIO.NOME_CIRCOLO = CIRCOLO.NOME) AND (SOCIO.NOME = 'MARCO') AND (SOCIO.COGNOME = 'ARANCIO');", 1);
-INSERT INTO Sketch_Codice VALUES(1, 2, "Test Completo", "SELECT COUNT(*) FROM SOCIO WHERE (ANNONASCITA < 2000);", 1);
+INSERT INTO Sketch_Codice VALUES(1, 2, "Test Completo", "SELECT COUNT(*) FROM SOCIO WHERE (ANNO_NASCITA < 2000);", 1);
 INSERT INTO Sketch_Codice VALUES(1, 3, "Test Completo", "SELECT COUNT(*), NOME_CIRCOLO FROM SOCIO GROUP BY NOME_CIRCOLO;", 1);
 INSERT INTO Sketch_Codice VALUES(1, 4, "Test Completo", "SELECT NOME, COGNOME FROM SOCIO WHERE CF IN (SELECT CF_SOCIO FROM TELEFONO GROUP BY CF_SOCIO HAVING COUNT(*) >= 2);", 1);
 INSERT INTO Sketch_Codice VALUES(1, 5, "Test Completo", "SELECT CITTA, SUM(NUM_CAMPI_TENNIS) FROM CIRCOLO GROUP BY CITTA HAVING SUM(NUM_CAMPI_TENNIS) > 5;", 1);
@@ -119,7 +147,7 @@ INSERT INTO Test VALUES("Test Parziale", "luigi.bianchi@gmail.com", NULL, "2008-
 
 INSERT INTO Quesito VALUES(9, "Test Parziale", 'MEDIO', 0, "Seleziona la query corretta");
 INSERT INTO Quesito VALUES(10, "Test Parziale", 'BASSO', 0, "Scrivere la query che visualizza il numero di soci nati prima del 2000 (escluso)");
-INSERT INTO Quesito VALUES(11, "Test Parziale", 'BASSO', 0, "La query 'SELECT COUNT(*) FROM SOCIO WHERE (ANNONASCITA < 2000);' è corretta?");
+INSERT INTO Quesito VALUES(11, "Test Parziale", 'BASSO', 0, "La query 'SELECT COUNT(*) FROM SOCIO WHERE (ANNO_NASCITA < 2000);' è corretta?");
 
 INSERT INTO Afferenza VALUES(9, "Test Parziale", 1);
 INSERT INTO Afferenza VALUES(9, "Test Parziale", 2);
@@ -140,7 +168,7 @@ INSERT INTO Opzione_Risposta VALUES(2, 11, "Test Parziale", "FALSO", 0);
 INSERT INTO Completamento VALUES("Test Completo", "mario.rossi@gmail.com", 'INCOMPLETAMENTO', "2008-10-29 14:56:59", "2008-12-31 14:56:59");
 
 INSERT INTO Risposta VALUES("mario.rossi@gmail.com", 1, "Test Completo", "SELECT CIRCOLO.NOME, CIRCOLO.CITTA FROM CIRCOLO, SOCIO WHERE (SOCIO.NOME_CIRCOLO = CIRCOLO.NOME) AND (SOCIO.NOME = 'MARCO') AND (SOCIO.COGNOME = 'ARANCIO');", 1);
-INSERT INTO Risposta VALUES("mario.rossi@gmail.com", 2, "Test Completo", "SELECT COUNT(*) FROM SOCIO WHERE (ANNONASCITA < 2000);", 1);
+INSERT INTO Risposta VALUES("mario.rossi@gmail.com", 2, "Test Completo", "SELECT COUNT(*) FROM SOCIO WHERE (ANNO_NASCITA < 2000);", 1);
 INSERT INTO Risposta VALUES("mario.rossi@gmail.com", 3, "Test Completo", "SELECT COUNT(*), NOME_CIRCOLO FROM SOCIO GROUP BY NOME_CIRCOLO;", 1);
 INSERT INTO Risposta VALUES("mario.rossi@gmail.com", 4, "Test Completo", "SELECT NOME, COGNOME FROM SOCIO WHERE CF IN (SELECT CF_SOCIO FROM TELEFONO GROUP BY CF_SOCIO HAVING COUNT(*) >= 2);", 1);
 INSERT INTO Risposta VALUES("mario.rossi@gmail.com", 5, "Test Completo", "SELECT CITTA, SUM(NUM_CAMPI_TENNIS) FROM CIRCOLO GROUP BY CITTA HAVING SUM(NUM_CAMPI_TENNIS) > 5;", 1);
