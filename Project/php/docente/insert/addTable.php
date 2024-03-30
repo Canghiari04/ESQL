@@ -14,8 +14,8 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Tabella_Esercizio nome: '.$nameTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Tabella_Esercizio titolo: '.$nameTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document); // scrittura log inserimento di una tabella
     }
 
     function insertRecord($conn, $manager, $sql, $nameTable) {
@@ -242,8 +242,8 @@
                     echo "Eccezione ".$e -> getMessage()."<br>";
                 }
 
-                $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento vincolo integrità tra attributo id:'.$idAttributeReferential.' e attributo id: '.$idAttributeReferenced.'', 'Timestamp' => date('Y-m-d H:i:s')];
-                writeLog($manager, $document);             
+                $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Vincolo_INtegrità tra Attributo id:'.$idAttributeReferential.' e Attributo id: '.$idAttributeReferenced.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                writeLog($manager, $document); // scrittura log inserimento di un vincolo di integrità         
             }
         }
     }
@@ -279,8 +279,8 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento attributo nome: '.$name.' relativo alla Tabella_Esercizio id: '.$idTableReferential.'', 'Timestamp' => date('Y-m-d H:i:s')];
-            writeLog($manager, $document);
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Attributo nome: '.$name.'. Referenziato Tabella_Esercizio id: '.$idTableReferential.'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document); // scrittura log inserimento di un attributo
         }
         
         $validity = 1; // variabile utilizzata come riscontro dell'inserimento
@@ -300,7 +300,6 @@
 
             $row = $result -> fetch(PDO::FETCH_ASSOC);
             $idAttributeReferential = $row["ID"];
-        
         
             $validity = insertReference($conn, $manager, $idAttributeReferential, $idTableReferential, $tokensAttribute[3]);
         }
@@ -355,8 +354,8 @@
                     echo "Eccezione ".$e -> getMessage()."<br>";
                 }
 
-                $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento vincolo integrità tra attributo id:'.$idAttributeReferential.' e attributo id: '.$idAttributeReferenced.'', 'Timestamp' => date('Y-m-d H:i:s')];
-                writeLog($manager, $document);
+                $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Vincolo_Integrità Attributo id:'.$idAttributeReferential.' e Attributo id: '.$idAttributeReferenced.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                writeLog($manager, $document); // scrittura log inserimento di un vincolo di integrità
 
                 return 1;
             }       
@@ -425,8 +424,8 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento attributo nome: '.$tokens[0].' relativo alla Tabella_Esercizio id: '.$idTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
-            writeLog($manager, $document);
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Attributo nome: '.$tokens[0].'. Relativo Tabella_Esercizio id: '.$idTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document); // scrittura inserimento di un attributo
         }
     }
 ?>

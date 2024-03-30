@@ -48,7 +48,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione tabella: '.$nome.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione Tabella titolo: '.$nome.'', 'Timestamp' => date('Y-m-d H:i:s')];
         writeLog($manager, $document); // scrittura log eliminazione di una tabella 
     }
 
@@ -99,7 +99,7 @@
                     echo "Eccezione ".$e -> getMessage()."<br>";
                 }
 
-                $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$idQuestion.'. Referenziato tabella id: '.$idTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione Quesito id: '.$idQuestion.'. Referenziato Tabella id: '.$idTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
                 writeLog($manager, $document); // scrittura log eliminazione di un quesito referenziato ad una tabella
             }
         }
@@ -131,7 +131,7 @@
         
                 $resultProcedure -> execute();
 
-                $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione dati dalla collezione: '.$nameTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
+                $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione della Tabella titolo: '.$nameTable.'', 'Timestamp' => date('Y-m-d H:i:s')];
                 writeLog($manager, $document); // scrittura log eliminazione di un quesito referenziato ad una tabella
             
             } catch(PDOException $e) {

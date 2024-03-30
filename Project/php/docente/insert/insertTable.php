@@ -53,7 +53,7 @@
                                     insertTableExercise($conn, $manager, $tokenName[0], $_SESSION["emailDocente"]); // inserimento nella tabella Tabella_Esercizio della nuova collezione
                                     insertRecord($conn, $manager, $sql, $tokenName[0]); // inserimento dei meta-dati che caratterizzano la tabella 
 
-                                    $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento tabella: '.$tokenName[0].'. Creata dal docentes: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
+                                    $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Tabella titolo: '.$tokenName[0].'. Creata dal Docente email: '.$_SESSION["emailDocente"].'', 'Timestamp' => date('Y-m-d H:i:s')];
                                     writeLog($manager, $document); // scrittura log inserimento di una tabella
                                 } catch(PDOException $e) { // in caso di eccezioni della query CREATE sono visualizzate a schermo tramite la textarea
                                     echo "<script>document.querySelector('.input-tips').value=".json_encode($e -> getMessage(), JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS).";</script>"; // metodo in grado di rendere compatibile caratteri speciali con la visualizzazione a schermo dell'eccezione

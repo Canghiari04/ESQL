@@ -23,8 +23,8 @@
             echo '<script>alert("Si è verificato un errore. \r\rRitenta.");</script>';
         }
   
-        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document); // scrittura log inserimento di un test
     }
 
     function convertToBoolean($viewAnswers) {

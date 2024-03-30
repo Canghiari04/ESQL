@@ -29,7 +29,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione Test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
         writeLog($manager, $document); // scrittura log eliminazione di un test
     }
 
@@ -45,7 +45,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Aggiornamento', 'Log' => 'Aggiornamento visualizza risposta test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        $document = ['Tipo log' => 'Aggiornamento', 'Log' => 'Aggiornamento visualizza risposta del Test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
         writeLog($manager, $document); // scrittura log aggiornamento dello stato di un test
     }
 
@@ -64,7 +64,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$valuesQuestion[1].' Referenziato tabella id: '.$valuesQuestion[0].'', 'Timestamp' => date('Y-m-d H:i:s')];
+        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione Quesito id: '.$valuesQuestion[1].' Referenziato Tabella_Esercizio id: '.$valuesQuestion[0].'', 'Timestamp' => date('Y-m-d H:i:s')];
         writeLog($manager, $document); // scrittura log eliminazione di un quesito referenziato ad un test
     }
 

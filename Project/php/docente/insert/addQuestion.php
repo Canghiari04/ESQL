@@ -63,8 +63,8 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento quesito id: '.$idQuestion.' relativo al test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Quesito id: '.$idQuestion.'. Relativo Test titolo: '.$titleTest.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document); // scrittua log inserimento di un quesito
 
         $_SESSION["idCurrentQuestion"] = $idQuestion; // inizializzazione del campo della sessione affinchè sia possibile risalire all'id del quesito per successivo inserimento all'interno della tabella Afferenza
         

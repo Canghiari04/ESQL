@@ -68,8 +68,8 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
         
-        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento opzione di risposta id: '.$id.'', 'Timestamp' => date('Y-m-d H:i:s')];
-        writeLog($manager, $document);
+        $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Opzione_Risposta id: '.$id.'. Relativo Quesito id: '.$idQuestion.'', 'Timestamp' => date('Y-m-d H:i:s')];
+        writeLog($manager, $document); // scrittura log inserimento di un'opzione di risposta
     }
 
     function checkQuery($conn, $textAnswer) { // controllo della correttezza sintattica della query

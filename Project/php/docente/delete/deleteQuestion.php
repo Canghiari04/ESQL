@@ -31,7 +31,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione quesito id: '.$valuesQuestion[0].'', 'Timestamp' => date('Y-m-d H:i:s')]; 
+        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione Quesito id: '.$valuesQuestion[0].'', 'Timestamp' => date('Y-m-d H:i:s')]; 
         writeLog($manager, $document); // scrittura log eliminazione di un quesito
     }
 
@@ -55,7 +55,7 @@
             echo "Eccezione ".$e -> getMessage()."<br>";
         }
 
-        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione risposta id: '.$valuesOption[1].'', 'Timestamp' => date('Y-m-d H:i:s')];
+        $document = ['Tipo log' => 'Cancellazione', 'Log' => 'Cancellazione Risposta id: '.$valuesOption[1].'', 'Timestamp' => date('Y-m-d H:i:s')];
         writeLog($manager, $document); // scrittura log eliminazione di una risposta
     }
 

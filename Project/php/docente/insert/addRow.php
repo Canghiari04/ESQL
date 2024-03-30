@@ -341,8 +341,8 @@
         
             $result -> execute(); 
 
-            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento nella collezione: '.getTableName($conn), 'Timestamp' => date('Y-m-d H:i:s')];
-            writeLog($manager, $document);
+            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Tabella_Esercizio titolo: '.getTableName($conn), 'Timestamp' => date('Y-m-d H:i:s')];
+            writeLog($manager, $document); // scrittura log inserimento di una tabella 
 
             echo "<script>document.querySelector('.input-tips').value='INSERIMENTO DATI AVVENUTO CON SUCCESSO';</script>";
 

@@ -65,8 +65,9 @@
                                     $stmt -> bindValue(":idTabella", $_SESSION["idCurrentTable"]);
                                     
                                     $stmt -> execute();
-                                    $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento nella collezione: '.getTableName($conn), 'Timestamp' => date('Y-m-d H:i:s')];
-                                    writeLog($manager, $document);
+
+                                    $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento fittizio in Manipolazione_Riga della Tabella titolo: '.getTableName($conn), 'Timestamp' => date('Y-m-d H:i:s')];
+                                    writeLog($manager, $document); // scrittura log inserimento fittizio nella tabella Manipolazione_Riga
                                 } catch(PDOException $e) {
                                     echo "Eccezione ".$e -> getMessage()."<br>";
                                 }
