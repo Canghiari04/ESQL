@@ -43,6 +43,7 @@ h2:hover, th:hover, td:hover {
 
 .single-div {
     margin-top: 5rem;
+    margin-bottom: 2.5rem;
     padding: 1rem 1rem;
     width: 100%;
     background-color: rgb(240, 240, 240);

@@ -1,5 +1,5 @@
 select {
-    width: 20vh;
+    width: 22.5vh;
     height: 3.5vh;
     border: 2px solid black;
     border-radius: 0.7vh;
@@ -18,7 +18,7 @@ button {
     border-radius: 10px;
     text-align: center;
     padding: 12px 28px;
-    margin: 5vh 114.5vh;
+    margin: 5vh 124vh;
     text-decoration: none;
 }
 
