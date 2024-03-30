@@ -1,5 +1,5 @@
 <?php
-    error_reporting(E_ALL ^ E_WARNING); //rimozione messaggi di tipo warning
+    error_reporting(E_ALL ^ E_WARNING); // metodo attuato per rimuovere warning PHP
     session_destroy(); // metodo attuato per eliminare i campi immessi precedentemente all'interno della sessione  
 ?>
 <!DOCTYPE html>
