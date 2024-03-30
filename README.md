@@ -7,5 +7,3 @@ Project for the University of Bologna Database course (70155), Accademic Year (2
 - Ossama Nadifi
 
 [Specifics of the project](https://virtuale.unibo.it/mod/resource/view.php?id=1355231)
-
-## Information about ESQL
