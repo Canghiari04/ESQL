@@ -52,5 +52,6 @@ h2:hover, th:hover, td:hover {
 }
 
 .single-div:hover {
+    transition: border .4s;
     border: 2px solid #ff3131;
 }
