@@ -1,7 +1,7 @@
 # ESQL
 Progetto per il corso Basi di Dati (70155) Anno Accademico (2023/2024)
 
-### Realizzato da:
+### Realizzato dagli studenti:
 - Matteo Canghiari
 - Davide De Rosa
 - Ossama Nadifi
