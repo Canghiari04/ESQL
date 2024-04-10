@@ -12,7 +12,7 @@
 
             if(isset($_POST[$varCheckbox])) {
                 $mapArrayAnswer[$arrayIdQuestion[$i]] = $_POST[$varCheckbox];
-            } else {
+            } elseif(isset($_POST[$varTextarea])) {
                 $mapArrayAnswer[$arrayIdQuestion[$i]] = $_POST[$varTextarea];
             }         
         }
@@ -147,8 +147,8 @@
                 echo "Eccezione ".$e -> getMessage()."<br>";
             }
 
-            $document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Risposta del Quesito id: '.$idQuestion.', immessa Studente email: '.$email.'', 'Timestamp' => date('Y-m-d H:i:s')];
-            writeLog($manager, $document); // scrittura log inserimento di una risposta
+            //$document = ['Tipo log' => 'Inserimento', 'Log' => 'Inserimento Risposta del Quesito id: '.$idQuestion.', immessa Studente email: '.$email.'', 'Timestamp' => date('Y-m-d H:i:s')];
+            //writeLog($manager, $document); // scrittura log inserimento di una risposta
         }
     }
 
