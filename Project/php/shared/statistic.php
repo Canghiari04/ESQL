@@ -151,6 +151,7 @@
                                 <tr>  
                                     <th>POSIZIONE</th>
                                     <th>QUESITO</th>
+                                    <th>TITOLO_TEST</th>
                                     <th>RISPOSTE</th>                  
                                 </tr>
                         ';
@@ -164,6 +165,7 @@
                                     <tr>
                                         <th>'.$cont.'</th>  
                                         <th>'.$row -> ID_QUESITO.'</th>
+                                        <th>'.$row -> TITOLO_TEST.'</th>
                                         <th>'.$row -> NUMERO.'</th>
                                     </tr>
                                 ';
