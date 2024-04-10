@@ -116,6 +116,17 @@ button:hover, select:hover, input:hover {
     border: 2px solid #ff3131;
 }
 
+.button-insert {
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    padding: 12px 28px;
+    margin: 30px 1042.5px;
+    text-decoration: none;
+}
+
 .button-question {
     color: black;
     background-color: white;
