@@ -26,9 +26,9 @@ NUMERO VARCHAR(10) PRIMARY KEY,
 CF_SOCIO VARCHAR(255) REFERENCES SOCIO(CF)
 );
 
-INSERT INTO Tabella_Esercizio VALUES(1, "CIRCOLO", "2008-10-29 14:56:59", 6, "luigi.bianchi@gmail.com");
-INSERT INTO Tabella_Esercizio VALUES(2, "SOCIO", "2008-10-29 14:56:59", 8, "luigi.bianchi@gmail.com");
-INSERT INTO Tabella_Esercizio VALUES(3, "TELEFONO", "2008-10-29 14:56:59", 11, "luigi.bianchi@gmail.com");
+INSERT INTO Tabella_Esercizio VALUES(1, "CIRCOLO", "2008-10-29 14:56:59", 0, "luigi.bianchi@gmail.com");
+INSERT INTO Tabella_Esercizio VALUES(2, "SOCIO", "2008-10-29 14:56:59", 0, "luigi.bianchi@gmail.com");
+INSERT INTO Tabella_Esercizio VALUES(3, "TELEFONO", "2008-10-29 14:56:59", 0, "luigi.bianchi@gmail.com");
 
 INSERT INTO Attributo VALUES(1, 1, "VARCHAR", "NOME", 1);
 INSERT INTO Attributo VALUES(2, 1, "VARCHAR", "CITTA", 0);
@@ -161,7 +161,7 @@ INSERT INTO Domanda_Chiusa VALUES(11, "Test Parziale");
 INSERT INTO Opzione_Risposta VALUES(1, 9, "Test Parziale", "SELECT ALL FROM CIRCOLO;", 0);
 INSERT INTO Opzione_Risposta VALUES(2, 9, "Test Parziale", "SELECT * FROM CIRCOLO;", 1);
 INSERT INTO Opzione_Risposta VALUES(3, 9, "Test Parziale", "SELECT ALL FROM;", 0);
-INSERT INTO Sketch_Codice VALUES(1, 10, "Test Parziale", "SELECT COUNT(*) FROM SOCIO WHERE (ANNONASCITA < 2000);", 1);
+INSERT INTO Sketch_Codice VALUES(1, 10, "Test Parziale", "SELECT COUNT(*) FROM SOCIO WHERE (ANNO_NASCITA < 2000);", 1);
 INSERT INTO Opzione_Risposta VALUES(1, 11, "Test Parziale", "VERO", 1);
 INSERT INTO Opzione_Risposta VALUES(2, 11, "Test Parziale", "FALSO", 0);
 
