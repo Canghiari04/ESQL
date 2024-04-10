@@ -270,7 +270,7 @@
         $arrayFieldAnswer = $_SESSION["fieldAnswer"]; // array contenenti i field della query risposta data dallo studente e la query soluzione già presente nel database
         $arrayFieldSolution = $_SESSION["fieldSolution"];
 
-        echo 'ANNO
+        echo '
             <div class="div-table">
         ';
 
