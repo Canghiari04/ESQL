@@ -6,7 +6,7 @@ Progetto per il corso di Basi di Dati, Informatica per il Management anno 2023/2
 - De Rosa Davide
 - Nadifi Ossama
 
-[Specifiche tecniche del progetto]()
+[Specifiche tecniche del progetto](https://virtuale.unibo.it/pluginfile.php/1792928/mod_resource/content/3/progettobd2024.pdf)
 
 ## Informazioni
 **ESQL** è una piattaforma progettata per facilitare l'apprendimento interattivo per studenti, garantendo una gestione efficiente dei test e delle attività didattiche. Il progetto include:
