@@ -13,7 +13,7 @@ Progetto per il corso di Basi di Dati, Informatica per il Management anno 2023/2
 
 ### Stack:
 
-- **Frontend**: __HTML__, __CSS__, per la creazione del layout e della visualizzazione grafica che contraddistingue la piattaforma
+- **Frontend**: __HTML__ e __CSS__, per la creazione del layout e della visualizzazione grafica che contraddistingue la piattaforma
 - **Backend**: __PHP__, per la logica dell'applicativo e gestione annessa dei dati
 
 ### Database:
