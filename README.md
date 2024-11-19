@@ -1,5 +1,5 @@
 # ESQL
-Progetto per il corso di Basi di Dati, Informatica per il Management anno 2023/2024
+Progetto per il corso di Basi di Dati (70155) Informatica per il Management anno (2023/2024)
 
 ### Realizzato dagli studenti:
 - Canghiari Matteo
